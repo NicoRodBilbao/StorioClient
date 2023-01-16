@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 public class Booking implements Serializable {
     private Integer id;
@@ -34,7 +32,6 @@ public class Booking implements Serializable {
     }
     */
 
-    @XmlTransient
     public List<Pack> getPacks() {
         return packs;
     }
