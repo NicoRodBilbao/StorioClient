@@ -2,7 +2,7 @@ package entities;
 
 public enum BookingState {
     PENDING,
-    APROVED,
+    APPROVED,
     HANDED,
     RETURNED,
     DENIED;
