@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TextArea fx:id="taDescriptionPack" layoutX="304.0" layoutY="146.0" prefHeight="109.0" prefWidth="287.0" />
+      <TableView fx:id="tvTablePack" layoutX="42.0" layoutY="268.0" prefHeight="270.0" prefWidth="726.0" style="-fx-background-color: #333333; -fx-border-color: white;">
+        <columns>
+          <TableColumn prefWidth="119.19998168945312" text="ID" />
+          <TableColumn minWidth="0.0" prefWidth="236.79998779296875" text="Description" />
+            <TableColumn prefWidth="131.99993896484375" text="State" />
+            <TableColumn prefWidth="124.00006103515625" text="Date Added" />
+            <TableColumn minWidth="0.0" prefWidth="110.39996337890625" text="Pack Type" />
+        </columns>
+      </TableView>
+      <ComboBox fx:id="cbTypePack" layoutX="42.0" layoutY="150.0" prefHeight="25.0" prefWidth="203.0" />
+      <Label fx:id="lblTypePack" layoutX="42.0" layoutY="117.0" prefHeight="35.0" prefWidth="203.0" text="Pack Type" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblDescriptionPack" layoutX="304.0" layoutY="117.0" prefHeight="35.0" prefWidth="203.0" text="Description" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnCreatePack" layoutX="652.0" layoutY="73.0" mnemonicParsing="false" onAction="#handleSignUpButtonAction" prefHeight="33.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Create" textFill="WHITE">
+         <font>
+            <Font name="Calibri Bold" size="17.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnSearchPack" layoutX="652.0" layoutY="118.0" mnemonicParsing="false" onAction="#handleSignUpButtonAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Search" textFill="WHITE">
+         <font>
+            <Font name="Calibri Bold" size="17.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnDeletePack" layoutX="652.0" layoutY="222.0" mnemonicParsing="false" onAction="#handleSignUpButtonAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Delete" textFill="WHITE">
+         <font>
+            <Font name="Calibri Bold" size="17.0" />
+         </font>
+      </Button>
+      <TextField fx:id="tfNamePack" layoutX="42.0" layoutY="77.0" prefHeight="25.0" prefWidth="102.0" />
+      <Label fx:id="lblIdPack" layoutX="42.0" layoutY="46.0" prefHeight="35.0" prefWidth="102.0" text="ID" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnModifyPack" layoutX="652.0" layoutY="172.0" mnemonicParsing="false" onAction="#handleSignUpButtonAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Modify" textFill="WHITE">
+         <font>
+            <Font name="Calibri Bold" size="17.0" />
+         </font>
+      </Button>
+      <DatePicker fx:id="dpCreateDatePack" layoutX="44.0" layoutY="226.0" />
+      <Label fx:id="lblCreateDatePack" layoutX="44.0" layoutY="188.0" prefHeight="35.0" prefWidth="174.0" text="Create Date" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <ComboBox fx:id="cbStatePack" layoutX="304.0" layoutY="77.0" prefHeight="25.0" prefWidth="203.0" />
+      <Label fx:id="lblStatePack" layoutX="304.0" layoutY="46.0" prefHeight="35.0" prefWidth="203.0" text="State" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <MenuBar fx:id="menuBar" layoutY="1.0" prefHeight="26.0" prefWidth="800.0">
+        <menus>
+            <Menu fx:id="mnGoBack" mnemonicParsing="false" text="Go Back" />
+            <Menu fx:id="mnGoTo" mnemonicParsing="false" text="Go To">
+               <items>
+                  <MenuItem fx:id="miBooking" mnemonicParsing="false" text="Booking Management" />
+                  <MenuItem fx:id="miReport" mnemonicParsing="false" text="Report Management" />
+                  <MenuItem fx:id="miPack" mnemonicParsing="false" text="Pack Management" />
+                  <MenuItem fx:id="miModel" mnemonicParsing="false" text="Model Management" />
+                  <MenuItem fx:id="miItem" mnemonicParsing="false" text="Item Management" />
+                  <MenuItem fx:id="miUser" mnemonicParsing="false" text="User Management" />
+               </items>
+            </Menu>
+            <Menu fx:id="mnDarkMode" mnemonicParsing="false" text="Dark Mode" />
+            <Menu fx:id="mnGoBack1" mnemonicParsing="false" text="Help" />
+        </menus>
+      </MenuBar>
+   </children>
+</Pane>

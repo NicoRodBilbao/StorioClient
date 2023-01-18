@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane id="paneWindow" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TableView fx:id="tvReport" layoutX="16.0" layoutY="232.0" prefHeight="354.0" prefWidth="772.0" style="-fx-background-color: #333333; -fx-border-color: WHITE;">
+         <columns>
+            <TableColumn fx:id="tcId" prefWidth="44.80001926422119" text="Id" />
+            <TableColumn fx:id="tcDate" prefWidth="112.0" text="Date " />
+            <TableColumn fx:id="tcDescription" prefWidth="411.20001220703125" text="Description" />
+            <TableColumn fx:id="tcItem" prefWidth="205.5999755859375" text="Item" />
+         </columns>
+      </TableView>
+      <MenuBar fx:id="menuBar" layoutY="1.0" prefHeight="27.0" prefWidth="800.0">
+         <menus>
+            <Menu fx:id="mnGoBack" mnemonicParsing="false" text="Go Back" />
+            <Menu fx:id="mnGoTo" mnemonicParsing="false" text="Go To">
+               <items>
+                  <MenuItem fx:id="miBooking" mnemonicParsing="false" text="Booking Management" />
+                  <MenuItem fx:id="miPack" mnemonicParsing="false" text="Pack Management" />
+                  <MenuItem fx:id="miModel" mnemonicParsing="false" text="Model Management" />
+                  <MenuItem fx:id="miItem" mnemonicParsing="false" text="Item Management" />
+                  <MenuItem fx:id="miUser" mnemonicParsing="false" text="User Management" />
+               </items>
+            </Menu>
+            <Menu fx:id="mnDarkMode" mnemonicParsing="false" text="Dark Mode" />
+            <Menu fx:id="mnHelp" mnemonicParsing="false" text="Help" />
+         </menus>
+      </MenuBar>
+      <Label fx:id="lblItemId" layoutX="38.0" layoutY="106.0" prefHeight="27.0" prefWidth="209.0" text="Item Id" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <TextField fx:id="tfItemId" layoutX="38.0" layoutY="143.0" prefHeight="27.0" prefWidth="209.0" />
+      <Button fx:id="btnSearchReports" layoutX="648.0" layoutY="123.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="113.0" style="-fx-background-color: #FE0001;" text="Search" textFill="WHITE">
+         <font>
+            <Font name="Calibri Bold" size="14.0" />
+         </font>
+      </Button>
+   </children>
+</Pane>
