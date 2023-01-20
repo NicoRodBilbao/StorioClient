@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package factories;
+package interfaces;
 
 /**
  *
  * @author Markel Fernandez
  */
-public class BookingFactory {
+public interface Bookingable {
     
 }
