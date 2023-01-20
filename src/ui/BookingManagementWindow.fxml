@@ -26,7 +26,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Button fx:id="btnCreate" layoutX="641.0" layoutY="73.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="113.0" style="-fx-background-color: #FE0001;" text="Create" textFill="WHITE">
+            <Button fx:id="btnCreate" layoutX="641.0" layoutY="73.0" mnemonicParsing="false" onAction="handleCreateButtonAction" prefHeight="25.0" prefWidth="113.0" style="-fx-background-color: #FE0001;" text="Create" textFill="WHITE">
                <font>
                   <Font name="Calibri Bold" size="14.0" />
                </font>
