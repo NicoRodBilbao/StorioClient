@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
      *  Entity class Item has the following fields: 
@@ -18,6 +19,7 @@ import java.util.Objects;
      * 
      * @author Nicolás Rodríguez
  */
+@XmlRootElement
 public class Item implements Serializable {
     /**
      * Identifier field for the Item. 

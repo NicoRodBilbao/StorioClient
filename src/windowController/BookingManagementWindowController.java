@@ -26,7 +26,6 @@ import javafx.scene.layout.Pane;
  * @author 2dam
  */
 public class BookingManagementWindowController implements Initializable {
-    
     @FXML
     private Pane paneWindow;
     @FXML
