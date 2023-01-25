@@ -10,11 +10,13 @@ import java.util.List;
 public interface Modelable {
     public void createModel(Model model);
     
-    public void modifyModel(Model model);
+    public void updateModel(Model model);
     
     public List<Model> listAllModels();
     
     public List<Model> findModelById(Integer id);
     
-    public void deleteMode(Integer id);
+    public void deleteModel(Integer id);
+    
+    public Integer countModel();
 }
