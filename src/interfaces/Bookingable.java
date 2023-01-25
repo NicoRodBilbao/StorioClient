@@ -11,6 +11,7 @@ import entities.Pack;
 import java.util.List;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
 
 /**
  *
@@ -39,7 +40,7 @@ public interface Bookingable {
 
     public <T> T findPacksForBooking_JSON(Class<T> responseType, String id) throws ClientErrorException;
 
-    public <T> T findAll_XML(Class<T> responseType) throws ClientErrorException;
+    public <T> T findAll_XML(GenericType<T> responseType) throws ClientErrorException;
 
     public <T> T findAll_JSON(Class<T> responseType) throws ClientErrorException;
 

@@ -5,9 +5,11 @@
  */
 package windowController;
 
-import java.awt.Image;
-import java.net.URL;
-import java.util.ResourceBundle;
+import entities.Booking;
+import entities.BookingState;
+import entities.Pack;
+import entities.PackState;
+import entities.User;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,15 +27,35 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javax.swing.table.TableColumn;
+import javafx.scene.control.TableColumn;
+import factories.BookingFactory;
+import interfaces.Bookingable;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.WindowEvent;
+import javax.ws.rs.core.GenericType;
 
 /**
  *
  * @author 2dam
  */
-public class BookingManagementWindowController{
-    private Stage stage;
+public class BookingManagementWindowController {
+
+    private Stage primaryStage;
     protected static final Logger LOGGER = Logger.getLogger(BookingManagementWindowController.class.getName());
+
+    private BookingFactory bookingFactory = new BookingFactory();
+    private Bookingable bookingable = bookingFactory.getAccessBooking();
     @FXML
     private Pane paneWindow, paneForm;
     @FXML
@@ -55,43 +77,56 @@ public class BookingManagementWindowController{
     @FXML
     private Menu mnDarkMode, mnHelp, mnGoTo, mnGoBack;
     @FXML
-    private MenuItem miReport, miPack, miModel, miItem, miUser;
+    private MenuItem miReport, miPack, miModel, miItem, miUser, miUsersManual, miPrintReport;
     @FXML
     private ListView lvPacks;
     @FXML
     private TableColumn tcId, tcDescription, tcStartDate, tcEndDate, tcState, tcPacks;
-    
-    
-    
+    @FXML
+    private TableView tvBooking;
+    private ObservableList<Booking> bookingsData;
+    private ObservableList<ArrayList> packs = FXCollections.observableArrayList();
+
     @FXML
     private void handleButtonAction(ActionEvent event) {
-        
+
     }
+
     public void initStage(Parent root) {
-        LOGGER.info("Initializing SignUp stage.");
-        
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        // , se le pondrá el título de “Sign Up” a la ventana
-        stage.setTitle("SignUp");
-        //  será una ventana no resizable
-        stage.setResizable(false);
-        // Listens to the event of the window showing up
-       taDescription.setDisable(true);
-       tfId.setDisable(true);
-       dpEndDate.setDisable(true);
-       dpStartDate.setDisable(true);
-       cbState.setDisable(true);
-       lvPacks.setDisable(true);
-       //if(userPrivilege==Client || userPrivilege == Manager){
-       miItem.setDisable(true);
-       miModel.setDisable(true);
-       miPack.setDisable(true);
-       miReport.setDisable(true);
-       
-       //}
-       stage.show();
-    }    
+        try {
+            LOGGER.info("Initializing BookingController stage.");
+            Scene scene = new Scene(root);
+            primaryStage.setScene(scene);
+            primaryStage.setTitle("Booking Management");
+            primaryStage.setResizable(false);
+            taDescription.setDisable(true);
+            tfId.setDisable(true);
+            dpEndDate.setDisable(true);
+            dpStartDate.setDisable(true);
+            cbState.setDisable(true);
+            lvPacks.setDisable(true);
+            lblDescription.setVisible(true);
+            lblEndDate.setVisible(true);
+            lblId.setVisible(true);
+            lblPacks.setVisible(true);
+            lblStartDate.setVisible(true);
+            lblState.setVisible(true);
+            cbState.getItems().addAll(BookingState.values());
+            
+            lvPacks.setItems(packs);
+
+            //if(userPrivilege==Client || userPrivilege == Manager){
+            miItem.setDisable(true);
+            miModel.setDisable(true);
+            miPack.setDisable(true);
+            miReport.setDisable(true);
+            refreshTable();
+            primaryStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     /**
      * This method validates the TextfFields and executes signUp() if ir works
@@ -100,15 +135,87 @@ public class BookingManagementWindowController{
      * @param event The observed event
      */
     private void handleCreateButtonAction(ActionEvent event) {
-        /*Se validará el campo tfUsername.
-            En caso de que no se valide con más
-            de 30 caracteres o que haya
-            espacios en blanco, lanza
-            IncorrectUserException.*/
+        /*Al pulsar este botón se alternará entre dos estados:
+Estado Activado: Los Button btnSearch, btnModify y btnDelete se deshabilitarán. Se habilitarán los DatePickers(dpStartDate y dpEndDate), el ComboBox(cbState), la ListView(lvPacks) y el TextArea(taDescription).
+Estado Desactivado: Los Button btnSearch, btnModify y btnDelete se habilitarán. Se deshabilitarán los DatePickers(dpStartDate y dpEndDate), elComboBox(cbState),la ListView(lvPacks) y el TextArea(taDescription).
+Cuando pase de estado activado a estado desactivado se recogerán los datos introducidos y se llamará al método createBooking().
+Si se está en estado activado, todos los campos del formulario no están rellenos y se clicka btnCreate se pasa a modo deshabilitado sin llamar a ningún método.
+         */
         try {
-            
-        }catch(Exception e){
-        
+            if (btnDelete.isDisabled() && btnModify.isDisabled() && btnSearch.isDisabled()) {
+                Booking booking = null;
+                dpEndDate.setDisable(true);
+                dpStartDate.setDisable(true);
+                cbState.setDisable(true);
+                lvPacks.setDisable(true);
+                taDescription.setDisable(true);
+                btnDelete.setDisable(false);
+                btnModify.setDisable(false);
+                btnSearch.setDisable(false);
+                if(!taDescription.toString().trim().isEmpty() && dpEndDate.getValue() == null )
+                booking.setDescription(taDescription.toString());
+                booking.setEndDate(Date.valueOf(dpEndDate.getValue()));
+                booking.setStartDate(Date.valueOf(dpStartDate.getValue()));
+                booking.setPacks(lvPacks.getItems());
+                booking.setState(BookingState.PENDING);
+                bookingable.createBooking_XML(booking);
+            } else {
+                btnDelete.setDisable(true);
+                btnModify.setDisable(true);
+                btnSearch.setDisable(true);
+                taDescription.setDisable(false);
+                dpEndDate.setDisable(false);
+                dpStartDate.setDisable(false);
+                lvPacks.setDisable(false);
+                cbState.setDisable(false);
+                
+
+            }
+        } catch (Exception e) {
+
         }
     }
+
+    public void setStage(Stage stage) {
+        this.primaryStage = stage;
+    }
+
+    public void closeWindow(WindowEvent event) {
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText("Do you want to exit the application?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            Platform.exit();
+        } else {
+            event.consume();
+        }
+    }
+
+    public void refreshTable() {
+        this.tcId.setCellValueFactory(
+                new PropertyValueFactory<>("id")
+        );
+        this.tcDescription.setCellValueFactory(
+                new PropertyValueFactory<>("description")
+        );
+        this.tcStartDate.setCellValueFactory(
+                new PropertyValueFactory<>("startDate")
+        );
+        this.tcEndDate.setCellValueFactory(
+                new PropertyValueFactory<>("endDate")
+        );
+        this.tcState.setCellValueFactory(
+                new PropertyValueFactory<>("state")
+        );
+        this.tcPacks.setCellValueFactory(
+                new PropertyValueFactory<>("packs")
+        );
+        List<Booking> bookings = bookingable.findAll_XML(new GenericType<List<Booking>>() {
+        });
+        //bookingsData = FXCollections.observableArrayList(bookingable.findAll_XML(new GenericType<List<Booking>>(){}));
+        tvBooking.setItems(FXCollections.observableArrayList(bookings));
+    }
+
 }

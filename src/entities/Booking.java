@@ -4,17 +4,19 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import javax.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement(name = "booking")
 public class Booking implements Serializable {
+
     private Integer id;
-    //private Client user;
+    private Client user;
     private List<Pack> packs;
     private Date startDate;
     private Date endDate;
     private String description;
     private BookingState state;
-    
-    
+
     public Integer getId() {
         return id;
     }
@@ -22,7 +24,7 @@ public class Booking implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
-    /*
+
     public Client getUser() {
         return user;
     }
@@ -30,7 +32,6 @@ public class Booking implements Serializable {
     public void setUser(Client user) {
         this.user = user;
     }
-    */
 
     public List<Pack> getPacks() {
         return packs;
@@ -71,7 +72,6 @@ public class Booking implements Serializable {
     public void setState(BookingState state) {
         this.state = state;
     }
-   
 
     public Booking() {
         super();
@@ -89,8 +89,6 @@ public class Booking implements Serializable {
         hash = 89 * hash + Objects.hashCode(this.state);
         return hash;
     }
-
-   
 
     @Override
     public boolean equals(Object obj) {
@@ -110,9 +108,9 @@ public class Booking implements Serializable {
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
-        /*if (!Objects.equals(this.user, other.user)) {
+        if (!Objects.equals(this.user, other.user)) {
             return false;
-        }*/
+        }
         if (!Objects.equals(this.packs, other.packs)) {
             return false;
         }
@@ -132,6 +130,5 @@ public class Booking implements Serializable {
     public String toString() {
         return "Booking{" + "id=" + id + /*", user=" + user +*/ ", packs=" + packs + ", startDate=" + startDate + ", endDate=" + endDate + ", description=" + description + ", state=" + state + '}';
     }
-    
-    
+
 }
