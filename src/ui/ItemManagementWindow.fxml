@@ -14,15 +14,15 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="windowController.ItemManagementWindowController">
    <children>
       <TableView fx:id="tvTableItem" layoutX="37.0" layoutY="275.0" prefHeight="270.0" prefWidth="726.0" style="-fx-background-color: #333333; -fx-border-color: white;">
         <columns>
-          <TableColumn prefWidth="56.79998779296875" resizable="false" text="ID" />
-          <TableColumn minWidth="0.0" prefWidth="229.60004425048828" resizable="false" text="Issues" />
-            <TableColumn prefWidth="151.20001220703125" resizable="false" text="Model" />
-            <TableColumn prefWidth="148.79995727539062" resizable="false" text="Date" />
-            <TableColumn prefWidth="139.99993896484375" resizable="false" text="Pack" />
+          <TableColumn fx:id="tcId" prefWidth="56.79998779296875" resizable="false" text="ID" />
+          <TableColumn fx:id="tcIssues" minWidth="0.0" prefWidth="229.60004425048828" resizable="false" text="Issues" />
+            <TableColumn fx:id="tcModel" prefWidth="151.20001220703125" resizable="false" text="Model" />
+            <TableColumn fx:id="tcDate" prefWidth="148.79995727539062" resizable="false" text="Date" />
+            <TableColumn fx:id="tcPack" prefWidth="139.99993896484375" resizable="false" text="Pack" />
         </columns>
       </TableView>
       <MenuBar fx:id="menuBar" layoutY="1.0" prefHeight="26.0" prefWidth="800.0">
@@ -53,17 +53,17 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <Button fx:id="btnCreateItem" layoutX="672.0" layoutY="81.0" mnemonicParsing="false" onAction="#handleSignUpButtonAction" prefHeight="33.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Create" textFill="WHITE">
+      <Button fx:id="btnCreateItem" layoutX="672.0" layoutY="81.0" mnemonicParsing="false" onAction="#createItem" prefHeight="33.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Create" textFill="WHITE">
          <font>
             <Font name="Calibri Bold" size="17.0" />
          </font>
       </Button>
-      <Button fx:id="btnSearchItem" layoutX="672.0" layoutY="126.0" mnemonicParsing="false" onAction="#handleSignUpButtonAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Search" textFill="WHITE">
+      <Button fx:id="btnSearchItem" layoutX="672.0" layoutY="126.0" mnemonicParsing="false" onAction="#findItem" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Search" textFill="WHITE">
          <font>
             <Font name="Calibri Bold" size="17.0" />
          </font>
       </Button>
-      <Button fx:id="btnDeleteItem" layoutX="672.0" layoutY="230.0" mnemonicParsing="false" onAction="#handleSignUpButtonAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Delete" textFill="WHITE">
+      <Button fx:id="btnDeleteItem" layoutX="672.0" layoutY="230.0" mnemonicParsing="false" onAction="#deleteItem" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Delete" textFill="WHITE">
          <font>
             <Font name="Calibri Bold" size="17.0" />
          </font>
@@ -74,7 +74,7 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <Button fx:id="btnModifyItem" layoutX="672.0" layoutY="180.0" mnemonicParsing="false" onAction="#handleSignUpButtonAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Modify" textFill="WHITE">
+      <Button fx:id="btnModifyItem" layoutX="672.0" layoutY="180.0" mnemonicParsing="false" onAction="#updateItem" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Modify" textFill="WHITE">
          <font>
             <Font name="Calibri Bold" size="17.0" />
          </font>

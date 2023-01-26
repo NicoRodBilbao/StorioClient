@@ -5,7 +5,7 @@
  */
 package factories;
 
-import implementations.BookingImplementation;
+import dataAccess.BookingImplementation;
 import interfaces.Bookingable;
 
 /**

@@ -1,10 +1,11 @@
 package windowController;
 
+import entities.Item;
 import entities.Model;
+import factories.ItemFactory;
 import factories.ModelFactory;
+import interfaces.Itemable;
 import interfaces.Modelable;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,14 +18,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -35,106 +35,78 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 /**
- * This window adds the functionality of Managing the entity Model and
+ * This window adds the functionality of Managing the entity Item and
  * navigation through various windows.
  *
  * @author Nicolás Rodríguez
  */
-public class ModelManagementWindowController {
+public class ItemManagementWindowController {
 
     // FXML Attributes
     @FXML
-    private TableView tvModel;
+    private TableView tvTableItem;
     @FXML
-    private TableColumn tcId;
-    @FXML
-    private TableColumn tcModel;
-    @FXML
-    private TableColumn tcDescription;
-    @FXML
-    private TableColumn tcNote;
-    @FXML
-    private TableColumn tcItemsId;
+    private TableColumn tcId,tcIssues,tcModel,tcDate,tcPack;
     @FXML
     private MenuBar menuBar;
     @FXML
-    private Menu mnGoBack;
+    private Menu mnGoBack,mnGoBack1,mnGoTo,mnHelp,mnDarkMode;
     @FXML
-    private Menu mnGoTo;
-    @FXML
-    private MenuItem mi;
-    @FXML
-    private MenuItem miBooking;
-    @FXML
-    private MenuItem miReport;
-    @FXML
-    private MenuItem miPack;
-    @FXML
-    private MenuItem miItem;
-    @FXML
-    private MenuItem miUser;
-    @FXML
-    private Menu mnDarkMode;
-    @FXML
-    private Menu mnHelp;
+    private MenuItem miBooking,miReport,miPack,miModel,miUser;
     @FXML
     private Pane paneModel;
     @FXML
-    private TextField tfId;
+    private TextField tfIdItem;
     @FXML
-    private TextField tfDescription;
+    private TextArea taIssuesItem;
     @FXML
-    private TextField tfModel;
+    private ComboBox cbModelItem,cbPackItem;
     @FXML
-    private TextField tfNote;
+    private DatePicker dpCreateDateItem;
     @FXML
-    private Label lblId;
+    private Label lblIdItem,lblModelItem,lblIssuesItem,lblCreateDateItem,lblPackItem;
     @FXML
-    private Label lblDescription;
-    @FXML
-    private Label lblModel;
-    @FXML
-    private Label lblNote;
-    @FXML
-    private TextArea taDescription;
-    @FXML
-    private Button btnCreate, btnDelete, btnModify, btnSearch;
+    private Button btnCreateItem, btnDeleteItem, btnModifyItem, btnSearchItem;
     /**
      * Logger for tracking the windows functionality.
      */
-    protected static final Logger LOGGER = Logger.getLogger(ModelManagementWindowController.class.getName());
+    protected static final Logger LOGGER = Logger.getLogger(ItemManagementWindowController.class.getName());
 
     Stage primaryStage;
+    Itemable itemable = ItemFactory.getAccessItem();
     Modelable modelable = ModelFactory.getAccessModel();
+    //Packable packable = PackFactory.getAccessPack();
 
     
     public void setStage(Parent root) {
-        LOGGER.info("Initializing ModelManagementWindow.");
+        LOGGER.info("Initializing ItemManagementWindow.");
 
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Model Management");
         primaryStage.setResizable(false);
         primaryStage.setOnShowing(this::windowShowing);
-        tvModel.setOnMouseClicked(event -> this.handleOnMouseClick(event));
+        
+        //tvTableItem.setOnMouseClicked(event -> this.handleOnMouseClick(event));
         refreshTable();
         primaryStage.show();
     }
 
     private void windowShowing(WindowEvent event) {
-        tfId.requestFocus();
-        tfId.setDisable(true);
-        tfDescription.setDisable(true);
-        tfModel.setDisable(true);
-        tfNote.setDisable(true);
-        btnCreate.setDisable(false);
-        btnModify.setDisable(false);
-        btnSearch.setDisable(false);
-        btnDelete.setDisable(false);
+        tfIdItem.requestFocus();
+        tfIdItem.setDisable(true);
+        /*taIssuesItem.setDisable(true);
+        cbModelItem.setDisable(true);
+        cbPackItem.setDisable(true);
+        dpCreateDateItem.setDisable(true);*/
+        btnCreateItem.setDisable(false);
+        btnModifyItem.setDisable(false);
+        btnSearchItem.setDisable(false);
+        btnDeleteItem.setDisable(false);
     }
 
-    public void createModel(ActionEvent event) {
-        LOGGER.info("Initializing creation.");
+    public void createItem(ActionEvent event) {
+    /*    LOGGER.info("Initializing creation.");
         if (!btnCreate.isDisabled() & !btnModify.isDisabled()) { // Change to creation mode
             LOGGER.info("Create enabled state.");
             changeMode(1); // Change to creation mode
@@ -149,11 +121,11 @@ public class ModelManagementWindowController {
             refreshTable(); // Change to creation mode
             changeMode(0); // Some fields are empty
         }
-        LOGGER.info("Finishing creation.");
+        LOGGER.info("Finishing creation.");*/
     }
 
-    public void updateModel(ActionEvent event) {
-        LOGGER.info("Initializing update.");
+    public void updateItem(ActionEvent event) {
+        /*LOGGER.info("Initializing update.");
         if (!btnCreate.isDisabled() & !btnModify.isDisabled()) {
             LOGGER.info("Update enabled state.");
             changeMode(2); // Change to update mode
@@ -170,11 +142,11 @@ public class ModelManagementWindowController {
             refreshTable(); // Refresh the table
             changeMode(0); // Change to default mode
         }
-        LOGGER.info("Finishing update.");
+        LOGGER.info("Finishing update.");*/
     }
 
-    public void findModel(ActionEvent event) {
-        LOGGER.info("Initializing search.");
+    public void findItem(ActionEvent event) {
+        /*LOGGER.info("Initializing search.");
         if (!btnDelete.isDisabled() & !btnModify.isDisabled()) { // Change to search mode
             LOGGER.info("Search enabled state.");
             changeMode(3); // Change to search mode
@@ -194,11 +166,11 @@ public class ModelManagementWindowController {
             }
             changeMode(0); // Change to default mode
         }
-        LOGGER.info("Finishing search.");
+        LOGGER.info("Finishing search.");*/
     }
 
-    public void deleteModel(ActionEvent event) {
-        LOGGER.info("Initializing deletion.");
+    public void deleteItem(ActionEvent event) {
+        /*LOGGER.info("Initializing deletion.");
         if (!btnDelete.isDisabled() & !btnModify.isDisabled()) { // Change to deletion mode
             LOGGER.info("Delete enabled state.");
             changeMode(4);
@@ -212,43 +184,50 @@ public class ModelManagementWindowController {
             changeMode(0);
             refreshTable();
         }
-        LOGGER.info("Finishing deletion.");
+        LOGGER.info("Finishing deletion.");*/
     }
 
     private void refreshTable() {
         LOGGER.info("Retrieving model data.");
-        List<Model> listModel = modelable.listAllModels();
+        List<Item> listItem = itemable.listAllItems();
         tcId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        tcDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
         tcModel.setCellValueFactory(new PropertyValueFactory<>("model"));
-        tcNote.setCellValueFactory(new PropertyValueFactory<>("notes"));
-        tcItemsId.setCellValueFactory(new PropertyValueFactory<>("items"));
+        tcDate.setCellValueFactory(new PropertyValueFactory<>("dateAdded"));
+        tcIssues.setCellValueFactory(new PropertyValueFactory<>("issues"));
+        tcPack.setCellValueFactory(new PropertyValueFactory<>("pack"));
 
-        tvModel.setItems(FXCollections.observableArrayList(listModel));
+        tvTableItem.setItems(FXCollections.observableArrayList(listItem));
+        
+        List<Model> listModel = modelable.listAllModels();
+        cbModelItem.setItems(FXCollections.observableArrayList(listModel));
+        //List<Pack> listPack = packable.listAllPacks();
+        //cbPackItem.setItems(FXCollections.observableArrayList(listPack));
     }
 
     private void emptyFields() {
         LOGGER.info("Emptying fields.");
-        tfId.setText("");
-        tfDescription.setText("");
-        tfModel.setText("");
-        tfNote.setText("");
+        tfIdItem.setText("");
+        taIssuesItem.setText("");
+        dpCreateDateItem.setValue(null);
+        cbPackItem.setValue(null);
+        cbModelItem.getSelectionModel().select(0);
     }
 
     private void enableButtons() {
         LOGGER.info("Enabling buttons.");
-        btnCreate.setDisable(false);
-        btnModify.setDisable(false);
-        btnSearch.setDisable(false);
-        btnDelete.setDisable(false);
+        btnCreateItem.setDisable(false);
+        btnModifyItem.setDisable(false);
+        btnSearchItem.setDisable(false);
+        btnDeleteItem.setDisable(false);
     }
 
     private void disableTextFields() {
         LOGGER.info("Disabling text fields.");
-        tfId.setDisable(true);
-        tfDescription.setDisable(true);
-        tfModel.setDisable(true);
-        tfNote.setDisable(true);
+        tfIdItem.setDisable(true);
+        taIssuesItem.setDisable(true);
+        dpCreateDateItem.setDisable(true);
+        cbModelItem.setDisable(true);
+        cbPackItem.setDisable(true);
     }
 
     public void setStage(Stage stage) {
@@ -272,7 +251,7 @@ public class ModelManagementWindowController {
      *
      * @param selectedMode The mode selected for the window.
      */
-    private void changeMode(Integer selectedMode) {
+    /*private void changeMode(Integer selectedMode) {
         switch (selectedMode) {
             case 0: // Regular mode
                 LOGGER.info("Enabling and disabling fields.");
@@ -324,9 +303,9 @@ public class ModelManagementWindowController {
                 refreshTable();
                 break;
         }
-    }
+    }*/
 
-    private void handleOnMouseClick(MouseEvent event) {
+    /*private void handleOnMouseClick(MouseEvent event) {
         TableView tv = (TableView) event.getSource();
         if (tv.getSelectionModel().getSelectedItem() != null) { // Checks if the table view is selected
             ObservableList selectedItems = tv.getSelectionModel().getSelectedItems();
@@ -341,5 +320,5 @@ public class ModelManagementWindowController {
             tfModel.setText(model.getModel());
             tfNote.setText(model.getNotes());
         }
-    }
+    }*/
 }
