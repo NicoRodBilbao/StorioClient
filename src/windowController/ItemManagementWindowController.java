@@ -10,8 +10,10 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -32,14 +34,16 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 /**
- * This window adds the functionality of Managing the entity Item and
- * navigation through various windows.
+ * This window adds the functionality of Managing the entity Item and navigation
+ * through various windows.
  *
  * @author Nicolás Rodríguez
  */
@@ -49,13 +53,13 @@ public class ItemManagementWindowController {
     @FXML
     private TableView tvTableItem;
     @FXML
-    private TableColumn tcId,tcIssues,tcModel,tcDate,tcPack;
+    private TableColumn tcId, tcIssues, tcModel, tcDate, tcPack;
     @FXML
     private MenuBar menuBar;
     @FXML
-    private Menu mnGoBack,mnGoBack1,mnGoTo,mnHelp,mnDarkMode;
+    private Menu mnGoBack, mnGoBack1, mnGoTo, mnHelp, mnDarkMode;
     @FXML
-    private MenuItem miBooking,miReport,miPack,miModel,miUser;
+    private MenuItem miBooking, miReport, miPack, miModel, miUser;
     @FXML
     private Pane paneModel;
     @FXML
@@ -63,11 +67,11 @@ public class ItemManagementWindowController {
     @FXML
     private TextArea taIssuesItem;
     @FXML
-    private ComboBox cbModelItem,cbPackItem;
+    private ComboBox cbModelItem, cbPackItem;
     @FXML
     private DatePicker dpCreateDateItem;
     @FXML
-    private Label lblIdItem,lblModelItem,lblIssuesItem,lblCreateDateItem,lblPackItem;
+    private Label lblIdItem, lblModelItem, lblIssuesItem, lblCreateDateItem, lblPackItem;
     @FXML
     private Button btnCreateItem, btnDeleteItem, btnModifyItem, btnSearchItem;
     /**
@@ -80,16 +84,22 @@ public class ItemManagementWindowController {
     Modelable modelable = ModelFactory.getAccessModel();
     //Packable packable = PackFactory.getAccessPack();
 
-    
     public void setStage(Parent root) {
         LOGGER.info("Initializing ItemManagementWindow.");
 
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Model Management");
+        primaryStage.setTitle("Item Management");
         primaryStage.setResizable(false);
         primaryStage.setOnShowing(this::windowShowing);
-        
+        primaryStage.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
+        if (KeyCode.ESCAPE == event.getCode()) {
+            Optional<ButtonType> action = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to exit Storio?").showAndWait();
+                if (action.get() == ButtonType.OK) 
+                    primaryStage.close();
+        }
+    });
+
         tvTableItem.setOnMouseClicked(event -> this.handleOnMouseClick(event));
         refreshTable();
         primaryStage.show();
@@ -98,10 +108,10 @@ public class ItemManagementWindowController {
     private void windowShowing(WindowEvent event) {
         tfIdItem.requestFocus();
         tfIdItem.setDisable(true);
-        /*taIssuesItem.setDisable(true);
+        taIssuesItem.setDisable(true);
         cbModelItem.setDisable(true);
         cbPackItem.setDisable(true);
-        dpCreateDateItem.setDisable(true);*/
+        dpCreateDateItem.setDisable(true);
         btnCreateItem.setDisable(false);
         btnModifyItem.setDisable(false);
         btnSearchItem.setDisable(false);
@@ -109,85 +119,98 @@ public class ItemManagementWindowController {
     }
 
     public void createItem(ActionEvent event) {
-    /*    LOGGER.info("Initializing creation.");
-        if (!btnCreate.isDisabled() & !btnModify.isDisabled()) { // Change to creation mode
+        LOGGER.info("Initializing creation.");
+        if (!btnCreateItem.isDisabled() & !btnModifyItem.isDisabled()) { // Change to creation mode
             LOGGER.info("Create enabled state.");
             changeMode(1); // Change to creation mode
         } else { // Create and change to default mode
             LOGGER.info("Create disabled state.");
-            if (!(tfModel.getText().trim().equals("") || tfModel.getText().trim().equals("") || tfNote.getText().trim().equals(""))) { // All fields have content
+            if (!(taIssuesItem.getText().trim().equals("") || cbModelItem.getSelectionModel().getSelectedItem().toString().trim().equals("") || dpCreateDateItem.getValue() == null)) { // All fields have content
                 LOGGER.info("Creating model.");
-                modelable.createModel(new Model(0, tfModel.getText(), tfDescription.getText(), tfNote.getText(), null));
+                List<Model> modelList = modelable.listAllModels().stream().filter(m -> m.getModel().equalsIgnoreCase(cbModelItem.getSelectionModel().getSelectedItem().toString())).collect(Collectors.toList());
+                itemable.createItem(new Item(
+                        0, 
+                        (Model) cbModelItem.getSelectionModel().getSelectedItem(),
+                        convertToDateViaInstant(dpCreateDateItem.getValue()),
+                        taIssuesItem.getText(),
+                        null,
+                        null
+                ));
             } else {// Some fields are empty
                 new Alert(Alert.AlertType.ERROR, "Fill the all the fields before trying to create.", ButtonType.OK).showAndWait();
             }
             refreshTable(); // Change to creation mode
             changeMode(0); // Some fields are empty
         }
-        LOGGER.info("Finishing creation.");*/
+        LOGGER.info("Finishing creation.");
     }
 
     public void updateItem(ActionEvent event) {
-        /*LOGGER.info("Initializing update.");
-        if (!btnCreate.isDisabled() & !btnModify.isDisabled()) {
+        LOGGER.info("Initializing update.");
+        if (!btnCreateItem.isDisabled() & !btnModifyItem.isDisabled()) {
             LOGGER.info("Update enabled state.");
             changeMode(2); // Change to update mode
         } else { // Update and change to default mode
             LOGGER.info("Update disabled state.");
 
-            if (!tfId.getText().trim().equals("")) { // There's a Model selected
-                LOGGER.info("Updating model.");
-                modelable.updateModel(new Model(Integer.parseInt(tfId.getText()), tfModel.getText(), tfDescription.getText(), tfNote.getText(), null));
-            } else { // There's not a Model selected
-                new Alert(Alert.AlertType.ERROR, "Please select a model from the table before trying to update.", ButtonType.OK).showAndWait();
+            if (!tfIdItem.getText().trim().equals("")) { // There's a Item selected
+                LOGGER.info("Updating Item.");
+                itemable.updateItem(new Item(
+                        Integer.parseInt(tfIdItem.getText()), 
+                        (Model) cbModelItem.getSelectionModel().getSelectedItem(),
+                        convertToDateViaInstant(dpCreateDateItem.getValue()),
+                        taIssuesItem.getText(),
+                        null,
+                        null));
+            } else { // There's not a Item selected
+                new Alert(Alert.AlertType.ERROR, "Please select an item from the table before trying to update.", ButtonType.OK).showAndWait();
             }
-
             refreshTable(); // Refresh the table
             changeMode(0); // Change to default mode
         }
-        LOGGER.info("Finishing update.");*/
+        LOGGER.info("Finishing update.");
     }
 
     public void findItem(ActionEvent event) {
-        /*LOGGER.info("Initializing search.");
-        if (!btnDelete.isDisabled() & !btnModify.isDisabled()) { // Change to search mode
+        LOGGER.info("Initializing search.");
+        if (!btnDeleteItem.isDisabled() & !btnModifyItem.isDisabled()) { // Change to search mode
             LOGGER.info("Search enabled state.");
             changeMode(3); // Change to search mode
         } else { // Find and change to default mode
-            if (tfId.getText().trim().isEmpty()) {  // Unfindable
+            if (tfIdItem.getText().trim().isEmpty()) {  // Unfindable
                 new Alert(Alert.AlertType.ERROR, "Fill the ID field before trying to search.", ButtonType.OK).showAndWait();
                 refreshTable(); // Refresh table content
             } else { 
-                LOGGER.log(Level.INFO, "Searching for Model {0}.", tfId.getText());
-                List<Model> listModel = modelable.findModelById(Integer.parseInt(tfId.getText()));
-                if (listModel.get(0) == null) { // Model wasn't found
-                    new Alert(Alert.AlertType.ERROR, "Could not find the Model.", ButtonType.OK).showAndWait();
+                LOGGER.log(Level.INFO, "Searching for Item {0}.", tfIdItem.getText());
+                List<Item> listItem = itemable.findItemById(Integer.parseInt(tfIdItem.getText()));
+                if (listItem.get(0) == null) { // Item wasn't found
+                    new Alert(Alert.AlertType.ERROR, "Could not find the item.", ButtonType.OK).showAndWait();
                     refreshTable(); // Refresh table content
                 } else { // Set the found item on the table
-                    tvModel.setItems(FXCollections.observableArrayList(listModel));
+                    tvTableItem.setItems(FXCollections.observableArrayList(listItem));
                 }
             }
             changeMode(0); // Change to default mode
         }
-        LOGGER.info("Finishing search.");*/
+        LOGGER.info("Finishing search.");
     }
 
     public void deleteItem(ActionEvent event) {
-        /*LOGGER.info("Initializing deletion.");
-        if (!btnDelete.isDisabled() & !btnModify.isDisabled()) { // Change to deletion mode
+        LOGGER.info("Initializing deletion.");
+        if (!btnDeleteItem.isDisabled() & !btnModifyItem.isDisabled()) { // Change to deletion mode
             LOGGER.info("Delete enabled state.");
             changeMode(4);
         } else { // Delete and change to default mode
-            LOGGER.log(Level.INFO, "Deleting Model {0}.", tfId.getText());
-            if (tfId.getText().trim().isEmpty()) {
+            LOGGER.log(Level.INFO, "Deleting Item {0}.", tfIdItem.getText());
+            if (tfIdItem.getText().trim().isEmpty()) {
                 new Alert(Alert.AlertType.ERROR, "Fill the ID field before trying to Delete.", ButtonType.OK).showAndWait();
             } else {
-                modelable.deleteModel(Integer.parseInt(tfId.getText()));
+                itemable.deleteItem(Integer.parseInt(tfIdItem.getText()));
             }
             changeMode(0);
             refreshTable();
         }
-        LOGGER.info("Finishing deletion.");*/
+        LOGGER.info("Finishing deletion.");
     }
 
     private void refreshTable() {
@@ -200,7 +223,7 @@ public class ItemManagementWindowController {
         tcPack.setCellValueFactory(new PropertyValueFactory<>("pack"));
 
         tvTableItem.setItems(FXCollections.observableArrayList(listItem));
-        
+
         List<Model> listModel = modelable.listAllModels();
         cbModelItem.setItems(FXCollections.observableArrayList(listModel));
         //List<Pack> listPack = packable.listAllPacks();
@@ -254,7 +277,7 @@ public class ItemManagementWindowController {
      *
      * @param selectedMode The mode selected for the window.
      */
-    /*private void changeMode(Integer selectedMode) {
+    private void changeMode(Integer selectedMode) {
         switch (selectedMode) {
             case 0: // Regular mode
                 LOGGER.info("Enabling and disabling fields.");
@@ -266,47 +289,48 @@ public class ItemManagementWindowController {
                 break;
             case 1: // Creation mode
                 LOGGER.info("Enabling and disabling fields.");
-                btnModify.setDisable(true);
-                btnSearch.setDisable(true);
-                btnDelete.setDisable(true);
-                tfDescription.setDisable(false);
-                tfModel.setDisable(false);
-                tfNote.setDisable(false);
-                tfId.setText("" + (modelable.countModel() + 1));
-                LOGGER.log(Level.INFO, "Setting up Model for id {0}.", tfId.getId());
+                btnModifyItem.setDisable(true);
+                btnSearchItem.setDisable(true);
+                btnDeleteItem.setDisable(true);
+                dpCreateDateItem.setDisable(false);
+                taIssuesItem.setDisable(false);
+                cbModelItem.setDisable(false);
+                tfIdItem.setText("" + (modelable.countModel() + 1));
+                LOGGER.log(Level.INFO, "Setting up Model for id {0}.", tfIdItem.getId());
                 LOGGER.info("Refreshing table.");
                 refreshTable();
                 break;
             case 2: // Update mode
                 LOGGER.info("Enabling and disabling fields.");
-                btnCreate.setDisable(true);
-                btnSearch.setDisable(true);
-                btnDelete.setDisable(true);
-                tfDescription.setDisable(false);
-                tfModel.setDisable(false);
-                tfNote.setDisable(false);
+                btnCreateItem.setDisable(true);
+                btnSearchItem.setDisable(true);
+                btnDeleteItem.setDisable(true);
+                taIssuesItem.setDisable(false);
+                cbModelItem.setDisable(false);
+                cbPackItem.setDisable(false);
+                dpCreateDateItem.setDisable(false);
                 LOGGER.info("Refreshing table.");
                 refreshTable();
                 break;
             case 3: // Search mode
                 LOGGER.info("Enabling and disabling fields.");
-                btnModify.setDisable(true);
-                btnDelete.setDisable(true);
-                btnCreate.setDisable(true);
-                tfId.setDisable(false);
+                btnModifyItem.setDisable(true);
+                btnDeleteItem.setDisable(true);
+                btnCreateItem.setDisable(true);
+                tfIdItem.setDisable(false);
                 refreshTable();
                 break;
             case 4: // Deletion mode
                 LOGGER.info("Enabling and disabling fields.");
-                btnModify.setDisable(true);
-                btnSearch.setDisable(true);
-                btnCreate.setDisable(true);
-                tfId.setDisable(false);
+                btnModifyItem.setDisable(true);
+                btnSearchItem.setDisable(true);
+                btnCreateItem.setDisable(true);
+                tfIdItem.setDisable(false);
                 LOGGER.info("Refreshing table.");
                 refreshTable();
                 break;
         }
-    }*/
+    }
 
     private void handleOnMouseClick(MouseEvent event) {
         TableView tv = (TableView) event.getSource();
@@ -324,9 +348,14 @@ public class ItemManagementWindowController {
             dpCreateDateItem.setValue(convertToLocalDateViaInstant(item.getDateAdded()));
         }
     }
+
     public LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
-    return dateToConvert.toInstant()
-      .atZone(ZoneId.systemDefault())
-      .toLocalDate();
-}
+        return dateToConvert.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+    }
+
+    public Date convertToDateViaInstant(LocalDate localDateToConvert) {
+        return Date.from(localDateToConvert.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
 }
