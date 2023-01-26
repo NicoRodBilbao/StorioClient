@@ -6,6 +6,9 @@ import factories.ItemFactory;
 import factories.ModelFactory;
 import interfaces.Itemable;
 import interfaces.Modelable;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -87,7 +90,7 @@ public class ItemManagementWindowController {
         primaryStage.setResizable(false);
         primaryStage.setOnShowing(this::windowShowing);
         
-        //tvTableItem.setOnMouseClicked(event -> this.handleOnMouseClick(event));
+        tvTableItem.setOnMouseClicked(event -> this.handleOnMouseClick(event));
         refreshTable();
         primaryStage.show();
     }
@@ -305,20 +308,25 @@ public class ItemManagementWindowController {
         }
     }*/
 
-    /*private void handleOnMouseClick(MouseEvent event) {
+    private void handleOnMouseClick(MouseEvent event) {
         TableView tv = (TableView) event.getSource();
         if (tv.getSelectionModel().getSelectedItem() != null) { // Checks if the table view is selected
             ObservableList selectedItems = tv.getSelectionModel().getSelectedItems();
-            Model model = (Model) selectedItems.get(0);
+            Item item = (Item) selectedItems.get(0);
 
-            LOGGER.log(Level.INFO, "Selecting table row: {0}", model.getId());
-            if (!(btnModify.isDisabled() && btnSearch.isDisabled() && btnDelete.isDisabled() && !btnCreate.isDisabled())) // If the creation mode is enabled, 
+            LOGGER.log(Level.INFO, "Selecting table row: {0}", item.getId());
+            if (!(btnModifyItem.isDisabled() && btnSearchItem.isDisabled() && btnDeleteItem.isDisabled() && !btnCreateItem.isDisabled())) // If the creation mode is enabled, 
             {
-                tfId.setText(String.valueOf(model.getId()));
+                tfIdItem.setText(String.valueOf(item.getId()));
             }
-            tfDescription.setText(model.getDescription());
-            tfModel.setText(model.getModel());
-            tfNote.setText(model.getNotes());
+            taIssuesItem.setText(item.getIssues());
+            cbModelItem.getSelectionModel().select(item.getModel());
+            dpCreateDateItem.setValue(convertToLocalDateViaInstant(item.getDateAdded()));
         }
-    }*/
+    }
+    public LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
+    return dateToConvert.toInstant()
+      .atZone(ZoneId.systemDefault())
+      .toLocalDate();
+}
 }

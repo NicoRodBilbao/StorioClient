@@ -21,8 +21,8 @@
           <TableColumn fx:id="tcId" prefWidth="56.79998779296875" resizable="false" text="ID" />
           <TableColumn fx:id="tcIssues" minWidth="0.0" prefWidth="229.60004425048828" resizable="false" text="Issues" />
             <TableColumn fx:id="tcModel" prefWidth="151.20001220703125" resizable="false" text="Model" />
-            <TableColumn fx:id="tcDate" prefWidth="148.79995727539062" resizable="false" text="Date" />
-            <TableColumn fx:id="tcPack" prefWidth="139.99993896484375" resizable="false" text="Pack" />
+            <TableColumn fx:id="tcDate" prefWidth="220.79998779296875" resizable="false" text="Date" />
+            <TableColumn fx:id="tcPack" prefWidth="68.00006103515625" resizable="false" text="Pack" />
         </columns>
       </TableView>
       <MenuBar fx:id="menuBar" layoutY="1.0" prefHeight="26.0" prefWidth="800.0">
