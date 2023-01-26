@@ -3,6 +3,7 @@ package entities;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
      *  Entity class Model has the following fields: 
@@ -16,6 +17,7 @@ import java.util.Objects;
      *
      * @author Nicolás Rodríguez
  */
+@XmlRootElement
 public class Model implements Serializable {
     /**
      * Identifier field for the Model. 

@@ -31,6 +31,7 @@ import javax.swing.table.TableColumn;
  *
  * @author 2dam
  */
+
 public class BookingManagementWindowController{
     private Stage stage;
     protected static final Logger LOGGER = Logger.getLogger(BookingManagementWindowController.class.getName());
