@@ -1,21 +1,21 @@
 package entities;
 
-import java.util.List;
+import javax.xml.bind.annotation.XmlRootElement;
 
-public class Client extends User {
+public class Admin extends User {
 
-	private List<Booking> bookings;
+	private Boolean isSuperAdmin = false;
 
-	public Client() {
+	public Admin() {
 		super();
 	}
 
-	public List<Booking> getBookings() {
-		return bookings;
+	public Boolean getIsSuperAdmin() {
+		return isSuperAdmin;
 	}
 
-	public void setBookings(List<Booking> bookings) {
-		this.bookings = bookings;
+	public void setIsSuperAdmin(Boolean isSuperAdmin) {
+		this.isSuperAdmin = isSuperAdmin;
 	}
 
 	@Override

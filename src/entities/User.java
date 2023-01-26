@@ -1,14 +1,132 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package entities;
 
-/**
- *
- * @author 2dam
- */
-public class User {
-    
+import java.io.Serializable;
+import java.util.Objects;
+
+public class User implements Serializable {
+
+	private Integer id;
+
+	private UserStatus status;
+
+	private String login;
+
+	private Integer phoneNumber;
+
+	private String fullName;
+
+	private String password;
+
+	private UserPrivilege privilege;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public UserStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(UserStatus status) {
+		this.status = status;
+	}
+
+	public String getLogin() {
+		return login;
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
+	}
+
+	public Integer getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(Integer phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public UserPrivilege getPrivilege() {
+		return privilege;
+	}
+
+	public void setPrivilege(UserPrivilege privilege) {
+		this.privilege = privilege;
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 3;
+		hash = 53 * hash + Objects.hashCode(this.id);
+		hash = 53 * hash + Objects.hashCode(this.status);
+		hash = 53 * hash + Objects.hashCode(this.login);
+		hash = 53 * hash + Objects.hashCode(this.phoneNumber);
+		hash = 53 * hash + Objects.hashCode(this.fullName);
+		hash = 53 * hash + Objects.hashCode(this.password);
+		hash = 53 * hash + Objects.hashCode(this.privilege);
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final User other = (User) obj;
+		if (!Objects.equals(this.login, other.login)) {
+			return false;
+		}
+		if (!Objects.equals(this.fullName, other.fullName)) {
+			return false;
+		}
+		if (!Objects.equals(this.password, other.password)) {
+			return false;
+		}
+		if (!Objects.equals(this.id, other.id)) {
+			return false;
+		}
+		if (this.status != other.status) {
+			return false;
+		}
+		if (!Objects.equals(this.phoneNumber, other.phoneNumber)) {
+			return false;
+		}
+		if (this.privilege != other.privilege) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "User{" + "id=" + id + ", status=" + status + ", login=" + login + ", phoneNumber=" + phoneNumber + ", fullName=" + fullName + ", password=" + password + ", privilege=" + privilege + '}';
+	}
+
 }

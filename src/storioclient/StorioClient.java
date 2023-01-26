@@ -5,6 +5,7 @@
  */
 package storioclient;
 
+import entities.User;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +24,7 @@ public class StorioClient extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
+        User user = new User(); 
          // Carga el document FXML y obtiene un objeto Parent
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/BookingManagementWindow.fxml"));
         // Crea una escena a partir del Parent
@@ -35,7 +37,7 @@ public class StorioClient extends Application {
         BookingManagementWindowController controller = (BookingManagementWindowController) loader.getController();
         // Establece la escena en el escensario (Stage) y la muestra
         controller.setStage(stage);
-        controller.initStage(root);
+        controller.initStage(root, user);
     }
 
     /**

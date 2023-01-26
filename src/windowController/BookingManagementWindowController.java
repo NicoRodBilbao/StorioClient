@@ -7,6 +7,7 @@ package windowController;
 
 import entities.Booking;
 import entities.BookingState;
+import entities.Client;
 import entities.Pack;
 import entities.PackState;
 import entities.User;
@@ -44,6 +45,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.WindowEvent;
 import javax.ws.rs.core.GenericType;
+import org.apache.velocity.runtime.directive.Foreach;
 
 /**
  *
@@ -86,15 +88,17 @@ public class BookingManagementWindowController {
     private TableView tvBooking;
     private ObservableList<Booking> bookingsData;
     private ObservableList<ArrayList> packs = FXCollections.observableArrayList();
+    private Client user;
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
 
     }
 
-    public void initStage(Parent root) {
+    public void initStage(Parent root, User user) {
         try {
             LOGGER.info("Initializing BookingController stage.");
+            this.user = (Client) user;
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
             primaryStage.setTitle("Booking Management");
@@ -112,16 +116,18 @@ public class BookingManagementWindowController {
             lblStartDate.setVisible(true);
             lblState.setVisible(true);
             cbState.getItems().addAll(BookingState.values());
-            
+
             lvPacks.setItems(packs);
 
-            //if(userPrivilege==Client || userPrivilege == Manager){
+            //if(user.getPrivilege().equals("USER") || user.getPrivilege().equals("MANAGER")){
             miItem.setDisable(true);
             miModel.setDisable(true);
             miPack.setDisable(true);
             miReport.setDisable(true);
             refreshTable();
             primaryStage.show();
+            //}else{
+            //}
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -144,6 +150,7 @@ Si se está en estado activado, todos los campos del formulario no están rellen
         try {
             if (btnDelete.isDisabled() && btnModify.isDisabled() && btnSearch.isDisabled()) {
                 Booking booking = null;
+                ObservableList<Pack> packs = lvPacks.getItems();
                 dpEndDate.setDisable(true);
                 dpStartDate.setDisable(true);
                 cbState.setDisable(true);
@@ -153,12 +160,8 @@ Si se está en estado activado, todos los campos del formulario no están rellen
                 btnModify.setDisable(false);
                 btnSearch.setDisable(false);
                 if(!taDescription.toString().trim().isEmpty() && dpEndDate.getValue() == null )
-                booking.setDescription(taDescription.toString());
-                booking.setEndDate(Date.valueOf(dpEndDate.getValue()));
-                booking.setStartDate(Date.valueOf(dpStartDate.getValue()));
-                booking.setPacks(lvPacks.getItems());
-                booking.setState(BookingState.PENDING);
-                bookingable.createBooking_XML(booking);
+                bookingable.createBooking_XML(new Booking(0, user, packs, Date.valueOf(dpStartDate.getValue()), Date.valueOf(dpEndDate.getValue()), taDescription.toString(), BookingState.PENDING ));
+                refreshTable();
             } else {
                 btnDelete.setDisable(true);
                 btnModify.setDisable(true);
@@ -167,7 +170,7 @@ Si se está en estado activado, todos los campos del formulario no están rellen
                 dpEndDate.setDisable(false);
                 dpStartDate.setDisable(false);
                 lvPacks.setDisable(false);
-                cbState.setDisable(false);
+                cbState.setDisable(true);
                 
 
             }
