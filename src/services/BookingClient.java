@@ -5,6 +5,7 @@
  */
 package services;
 
+import interfaces.Bookingable;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -22,7 +23,7 @@ import javax.ws.rs.client.WebTarget;
  *
  * @author 2dam
  */
-public class BookingClient {
+public class BookingClient implements Bookingable{
 
     private WebTarget webTarget;
     private Client client;

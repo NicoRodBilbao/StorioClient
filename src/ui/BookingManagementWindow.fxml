@@ -16,96 +16,92 @@
 <?import javafx.scene.text.Font?>
 
 <Pane id="paneWindow" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <Pane id="paneForm" layoutX="10.0" prefHeight="247.0" prefWidth="781.0" style="-fx-background-color: #333333;">
-         <children>
-            <TextField fx:id="tfID" layoutX="30.0" layoutY="88.0" />
-            <ComboBox fx:id="cbState" layoutX="453.0" layoutY="88.0" prefWidth="150.0" />
-            <Label fx:id="lblId" layoutX="30.0" layoutY="61.0" prefHeight="25.0" prefWidth="149.0" text="ID" textFill="WHITE">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <Button fx:id="btnCreate" layoutX="641.0" layoutY="73.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="113.0" style="-fx-background-color: #FE0001;" text="Create" textFill="WHITE">
-               <font>
-                  <Font name="Calibri Bold" size="14.0" />
-               </font>
-            </Button>
-            <Button fx:id="btnDelete" layoutX="641.0" layoutY="191.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="113.0" style="-fx-background-color: #FE0001;" text="Delete" textFill="WHITE">
-               <font>
-                  <Font name="Calibri Bold" size="14.0" />
-               </font>
-            </Button>
-            <Button fx:id="btnModify" layoutX="641.0" layoutY="152.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="113.0" style="-fx-background-color: #FE0001;" text="Modify" textFill="WHITE">
-               <font>
-                  <Font name="Calibri Bold" size="14.0" />
-               </font>
-            </Button>
-            <Label fx:id="lblDescription" layoutX="30.0" layoutY="153.0" prefHeight="25.0" prefWidth="149.0" text="DESCRIPTION" textFill="#fffdfd">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <Label fx:id="lblStartDate" layoutX="249.0" layoutY="61.0" prefHeight="25.0" prefWidth="149.0" text="START DATE" textFill="WHITE">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <Label fx:id="lblEndDate" layoutX="249.0" layoutY="160.0" prefHeight="25.0" prefWidth="149.0" text="END DATE" textFill="WHITE">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <Label fx:id="lblState" layoutX="454.0" layoutY="61.0" prefHeight="25.0" prefWidth="149.0" text="STATE" textFill="WHITE">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <Label fx:id="lblPacks" layoutX="454.0" layoutY="114.0" prefHeight="25.0" prefWidth="149.0" text="PACKS" textFill="WHITE">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <TextArea fx:id="taDescription" layoutX="30.0" layoutY="186.0" prefHeight="25.0" prefWidth="186.0" />
-            <Button id="btnSearch" fx:id="btnSearch" layoutX="641.0" layoutY="113.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="113.0" style="-fx-background-color: #FE0001;" text="Search" textFill="WHITE">
-               <font>
-                  <Font name="Calibri Bold" size="14.0" />
-               </font>
-            </Button>
-            <DatePicker fx:id="dpStartDate" layoutX="249.0" layoutY="88.0" />
-            <DatePicker fx:id="dpEndDate" layoutX="249.0" layoutY="192.0" />
-            <MenuBar fx:id="menuBar" layoutX="-9.0" layoutY="1.0" prefHeight="27.0" prefWidth="800.0">
-               <menus>
-                  <Menu fx:id="mnGoBack" mnemonicParsing="false" text="Go Back" />
-                  <Menu fx:id="mnGoTo" mnemonicParsing="false" text="Go To">
-                     <items>
+    <children>
+        <TextField fx:id="tfID" layoutX="30.0" layoutY="88.0" />
+        <ComboBox fx:id="cbState" layoutX="453.0" layoutY="88.0" prefWidth="150.0" />
+        <Label fx:id="lblId" layoutX="30.0" layoutY="61.0" prefHeight="25.0" prefWidth="149.0" text="ID" textFill="WHITE">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Label>
+        <Button fx:id="btnCreate" layoutX="641.0" layoutY="73.0" mnemonicParsing="false" onAction="handleCreateButtonAction" prefHeight="25.0" prefWidth="113.0" style="-fx-background-color: #FE0001;" text="Create" textFill="WHITE">
+            <font>
+                <Font name="Calibri Bold" size="14.0" />
+            </font>
+        </Button>
+        <Button fx:id="btnDelete" layoutX="641.0" layoutY="191.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="113.0" style="-fx-background-color: #FE0001;" text="Delete" textFill="WHITE">
+            <font>
+                <Font name="Calibri Bold" size="14.0" />
+            </font>
+        </Button>
+        <Button fx:id="btnModify" layoutX="641.0" layoutY="152.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="113.0" style="-fx-background-color: #FE0001;" text="Modify" textFill="WHITE">
+            <font>
+                <Font name="Calibri Bold" size="14.0" />
+            </font>
+        </Button>
+        <Label fx:id="lblDescription" layoutX="30.0" layoutY="153.0" prefHeight="25.0" prefWidth="149.0" text="DESCRIPTION" textFill="#fffdfd">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Label>
+        <Label fx:id="lblStartDate" layoutX="249.0" layoutY="61.0" prefHeight="25.0" prefWidth="149.0" text="START DATE" textFill="WHITE">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Label>
+        <Label fx:id="lblEndDate" layoutX="249.0" layoutY="160.0" prefHeight="25.0" prefWidth="149.0" text="END DATE" textFill="WHITE">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Label>
+        <Label fx:id="lblState" layoutX="454.0" layoutY="61.0" prefHeight="25.0" prefWidth="149.0" text="STATE" textFill="WHITE">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Label>
+        <Label fx:id="lblPacks" layoutX="454.0" layoutY="114.0" prefHeight="25.0" prefWidth="149.0" text="PACKS" textFill="WHITE">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Label>
+        <TextArea fx:id="taDescription" layoutX="30.0" layoutY="186.0" prefHeight="25.0" prefWidth="186.0" />
+        <Button id="btnSearch" fx:id="btnSearch" layoutX="641.0" layoutY="113.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="113.0" style="-fx-background-color: #FE0001;" text="Search" textFill="WHITE">
+            <font>
+                <Font name="Calibri Bold" size="14.0" />
+            </font>
+        </Button>
+        <DatePicker fx:id="dpStartDate" layoutX="249.0" layoutY="88.0" />
+        <DatePicker fx:id="dpEndDate" layoutX="249.0" layoutY="192.0" />
+        <MenuBar fx:id="menuBar" layoutX="-9.0" layoutY="1.0" prefHeight="27.0" prefWidth="800.0">
+            <menus>
+                <Menu fx:id="mnGoBack" mnemonicParsing="false" text="Go Back" />
+                <Menu fx:id="mnGoTo" mnemonicParsing="false" text="Go To">
+                    <items>
                         <MenuItem fx:id="miReport" mnemonicParsing="false" text="Report Management" />
                         <MenuItem fx:id="miUser" mnemonicParsing="false" text="User Management" />
                         <MenuItem fx:id="miModel" mnemonicParsing="false" text="Model Management" />
                         <MenuItem fx:id="miItem" mnemonicParsing="false" text="Item Management" />
                         <MenuItem fx:id="miPack" mnemonicParsing="false" text="Pack Management" />
-                     </items>
-                  </Menu>
-                  <Menu fx:id="mnDarkMode" mnemonicParsing="false" text="Dark Mode" />
-                  <Menu fx:id="mnHelp" mnemonicParsing="false" text="Help">
-                    <items>
-                      <MenuItem mnemonicParsing="false" text="Action 1" />
                     </items>
-                  </Menu>
-               </menus>
-            </MenuBar>
-            <ListView fx:id="lvPacks" layoutX="453.0" layoutY="137.0" prefHeight="81.0" prefWidth="150.0" />
-         </children>
-      </Pane>
-      <TableView fx:id="tvBooking" layoutX="10.0" layoutY="257.0" prefHeight="329.0" prefWidth="781.0" style="-fx-background-color: #333333; -fx-border-color: WHITE;">
-        <columns>
-          <TableColumn fx:id="tcId" prefWidth="44.80001926422119" text="Id" />
-          <TableColumn fx:id="tcDescription" prefWidth="189.5999755859375" text="Description" />
-            <TableColumn fx:id="tcStartDate" prefWidth="126.4000244140625" text="Start Date" />
-            <TableColumn fx:id="tcEndDate" prefWidth="136.79998779296875" text="End Date" />
-            <TableColumn fx:id="tcState" prefWidth="131.20001220703125" text="State" />
-            <TableColumn fx:id="tcPacks" prefWidth="167.20001220703125" text="Packs" />
-        </columns>
-      </TableView>
-   </children>
+                </Menu>
+                <Menu fx:id="mnDarkMode" mnemonicParsing="false" text="Dark Mode" />
+                <Menu fx:id="mnHelp" mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Action 1" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <ListView fx:id="lvPacks" layoutX="453.0" layoutY="137.0" prefHeight="81.0" prefWidth="150.0" />
+        <TableView fx:id="tvBooking" layoutX="10.0" layoutY="257.0" prefHeight="329.0" prefWidth="781.0" style="-fx-background-color: #333333; -fx-border-color: WHITE;">
+            <columns>
+                <TableColumn fx:id="tcId" prefWidth="44.80001926422119" text="Id" />
+                <TableColumn fx:id="tcDescription" prefWidth="189.5999755859375" text="Description" />
+                <TableColumn fx:id="tcStartDate" prefWidth="126.4000244140625" text="Start Date" />
+                <TableColumn fx:id="tcEndDate" prefWidth="136.79998779296875" text="End Date" />
+                <TableColumn fx:id="tcState" prefWidth="131.20001220703125" text="State" />
+                <TableColumn fx:id="tcPacks" prefWidth="167.20001220703125" text="Packs" />
+            </columns>
+        </TableView>
+    </children>
 </Pane>
