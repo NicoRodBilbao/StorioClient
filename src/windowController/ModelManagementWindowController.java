@@ -107,6 +107,7 @@ public class ModelManagementWindowController {
     Stage primaryStage;
     Modelable modelable = ModelFactory.getAccessUser();
 
+    
     public void setStage(Parent root) {
         LOGGER.info("Initializing ModelManagementWindow.");
 
@@ -134,16 +135,19 @@ public class ModelManagementWindowController {
 
     public void createModel(ActionEvent event) {
         LOGGER.info("Initializing creation.");
-        if (!btnCreate.isDisabled() & !btnModify.isDisabled()) {
+        if (!btnCreate.isDisabled() & !btnModify.isDisabled()) { // Change to creation mode
             LOGGER.info("Create enabled state.");
-            changeMode(1);
-        } else {
+            changeMode(1); // Change to creation mode
+        } else { // Create and change to default mode
             LOGGER.info("Create disabled state.");
-            LOGGER.info("Creating model.");
-            modelable.createModel(new Model(0, tfModel.getText(), tfDescription.getText(), tfNote.getText(), null));
-            
-            refreshTable();
-            changeMode(0);
+            if (!(tfModel.getText().trim().equals("") || tfModel.getText().trim().equals("") || tfNote.getText().trim().equals(""))) { // All fields have content
+                LOGGER.info("Creating model.");
+                modelable.createModel(new Model(0, tfModel.getText(), tfDescription.getText(), tfNote.getText(), null));
+            } else {// Some fields are empty
+                new Alert(Alert.AlertType.ERROR, "Fill the all the fields before trying to create.", ButtonType.OK).showAndWait();
+            }
+            refreshTable(); // Change to creation mode
+            changeMode(0); // Some fields are empty
         }
         LOGGER.info("Finishing creation.");
     }
@@ -152,15 +156,19 @@ public class ModelManagementWindowController {
         LOGGER.info("Initializing update.");
         if (!btnCreate.isDisabled() & !btnModify.isDisabled()) {
             LOGGER.info("Update enabled state.");
-            changeMode(2);
-        } else {
+            changeMode(2); // Change to update mode
+        } else { // Update and change to default mode
             LOGGER.info("Update disabled state.");
 
-            LOGGER.info("Updating model.");
-            modelable.updateModel(new Model(Integer.parseInt(tfId.getText()), tfModel.getText(), tfDescription.getText(), tfNote.getText(), null));
-            
-            refreshTable();
-            changeMode(0);
+            if (!tfId.getText().trim().equals("")) { // There's a Model selected
+                LOGGER.info("Updating model.");
+                modelable.updateModel(new Model(Integer.parseInt(tfId.getText()), tfModel.getText(), tfDescription.getText(), tfNote.getText(), null));
+            } else { // There's not a Model selected
+                new Alert(Alert.AlertType.ERROR, "Please select a model from the table before trying to update.", ButtonType.OK).showAndWait();
+            }
+
+            refreshTable(); // Refresh the table
+            changeMode(0); // Change to default mode
         }
         LOGGER.info("Finishing update.");
     }
@@ -169,23 +177,22 @@ public class ModelManagementWindowController {
         LOGGER.info("Initializing search.");
         if (!btnDelete.isDisabled() & !btnModify.isDisabled()) { // Change to search mode
             LOGGER.info("Search enabled state.");
-            changeMode(3);
+            changeMode(3); // Change to search mode
         } else { // Find and change to default mode
-            if (tfId.getText().trim().isEmpty()) {
+            if (tfId.getText().trim().isEmpty()) {  // Unfindable
                 new Alert(Alert.AlertType.ERROR, "Fill the ID field before trying to search.", ButtonType.OK).showAndWait();
-                refreshTable();
-            } else {
+                refreshTable(); // Refresh table content
+            } else { 
                 LOGGER.log(Level.INFO, "Searching for Model {0}.", tfId.getText());
                 List<Model> listModel = modelable.findModelById(Integer.parseInt(tfId.getText()));
-                if (listModel.get(0) == null) {
+                if (listModel.get(0) == null) { // Model wasn't found
                     new Alert(Alert.AlertType.ERROR, "Could not find the Model.", ButtonType.OK).showAndWait();
-                    refreshTable();
-                } else {
+                    refreshTable(); // Refresh table content
+                } else { // Set the found item on the table
                     tvModel.setItems(FXCollections.observableArrayList(listModel));
                 }
-                changeMode(0); // Change to default mode
             }
-
+            changeMode(0); // Change to default mode
         }
         LOGGER.info("Finishing search.");
     }
@@ -273,7 +280,7 @@ public class ModelManagementWindowController {
                 enableButtons();
                 emptyFields();
                 LOGGER.info("Refreshing table.");
-                
+
                 break;
             case 1: // Creation mode
                 LOGGER.info("Enabling and disabling fields.");
