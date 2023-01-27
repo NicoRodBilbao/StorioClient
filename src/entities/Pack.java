@@ -21,18 +21,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "pack", schema = "storio")
 @XmlRootElement*/
 public class Pack implements Serializable {
-   /* @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String description;
-    @OneToMany(mappedBy = "pack")
     private List<Item> items;
-    @Enumerated(EnumType.STRING)
     private PackState state;
-    @Enumerated(EnumType.STRING)
     private PackType type;
-    @ManyToMany
-    @JoinTable(name = "booking_pack", schema = "storio")
     private List<Booking> bookings;
 
     public Pack() {
@@ -121,6 +114,6 @@ public class Pack implements Serializable {
     @Override
     public String toString() {
         return "Pack{" + "id=" + id + ", description=" + description + ", items=" + items + ", state=" + state + ", type=" + type + ", bookings=" + bookings + '}';
-    }*/
+    }
 
 }

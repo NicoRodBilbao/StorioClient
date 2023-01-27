@@ -3,15 +3,19 @@ package windowController;
 import entities.Model;
 import factories.ModelFactory;
 import interfaces.Modelable;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -29,6 +33,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -42,6 +48,7 @@ import javafx.stage.WindowEvent;
  */
 public class ModelManagementWindowController {
 
+    private Label label;
     // FXML Attributes
     @FXML
     private TableView tvModel;
@@ -72,7 +79,7 @@ public class ModelManagementWindowController {
     @FXML
     private MenuItem miItem;
     @FXML
-    private MenuItem miUser;
+    private MenuItem miUser, miGoBack;
     @FXML
     private Menu mnDarkMode;
     @FXML
@@ -107,7 +114,6 @@ public class ModelManagementWindowController {
     Stage primaryStage;
     Modelable modelable = ModelFactory.getAccessModel();
 
-    
     public void setStage(Parent root) {
         LOGGER.info("Initializing ModelManagementWindow.");
 
@@ -116,7 +122,53 @@ public class ModelManagementWindowController {
         primaryStage.setTitle("Model Management");
         primaryStage.setResizable(false);
         primaryStage.setOnShowing(this::windowShowing);
-        tvModel.setOnMouseClicked(event -> this.handleOnMouseClick(event));
+        primaryStage.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent event) -> { // Adds an event handler that records every time the escape key is pressed
+            if (KeyCode.ESCAPE == event.getCode()) {
+                Optional<ButtonType> action = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to exit Storio?").showAndWait();
+                if (action.get() == ButtonType.OK) {
+                    primaryStage.close();
+                }
+            }
+        });
+        tvModel.setOnMouseClicked(event -> this.handleOnMouseClickTable(event));
+        miItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                primaryStage.close();
+                Stage stage = new Stage();
+                // Carga el document FXML y obtiene un objeto Parent
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/ItemManagementWindow.fxml"));
+                // Crea una escena a partir del Parent
+                Parent root = null;
+                try {
+                    root = (Parent) loader.load();
+                } catch (IOException ex) {
+                    Logger.getLogger(ModelManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                ItemManagementWindowController controller = (ItemManagementWindowController) loader.getController();
+                // Establece la escena en el escensario (Stage) y la muestra
+                controller.setStage(stage);
+                controller.setStage(root);
+            }
+        });
+        miGoBack.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                primaryStage.close();
+                Stage stage = new Stage();
+                // Carga el document FXML y obtiene un objeto Parent
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/LogInWindow.fxml"));
+                // Crea una escena a partir del Parent
+                Parent root = null;
+                try {
+                    root = (Parent) loader.load();
+                } catch (IOException ex) {
+                    Logger.getLogger(ItemManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                LogInWindowController controller = (LogInWindowController) loader.getController();
+                // Establece la escena en el escensario (Stage) y la muestra
+                controller.setStage(stage);
+                controller.initStage(root);
+            }
+        });        
         refreshTable();
         primaryStage.show();
     }
@@ -182,7 +234,7 @@ public class ModelManagementWindowController {
             if (tfId.getText().trim().isEmpty()) {  // Unfindable
                 new Alert(Alert.AlertType.ERROR, "Fill the ID field before trying to search.", ButtonType.OK).showAndWait();
                 refreshTable(); // Refresh table content
-            } else { 
+            } else {
                 LOGGER.log(Level.INFO, "Searching for Model {0}.", tfId.getText());
                 List<Model> listModel = modelable.findModelById(Integer.parseInt(tfId.getText()));
                 if (listModel.get(0) == null) { // Model wasn't found
@@ -326,7 +378,7 @@ public class ModelManagementWindowController {
         }
     }
 
-    private void handleOnMouseClick(MouseEvent event) {
+    private void handleOnMouseClickTable(MouseEvent event) {
         TableView tv = (TableView) event.getSource();
         if (tv.getSelectionModel().getSelectedItem() != null) { // Checks if the table view is selected
             ObservableList selectedItems = tv.getSelectionModel().getSelectedItems();
@@ -341,5 +393,23 @@ public class ModelManagementWindowController {
             tfModel.setText(model.getModel());
             tfNote.setText(model.getNotes());
         }
+    }
+
+    private void handleOnMouseClickMenu(MouseEvent event) {
+        primaryStage.close();
+        Stage stage = new Stage();
+        // Carga el document FXML y obtiene un objeto Parent
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/ItemManagementWindow.fxml"));
+        // Crea una escena a partir del Parent
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(ModelManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        ItemManagementWindowController controller = (ItemManagementWindowController) loader.getController();
+        // Establece la escena en el escensario (Stage) y la muestra
+        controller.setStage(stage);
+        controller.setStage(root);
     }
 }
