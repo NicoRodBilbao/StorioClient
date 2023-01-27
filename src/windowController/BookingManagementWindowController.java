@@ -9,7 +9,6 @@ import entities.Booking;
 import entities.BookingState;
 import entities.Client;
 import entities.Pack;
-import entities.PackState;
 import entities.User;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
@@ -31,9 +30,7 @@ import javafx.stage.Stage;
 import javafx.scene.control.TableColumn;
 import factories.BookingFactory;
 import interfaces.Bookingable;
-import java.sql.Date;
-import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import javafx.application.Platform;
@@ -45,7 +42,16 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.WindowEvent;
 import javax.ws.rs.core.GenericType;
-import org.apache.velocity.runtime.directive.Foreach;
+import factories.PackFactory;
+import interfaces.Packable;
+import java.time.Instant;
+import java.time.ZoneId;
+import javafx.scene.paint.Color;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 
 /**
  *
@@ -79,7 +85,7 @@ public class BookingManagementWindowController {
     @FXML
     private Menu mnDarkMode, mnHelp, mnGoTo, mnGoBack;
     @FXML
-    private MenuItem miReport, miPack, miModel, miItem, miUser, miUsersManual, miPrintReport;
+    private MenuItem miReport, miPack, miModel, miItem, miUser, miUsersManual, miPrintReport, miChangeMode;
     @FXML
     private ListView lvPacks;
     @FXML
@@ -87,18 +93,13 @@ public class BookingManagementWindowController {
     @FXML
     private TableView tvBooking;
     private ObservableList<Booking> bookingsData;
-    private ObservableList<ArrayList> packs = FXCollections.observableArrayList();
-    private Client user;
-
-    @FXML
-    private void handleButtonAction(ActionEvent event) {
-
-    }
+    private ObservableList<Pack> packs = null;
+    private Packable packManager = PackFactory.getAccessPack();
+    private Client user = new Client();
 
     public void initStage(Parent root, User user) {
         try {
             LOGGER.info("Initializing BookingController stage.");
-            this.user = (Client) user;
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
             primaryStage.setTitle("Booking Management");
@@ -113,17 +114,23 @@ public class BookingManagementWindowController {
             lblEndDate.setVisible(true);
             lblId.setVisible(true);
             lblPacks.setVisible(true);
+            //packs = FXCollections.observableArrayList(packManager.getAllPacks());
+            //lvPacks.setItems( packs);
             lblStartDate.setVisible(true);
             lblState.setVisible(true);
             cbState.getItems().addAll(BookingState.values());
-
-            lvPacks.setItems(packs);
-
+            miChangeMode.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    darkMode();
+                }
+            });
             //if(user.getPrivilege().equals("USER") || user.getPrivilege().equals("MANAGER")){
             miItem.setDisable(true);
             miModel.setDisable(true);
             miPack.setDisable(true);
             miReport.setDisable(true);
+
             refreshTable();
             primaryStage.show();
             //}else{
@@ -135,18 +142,12 @@ public class BookingManagementWindowController {
 
     @FXML
     /**
-     * This method validates the TextfFields and executes signUp() if ir works
-     * propperly.
+     * This method validates all the fields in the window and if they're okay,
+     * creates a new Booking. propperly.
      *
      * @param event The observed event
      */
     private void handleCreateButtonAction(ActionEvent event) {
-        /*Al pulsar este botón se alternará entre dos estados:
-Estado Activado: Los Button btnSearch, btnModify y btnDelete se deshabilitarán. Se habilitarán los DatePickers(dpStartDate y dpEndDate), el ComboBox(cbState), la ListView(lvPacks) y el TextArea(taDescription).
-Estado Desactivado: Los Button btnSearch, btnModify y btnDelete se habilitarán. Se deshabilitarán los DatePickers(dpStartDate y dpEndDate), elComboBox(cbState),la ListView(lvPacks) y el TextArea(taDescription).
-Cuando pase de estado activado a estado desactivado se recogerán los datos introducidos y se llamará al método createBooking().
-Si se está en estado activado, todos los campos del formulario no están rellenos y se clicka btnCreate se pasa a modo deshabilitado sin llamar a ningún método.
-         */
         try {
             if (btnDelete.isDisabled() && btnModify.isDisabled() && btnSearch.isDisabled()) {
                 Booking booking = null;
@@ -159,8 +160,14 @@ Si se está en estado activado, todos los campos del formulario no están rellen
                 btnDelete.setDisable(false);
                 btnModify.setDisable(false);
                 btnSearch.setDisable(false);
-                if(!taDescription.toString().trim().isEmpty() && dpEndDate.getValue() == null )
-                bookingable.createBooking_XML(new Booking(0, user, packs, Date.valueOf(dpStartDate.getValue()), Date.valueOf(dpEndDate.getValue()), taDescription.toString(), BookingState.PENDING ));
+                if (!taDescription.toString().trim().isEmpty() && dpEndDate.getValue() != null && dpStartDate.getValue() != null) {
+                    bookingable.createBooking_XML(new Booking(user,Date.from(dpStartDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()) , Date.from(dpEndDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()), taDescription.getText(), BookingState.PENDING));
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Correctly created", ButtonType.OK);
+                    alert.showAndWait();
+                }
+                taDescription.setText("");
+                dpEndDate.setValue(null);
+                dpStartDate.setValue(null);
                 refreshTable();
             } else {
                 btnDelete.setDisable(true);
@@ -171,7 +178,6 @@ Si se está en estado activado, todos los campos del formulario no están rellen
                 dpStartDate.setDisable(false);
                 lvPacks.setDisable(false);
                 cbState.setDisable(true);
-                
 
             }
         } catch (Exception e) {
@@ -217,8 +223,68 @@ Si se está en estado activado, todos los campos del formulario no están rellen
         );
         List<Booking> bookings = bookingable.findAll_XML(new GenericType<List<Booking>>() {
         });
-        //bookingsData = FXCollections.observableArrayList(bookingable.findAll_XML(new GenericType<List<Booking>>(){}));
+
         tvBooking.setItems(FXCollections.observableArrayList(bookings));
+    }
+
+    /**
+     * This method changes atributes of the window in order to change the visual
+     * theme.
+     */
+    private void darkMode() {
+
+        if (lblDescription.getTextFill().equals(Color.WHITE)) {
+            // Los background de los tfUsername, tfEmail, tfFullName, tfPassword y tfRepeatPassword cambiar�n de #3A3A3A a #DDDDDD
+            tfId.setBackground(new Background(new BackgroundFill(Color.valueOf("#DDDDDD"), CornerRadii.EMPTY, Insets.EMPTY)));
+            taDescription.setBackground(new Background(new BackgroundFill(Color.valueOf("#DDDDDD"), CornerRadii.EMPTY, Insets.EMPTY)));
+            dpEndDate.setBackground(new Background(new BackgroundFill(Color.valueOf("#DDDDDD"), CornerRadii.EMPTY, Insets.EMPTY)));
+            dpStartDate.setBackground(new Background(new BackgroundFill(Color.valueOf("#DDDDDD"), CornerRadii.EMPTY, Insets.EMPTY)));
+            lvPacks.setBackground(new Background(new BackgroundFill(Color.valueOf("#DDDDDD"), CornerRadii.EMPTY, Insets.EMPTY)));
+            // y la letra pasar� de WHITE a BLACK.
+            tfId.setStyle("-fx-text-inner-color:BLACK");
+            taDescription.setStyle("-fx-text-inner-color:BLACK");
+            dpEndDate.setStyle("-fx-text-inner-color:BLACK");
+            dpStartDate.setStyle("-fx-text-inner-color:BLACK");
+            lvPacks.setStyle("-fx-text-inner-color:BLACK");
+
+            // Las label lblUsername, lblEmail, lblFullName, lblPassword, 
+            //lblRepeatPassword cambiaran de color de la letra de WHITE a BLACK.
+            lblEndDate.setTextFill(Color.BLACK);
+            lblDescription.setTextFill(Color.BLACK);
+            lblId.setTextFill(Color.BLACK);
+            lblPacks.setTextFill(Color.BLACK);
+            lblStartDate.setTextFill(Color.BLACK);
+            lblState.setTextFill(Color.BLACK);
+            // El fondo cambia el color de #333333, a WHITE.
+            paneWindow.setStyle("-fx-background-color:WHITE");
+            paneForm.setStyle("-fx-background-color:WHITE");
+        } // En caso de que la imagen sea sol_light_mode, se cambiar� por el sol_dark_mode.
+        else {
+            // En caso contrario, los background de los tfUsername, tfEmail, tfFullName, tfPassword y tfRepeatPassword cambiar�n de #DDDDDD a #3A3A3A
+            tfId.setBackground(new Background(new BackgroundFill(Color.valueOf("#3A3A3A"), CornerRadii.EMPTY, Insets.EMPTY)));
+            taDescription.setBackground(new Background(new BackgroundFill(Color.valueOf("#3A3A3A"), CornerRadii.EMPTY, Insets.EMPTY)));
+            dpEndDate.setBackground(new Background(new BackgroundFill(Color.valueOf("#3A3A3A"), CornerRadii.EMPTY, Insets.EMPTY)));
+            dpStartDate.setBackground(new Background(new BackgroundFill(Color.valueOf("#3A3A3A"), CornerRadii.EMPTY, Insets.EMPTY)));
+            lvPacks.setBackground(new Background(new BackgroundFill(Color.valueOf("#3A3A3A"), CornerRadii.EMPTY, Insets.EMPTY)));
+            // la letra pasar� de BLACK a WHITE
+            tfId.setStyle("-fx-text-inner-color:WHITE");
+            taDescription.setStyle("-fx-text-inner-color:WHITE");
+            dpStartDate.setStyle("-fx-text-inner-color:WHITE");
+            dpEndDate.setStyle("-fx-text-inner-color:WHITE");
+            lvPacks.setStyle("-fx-text-inner-color:WHITE");
+            // En caso contrario, las label lblUsername, lblEmail, lblFullName, 
+            // lblPassword, lblRepeatPassword cambiaran de color de la letra de BLACK a WHITE.
+            lblDescription.setTextFill(Color.WHITE);
+            lblEndDate.setTextFill(Color.WHITE);
+            lblId.setTextFill(Color.WHITE);
+            lblPacks.setTextFill(Color.WHITE);
+            lblStartDate.setTextFill(Color.WHITE);
+            lblState.setTextFill(Color.WHITE);
+            // En caso contrario, pasar� a #333333
+            paneForm.setStyle("-fx-background-color:#333333");
+            paneWindow.setStyle("-fx-background-color:#333333");
+          
+        }
     }
 
 }

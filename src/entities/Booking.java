@@ -17,10 +17,8 @@ public class Booking implements Serializable {
     private String description;
     private BookingState state;
 
-    public Booking(Integer id, Client user, List<Pack> packs, Date startDate, Date endDate, String description, BookingState state) {
-        this.id = id;
+    public Booking(Client user, Date startDate, Date endDate, String description, BookingState state) {
         this.user = user;
-        this.packs = packs;
         this.startDate = startDate;
         this.endDate = endDate;
         this.description = description;

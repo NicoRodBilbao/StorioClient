@@ -83,7 +83,7 @@ public class BookingClient implements Bookingable{
         webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();
     }
 
-    public <T> T findPacksForBooking_XML(Class<T> responseType, String id) throws ClientErrorException {
+    public <T> T findPacksForBooking_XML(GenericType<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findPacksForBooking/{0}", new Object[]{id}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);

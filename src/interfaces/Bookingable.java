@@ -36,7 +36,7 @@ public interface Bookingable {
 
     public void removeBooking(String id) throws ClientErrorException;
 
-    public <T> T findPacksForBooking_XML(Class<T> responseType, String id) throws ClientErrorException;
+    public <T> T findPacksForBooking_XML(GenericType<T> responseType, String id) throws ClientErrorException;
 
     public <T> T findPacksForBooking_JSON(Class<T> responseType, String id) throws ClientErrorException;
 
