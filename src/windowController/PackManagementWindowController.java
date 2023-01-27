@@ -126,20 +126,12 @@ public class PackManagementWindowController {
 
             stage.setResizable(false);
 
-            /**
-             * Set all combobox disabled
-             */
             cbTypePack.setDisable(true);
             cbStatePack.setDisable(true);
 
-            /**
-             * Set datePicker disabled
-             */
             dpCreateDatePack.setDisable(true);
 
-            /**
-             * Set buttons disabled if the user profile is User
-             */
+            
 //            if (user.getPrivilege().equals(UserPrivilege.USER)) {
 //                btnCreatePack.setDisable(true);
 //                btnModifyPack.setDisable(true);
