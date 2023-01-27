@@ -1,6 +1,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -15,6 +16,7 @@ public class Pack implements Serializable {
 
     private Integer id;
     private String description;
+    private Date datePackAdd;
     private List<Item> items;
     private PackState state;
     private PackType type;
@@ -22,6 +24,16 @@ public class Pack implements Serializable {
 
     public Pack() {
         super();
+    }
+
+    public Pack(Integer id, String description, Date datePackAdd, List<Item> items, PackState state, PackType type, List<Booking> bookings) {
+        this.id = id;
+        this.description = description;
+        this.datePackAdd = datePackAdd;
+        this.items = items;
+        this.state = state;
+        this.type = type;
+        this.bookings = bookings;
     }
 
     public Integer getId() {
@@ -64,6 +76,14 @@ public class Pack implements Serializable {
         this.type = type;
     }
 
+    public Date getDatePackAdd() {
+        return datePackAdd;
+    }
+
+    public void setDatePackAdd(Date datePackAdd) {
+        this.datePackAdd = datePackAdd;
+    }
+
     public List<Booking> getBookings() {
         return bookings;
     }
@@ -75,12 +95,13 @@ public class Pack implements Serializable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 59 * hash + Objects.hashCode(this.id);
-        hash = 59 * hash + Objects.hashCode(this.description);
-        hash = 59 * hash + Objects.hashCode(this.items);
-        hash = 59 * hash + Objects.hashCode(this.state);
-        hash = 59 * hash + Objects.hashCode(this.type);
-        hash = 59 * hash + Objects.hashCode(this.bookings);
+        hash = 83 * hash + Objects.hashCode(this.id);
+        hash = 83 * hash + Objects.hashCode(this.description);
+        hash = 83 * hash + Objects.hashCode(this.datePackAdd);
+        hash = 83 * hash + Objects.hashCode(this.items);
+        hash = 83 * hash + Objects.hashCode(this.state);
+        hash = 83 * hash + Objects.hashCode(this.type);
+        hash = 83 * hash + Objects.hashCode(this.bookings);
         return hash;
     }
 
@@ -96,12 +117,33 @@ public class Pack implements Serializable {
             return false;
         }
         final Pack other = (Pack) obj;
+        if (!Objects.equals(this.description, other.description)) {
+            return false;
+        }
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.datePackAdd, other.datePackAdd)) {
+            return false;
+        }
+        if (!Objects.equals(this.items, other.items)) {
+            return false;
+        }
+        if (this.state != other.state) {
+            return false;
+        }
+        if (this.type != other.type) {
+            return false;
+        }
+        if (!Objects.equals(this.bookings, other.bookings)) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public String toString() {
-        return "Pack{" + "id=" + id + ", description=" + description + ", items=" + items + ", state=" + state + ", type=" + type + ", bookings=" + bookings + '}';
+        return "Pack{" + "id=" + id + ", description=" + description + ", datePackAdd=" + datePackAdd + ", items=" + items + ", state=" + state + ", type=" + type + ", bookings=" + bookings + '}';
     }
 
 }

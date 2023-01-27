@@ -117,7 +117,7 @@ public class PackManagerImplementation implements Packable {
     public List<Pack> getPacksByState(String packState) throws PackManagerException {
         List<Pack> packs = null;
         try{
-            packs = packWebClient.findPacksByType_XML(new GenericType<List<Pack>>() {}, packState);
+            packs = packWebClient.findPacksByState_XML(new GenericType<List<Pack>>() {}, packState);
         }catch(Exception ex){
             LOGGER.log(Level.SEVERE,
                     "PackManager: search packs by Type",
