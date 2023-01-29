@@ -41,17 +41,22 @@
 				<Menu fx:id="mnGoBack1" mnemonicParsing="false" text="Help" />
 			</menus>
 		</MenuBar>
-		<Button fx:id="btnCreateUser" layoutX="660.0" layoutY="70.0" mnemonicParsing="false" onAction="#handleSignUpButtonAction" prefHeight="33.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Create" textFill="WHITE">
+		<Button fx:id="btnCreateUser" layoutX="660.0" layoutY="70.0" mnemonicParsing="false" onAction="#handleBtnCreateUserAction" prefHeight="33.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Create" textFill="WHITE">
 			<font>
 				<Font name="Calibri Bold" size="17.0" />
 			</font>
 		</Button>
-		<Button fx:id="btnSearchUser" layoutX="660.0" layoutY="116.0" mnemonicParsing="false" onAction="#handleSignUpButtonAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Search" textFill="WHITE">
+		<Button fx:id="btnSearchUser" layoutX="660.0" layoutY="116.0" mnemonicParsing="false" onAction="#handleBtnSearchUserAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Search" textFill="WHITE">
 			<font>
 				<Font name="Calibri Bold" size="17.0" />
 			</font>
 		</Button>
-		<Button fx:id="btnDeleteUser" layoutX="660.0" layoutY="225.0" mnemonicParsing="false" onAction="#handleSignUpButtonAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Delete" textFill="WHITE">
+		<Button fx:id="btnDeleteUser" layoutX="660.0" layoutY="225.0" mnemonicParsing="false" onAction="#handleBtnDeleteUserAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Delete" textFill="WHITE">
+			<font>
+				<Font name="Calibri Bold" size="17.0" />
+			</font>
+		</Button>
+		<Button fx:id="btnChangePassword" layoutX="660.0" layoutY="225.0" mnemonicParsing="false" onAction="#handleBtnChangePasswordAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Delete" textFill="WHITE">
 			<font>
 				<Font name="Calibri Bold" size="17.0" />
 			</font>
@@ -62,7 +67,7 @@
 				<Font size="18.0" />
 			</font>
 		</Label>
-		<Button fx:id="btnModifyUser" layoutX="660.0" layoutY="169.0" mnemonicParsing="false" onAction="#handleSignUpButtonAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Modify" textFill="WHITE">
+		<Button fx:id="btnModifyUser" layoutX="660.0" layoutY="169.0" mnemonicParsing="false" onAction="#handleBtnModifyUserAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Modify" textFill="WHITE">
 			<font>
 				<Font name="Calibri Bold" size="17.0" />
 			</font>

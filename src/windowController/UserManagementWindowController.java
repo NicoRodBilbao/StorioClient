@@ -4,9 +4,10 @@ import entities.User;
 import entities.UserPrivilege;
 import factories.UserFactory;
 import interfaces.Userable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -63,6 +64,9 @@ public class UserManagementWindowController {
 
 	@FXML
 	private Button btnDeleteUser;
+
+	@FXML
+	private Button btnChangePassword;
 
 	@FXML
 	private Button btnModifyUser;
@@ -162,23 +166,142 @@ public class UserManagementWindowController {
 
     private void windowShowing(WindowEvent event) {
         tfIdUser.requestFocus();
+		// Set field status depending on the type of logged in user
         tfIdUser.setDisable(true);
 		cbStatusUser.setDisable(true);
-		// Set field status depending on the type of logged in user
 		tfFullNameUser.setDisable(!isAdmin);
 		tfEmailUser.setDisable(!isAdmin);
 		tfLoginUser.setDisable(!isAdmin);
 		tfPhoneNumberUser.setDisable(!isAdmin);
         btnCreateUser.setDisable(isAdmin);
-        btnModifyUser.setDisable(isAdmin);
+        btnModifyUser.setDisable(true);
         btnSearchUser.setDisable(isAdmin);
         btnDeleteUser.setDisable(isAdmin);
+
+		// Button visibility
+		btnCreateUser.setVisible(isAdmin);
+		btnSearchUser.setVisible(isAdmin);
+		btnDeleteUser.setVisible(isAdmin);
+		btnChangePassword.setVisible(!isAdmin);
+
+		// managed?
+		btnCreateUser.setManaged(isAdmin);
+		btnSearchUser.setManaged(isAdmin);
+		btnDeleteUser.setManaged(isAdmin);
+		btnChangePassword.setManaged(!isAdmin);
     }
 
 	private void handleOnMouseClick(MouseEvent event) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
+	public void handleBtnSearchUserAction(MouseEvent event) {
+		if(btnSearchUser.isDisabled())
+			btnSearchUser.setDisable(false);
+		else
+			btnSearchUser.setDisable(true);
+		if(btnSearchUser.isDisabled()) {
+			btnCreateUser.setDisable(false);
+			btnModifyUser.setDisable(false);
+			btnDeleteUser.setDisable(false);
+			cbStatusUser.setDisable(true);
+			tfEmailUser.setDisable(true);
+			tfFullNameUser.setDisable(true);
+			tfLoginUser.setDisable(true);
+			tfPhoneNumberUser.setDisable(true);
+		} else {
+			btnCreateUser.setDisable(true);
+			btnModifyUser.setDisable(true);
+			btnDeleteUser.setDisable(true);
+			cbStatusUser.setDisable(false);
+			tfEmailUser.setDisable(false);
+			tfFullNameUser.setDisable(false);
+			tfLoginUser.setDisable(false);
+			tfPhoneNumberUser.setDisable(false);
+		}
+	}
+
+	public void handleBtnCreateUserAction(MouseEvent event) {
+		if(btnCreateUser.isDisabled())
+			btnCreateUser.setDisable(false);
+		else
+			btnCreateUser.setDisable(true);
+		if(btnCreateUser.isDisabled()) {
+			btnSearchUser.setDisable(false);
+			btnModifyUser.setDisable(false);
+			btnDeleteUser.setDisable(false);
+			cbStatusUser.setDisable(true);
+			tfEmailUser.setDisable(true);
+			tfFullNameUser.setDisable(true);
+			tfLoginUser.setDisable(true);
+			tfPhoneNumberUser.setDisable(true);
+		} else {
+			btnSearchUser.setDisable(true);
+			btnModifyUser.setDisable(true);
+			btnDeleteUser.setDisable(true);
+			cbStatusUser.setDisable(false);
+			tfEmailUser.setDisable(false);
+			tfFullNameUser.setDisable(false);
+			tfLoginUser.setDisable(false);
+			tfPhoneNumberUser.setDisable(false);
+		}
+	}
+
+	public void handleBtnDeleteUserAction(MouseEvent event) {
+		if(btnDeleteUser.isDisabled())
+			btnDeleteUser.setDisable(false);
+		else
+			btnDeleteUser.setDisable(true);
+	}
+
+	public void handleBtnModifyUserAction(MouseEvent event) {
+		if(btnModifyUser.isDisabled())
+			btnModifyUser.setDisable(false);
+		else
+			btnModifyUser.setDisable(true);
+	}
+
+	public void handleBtnChangePasswordAction(MouseEvent event) {
+		if(btnChangePassword.isDisabled())
+			btnChangePassword.setDisable(false);
+		else
+			btnChangePassword.setDisable(true);
+	}
+
+	private void findUser() {
+		// TODO
+		// find user by login or id and put the
+		//user on the table
+		if(!tfIdUser.getText().equals("") && tfLoginUser.getText().equals("")) {
+			// find
+		} else {
+			// ERROR only one field needs to be informed
+		}
+		User result = null;
+		result = userable.findUserById(Integer.parseInt(tfIdUser.getText()));
+		result = userable.findUserByLogin(tfLoginUser.getText());
+	}
+
+	private void createUser() {
+		// TODO
+		// create a new user
+	}
+
+	private void deleteUser() {
+		// TODO
+		// delete de selected user
+	}
+
+	private void ModifyUser() {
+		// TODO
+		// modify the selected user with data from
+		//the informed fields
+	}
+
+	/**
+	 * Refresh the table data if the logged in user is an admin
+	 * or refresh the single user data (fields) if the user is not an admin
+	 */
 	private void refreshData() {
 		if(isAdmin) {
 			LOGGER.info("Retrieving user list data");
@@ -196,6 +319,10 @@ public class UserManagementWindowController {
 		}
 	}
 
+	/**
+	 * Initialize the window passing it the data it requires
+	 * @param u The logged in user
+	 */
 	public void initData(User u) {
 		LOGGER.info("Loading inital data");
 		if(u == null)
