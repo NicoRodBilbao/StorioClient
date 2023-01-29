@@ -46,9 +46,11 @@ import factories.PackFactory;
 import interfaces.Packable;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.logging.Level;
 import javafx.scene.paint.Color;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -130,6 +132,7 @@ public class BookingManagementWindowController {
             miModel.setDisable(true);
             miPack.setDisable(true);
             miReport.setDisable(true);
+            tvBooking.setOnMouseClicked(event -> this.handleOnMouseClick(event));
 
             refreshTable();
             primaryStage.show();
@@ -155,7 +158,7 @@ public class BookingManagementWindowController {
                 dpEndDate.setDisable(true);
                 dpStartDate.setDisable(true);
                 cbState.setDisable(true);
-                lvPacks.setDisable(true);
+                lvPacks.setDisable(false);
                 taDescription.setDisable(true);
                 btnDelete.setDisable(false);
                 btnModify.setDisable(false);
@@ -184,6 +187,146 @@ public class BookingManagementWindowController {
 
         }
     }
+    @FXML
+    /**
+     * This method validates all the fields in the window and if they're okay,
+     * creates a new Booking. propperly.
+     *
+     * @param event The observed event
+     */
+    private void handleModifyButtonAction(ActionEvent event) {
+        try {
+            if (btnDelete.isDisabled() && btnCreate.isDisabled() && btnSearch.isDisabled()) {
+                Booking booking = null;
+                ObservableList<Pack> packs = lvPacks.getItems();
+                dpEndDate.setDisable(true);
+                dpStartDate.setDisable(true);
+                cbState.setDisable(true);
+                lvPacks.setDisable(false);
+                tfId.setDisable(false);
+                taDescription.setDisable(true);
+                btnDelete.setDisable(false);
+                btnModify.setDisable(false);
+                btnSearch.setDisable(false);
+                if (!taDescription.toString().trim().isEmpty() && dpEndDate.getValue() != null && dpStartDate.getValue() != null) {
+                    bookingable.updateBooking_XML(new Booking(Integer.parseInt(tfId.toString()), user,Date.from(dpStartDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()) , Date.from(dpEndDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()), taDescription.getText(), BookingState.PENDING/*, packs*/));
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Correctly created", ButtonType.OK);
+                    alert.showAndWait();
+                }
+                taDescription.setText("");
+                dpEndDate.setValue(null);
+                dpStartDate.setValue(null);
+                refreshTable();
+            } else {
+                btnDelete.setDisable(true);
+                btnModify.setDisable(true);
+                btnSearch.setDisable(true);
+                taDescription.setDisable(false);
+                dpEndDate.setDisable(false);
+                dpStartDate.setDisable(false);
+                lvPacks.setDisable(false);
+                cbState.setDisable(true);
+
+            }
+        } catch (Exception e) {
+
+        }
+    }
+    @FXML
+    /**
+     * This method validates all the fields in the window and if they're okay,
+     * creates a new Booking. propperly.
+     *
+     * @param event The observed event
+     */
+    private void handleDeleteButtonAction(ActionEvent event) {
+        try {
+            if (btnModify.isDisabled() && btnCreate.isDisabled() && btnSearch.isDisabled()) {
+                Booking booking = null;
+                ObservableList<Pack> packs = lvPacks.getItems();
+                dpEndDate.setDisable(true);
+                dpStartDate.setDisable(true);
+                cbState.setDisable(true);
+                lvPacks.setDisable(false);
+                tfId.setDisable(true);
+                taDescription.setDisable(true);
+                btnDelete.setDisable(true);
+                btnModify.setDisable(true);
+                btnSearch.setDisable(true);
+                if (!taDescription.toString().trim().isEmpty() && dpEndDate.getValue() != null && dpStartDate.getValue() != null) {
+                    bookingable.removeBooking(tfId.toString());
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Correctly deleted", ButtonType.OK);
+                    alert.showAndWait();
+                }
+                tfId.setText("");
+                taDescription.setText("");
+                dpEndDate.setValue(null);
+                dpStartDate.setValue(null);
+                lvPacks.setItems(null);
+                refreshTable();
+            } else {
+                btnDelete.setDisable(true);
+                btnModify.setDisable(true);
+                btnSearch.setDisable(true);
+                taDescription.setDisable(false);
+                dpEndDate.setDisable(false);
+                dpStartDate.setDisable(false);
+                lvPacks.setDisable(false);
+                cbState.setDisable(true);
+
+            }
+        } catch (Exception e) {
+
+        }
+    }
+    @FXML
+    /**
+     * This method validates all the fields in the window and if they're okay,
+     * creates a new Booking. propperly.
+     *
+     * @param event The observed event
+     */
+    private void handleSearchButtonAction(ActionEvent event) {
+        try {
+            if (btnModify.isDisabled() && btnCreate.isDisabled() && btnDelete.isDisabled()) {
+                Booking booking = null;
+                ObservableList<Pack> packs = lvPacks.getItems();
+                dpEndDate.setDisable(true);
+                dpStartDate.setDisable(true);
+                cbState.setDisable(true);
+                lvPacks.setDisable(false);
+                tfId.setDisable(false);
+                taDescription.setDisable(true);
+                btnDelete.setDisable(true);
+                btnModify.setDisable(true);
+                btnSearch.setDisable(true);
+                if (!tfId.toString().trim().equals(null) ) {
+                    bookingable.find_XML(Booking.class, tfId.toString());
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Correctly deleted", ButtonType.OK);
+                    alert.showAndWait();
+                }
+                tfId.setText("");
+                taDescription.setText("");
+                dpEndDate.setValue(null);
+                dpStartDate.setValue(null);
+                lvPacks.setItems(null);
+                refreshTable();
+            } else {
+                btnDelete.setDisable(true);
+                btnModify.setDisable(true);
+                btnSearch.setDisable(true);
+                taDescription.setDisable(false);
+                dpEndDate.setDisable(false);
+                dpStartDate.setDisable(false);
+                lvPacks.setDisable(false);
+                cbState.setDisable(true);
+
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
 
     public void setStage(Stage stage) {
         this.primaryStage = stage;
@@ -284,6 +427,23 @@ public class BookingManagementWindowController {
             paneForm.setStyle("-fx-background-color:#333333");
             paneWindow.setStyle("-fx-background-color:#333333");
           
+        }
+    }
+    private void handleOnMouseClick(MouseEvent event) {
+        TableView tv = (TableView) event.getSource();
+        if (tv.getSelectionModel().getSelectedItem() != null) { // Checks if the table view is selected
+            ObservableList selectedItems = tv.getSelectionModel().getSelectedItems();
+            Booking booking = (Booking) selectedItems.get(0);
+
+            LOGGER.log(Level.INFO, "Selecting table row: {0}", booking.getId());
+            tfId.setText(String.valueOf(booking.getId()));
+            taDescription.setText(booking.getDescription());
+            dpEndDate.setValue(booking.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            dpStartDate.setValue(booking.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            cbState.setValue(booking.getState());
+            List<Pack> packs = booking.getPacks();
+            lvPacks.setItems(FXCollections.observableArrayList(packs));
+            
         }
     }
 

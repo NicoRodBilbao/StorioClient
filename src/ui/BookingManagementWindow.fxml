@@ -29,12 +29,12 @@
                 <Font name="Calibri Bold" size="14.0" />
             </font>
         </Button>
-        <Button fx:id="btnDelete" layoutX="641.0" layoutY="191.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="113.0" style="-fx-background-color: #FE0001;" text="Delete" textFill="WHITE">
+        <Button fx:id="btnDelete" layoutX="641.0" layoutY="191.0" mnemonicParsing="false" onAction="@handleDeleteButtonAction" prefHeight="25.0" prefWidth="113.0" style="-fx-background-color: #FE0001;" text="Delete" textFill="WHITE">
             <font>
                 <Font name="Calibri Bold" size="14.0" />
             </font>
         </Button>
-        <Button fx:id="btnModify" layoutX="641.0" layoutY="152.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="113.0" style="-fx-background-color: #FE0001;" text="Modify" textFill="WHITE">
+        <Button fx:id="btnModify" layoutX="641.0" layoutY="152.0" mnemonicParsing="false" onAction="#handleModifyButtonAction" prefHeight="25.0" prefWidth="113.0" style="-fx-background-color: #FE0001;" text="Modify" textFill="WHITE">
             <font>
                 <Font name="Calibri Bold" size="14.0" />
             </font>
@@ -65,7 +65,7 @@
             </font>
         </Label>
         <TextArea fx:id="taDescription" layoutX="11.0" layoutY="186.0" prefHeight="25.0" prefWidth="186.0" />
-        <Button id="btnSearch" fx:id="btnSearch" layoutX="641.0" layoutY="113.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="113.0" style="-fx-background-color: #FE0001;" text="Search" textFill="WHITE">
+        <Button id="btnSearch" fx:id="btnSearch" layoutX="641.0" layoutY="113.0" mnemonicParsing="false" onAction="#handleSearchButtonAction" prefHeight="25.0" prefWidth="113.0" style="-fx-background-color: #FE0001;" text="Search" textFill="WHITE">
             <font>
                 <Font name="Calibri Bold" size="14.0" />
             </font>
