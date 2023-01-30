@@ -89,7 +89,7 @@ public class PackManagerImplementation implements Packable {
         try{
             LOGGER.info("UsersManager: Finding all users from REST service (XML).");
             //Ask webClient for all users' data.
-            users = packWebClient.findAll_XML(new GenericType<List<Pack>>() {});
+            users = packWebClient.findAll_JSON(new GenericType<List<Pack>>() {});
         }catch(Exception ex){
             LOGGER.log(Level.SEVERE,
                     "UsersManager: Exception finding all users, {0}",
