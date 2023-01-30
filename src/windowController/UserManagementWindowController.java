@@ -6,8 +6,6 @@ import factories.UserFactory;
 import interfaces.Userable;
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -165,7 +163,6 @@ public class UserManagementWindowController {
     }
 
     private void windowShowing(WindowEvent event) {
-        tfIdUser.requestFocus();
 		// Set field status depending on the type of logged in user
         tfIdUser.setDisable(true);
 		cbStatusUser.setDisable(true);
@@ -189,6 +186,10 @@ public class UserManagementWindowController {
 		btnSearchUser.setManaged(isAdmin);
 		btnDeleteUser.setManaged(isAdmin);
 		btnChangePassword.setManaged(!isAdmin);
+
+		// table
+		tvTableUser.setDisable(!isAdmin);
+		tvTableUser.setManaged(isAdmin);
     }
 
 	private void handleOnMouseClick(MouseEvent event) {
