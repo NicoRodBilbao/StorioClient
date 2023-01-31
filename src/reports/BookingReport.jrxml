@@ -1,29 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE jasperReport PUBLIC "-//JasperReports//DTD JasperReport//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
-
-<jasperReport name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-    <background>
-        <band/>
-    </background>
-    <title>
-        <band height="79"/>
-    </title>
-    <pageHeader>
-        <band height="35"/>
-    </pageHeader>
-    <columnHeader>
-        <band height="61"/>
-    </columnHeader>
-    <detail>
-        <band height="125"/>
-    </detail>
-    <columnFooter>
-        <band height="45"/>
-    </columnFooter>
-    <pageFooter>
-        <band height="54"/>
-    </pageFooter>
-    <summary>
-        <band height="42"/>
-    </summary>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a0d15624-2434-4ea0-9dab-0fe8bcc53b7e">
+	<property name="ireport.zoom" value="1.6105100000000008"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+        <field name="id" class="java.lang.Integer"/>
+        <field name="description" class="java.lang.String"/>
+        <field name="startDate" class="java.util.Date"/>
+        <field name="endDate" class="java.util.Date"/>
+        <field name="state" class="java.lang.Object"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="228" y="27" width="100" height="20" uuid="6dd96792-45ae-4ec8-8047-77028ef0d98e"/>
+				<text><![CDATA[Bookings Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="12" width="51" height="20" uuid="06dccc57-6f79-4792-90a6-71034b335567"/>
+				<text><![CDATA[Id]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="68" y="12" width="100" height="20" uuid="9abe4bd9-e93a-4863-a1b4-88fddad1bd22"/>
+				<text><![CDATA[Description]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="182" y="12" width="100" height="20" uuid="214c5325-dce7-46db-a35a-fc5045309a72"/>
+				<text><![CDATA[Start Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="296" y="12" width="100" height="20" uuid="cb127987-e8fb-4372-9de5-a1c31ee78d39"/>
+				<text><![CDATA[End Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="407" y="12" width="53" height="20" uuid="45edffa0-0da0-4a00-a293-b74b985b5b33"/>
+				<text><![CDATA[State]]></text>
+			</staticText>
+			
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="61" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="17" width="51" height="20" uuid="cdc1138c-e66c-414f-aef1-0c21bea6d388"/>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="68" y="17" width="100" height="20" uuid="49235484-fdb7-410f-9c12-b2a27901a0d8"/>
+				<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="182" y="17" width="100" height="20" uuid="2b0cb652-3692-457b-9248-36ecd230f8d9"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd-MM-yyyy").format($F{startDate})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="296" y="17" width="81" height="20" uuid="285c039f-ab31-47fb-8dfd-0b5f2ed0df85"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd-MM-yyyy").format($F{endDate})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="407" y="17" width="67" height="20" uuid="bad5f42e-6ddf-4cc5-99f4-31d8ebfda766"/>
+				<textFieldExpression><![CDATA[$F{state}]]></textFieldExpression>
+			</textField>
+			
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
 </jasperReport>

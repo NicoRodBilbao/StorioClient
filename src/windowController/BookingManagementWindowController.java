@@ -51,6 +51,9 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import javafx.scene.paint.Color;
 import javafx.event.EventHandler;
@@ -60,6 +63,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -138,6 +148,12 @@ public class BookingManagementWindowController {
                     darkMode();
                 }
             });
+            miPrintReport.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    printReport();
+                }
+            });
             //if(user.getPrivilege().equals("USER") || user.getPrivilege().equals("MANAGER")){
             miItem.setDisable(true);
             miModel.setDisable(true);
@@ -150,7 +166,7 @@ public class BookingManagementWindowController {
             //}else{
             //}
         } catch (Exception e) {
-            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
         }
     }
 
@@ -173,12 +189,12 @@ public class BookingManagementWindowController {
                 btnDelete.setDisable(false);
                 btnModify.setDisable(false);
                 btnSearch.setDisable(false);
-                if (!taDescription.toString().trim().isEmpty() && dpEndDate.getValue() != null && dpStartDate.getValue() != null && dpEndDate.getValue().isAfter(dpStartDate.getValue())) {
+                if (!taDescription.getText().trim().isEmpty() && dpEndDate.getValue() != null && dpStartDate.getValue() != null && dpEndDate.getValue().isAfter(dpStartDate.getValue())) {
                     bookingable.createBooking_XML(new Booking(user, packs, Date.from(dpStartDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()), Date.from(dpEndDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()), taDescription.getText(), BookingState.PENDING));
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "Correctly created", ButtonType.OK);
                     alert.showAndWait();
                 } else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong, please check that are the fields are filled and that the start date is before the end date.", ButtonType.OK);
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong, please check that all the fields are filled and that the start date is before the end date.", ButtonType.OK);
                     alert.showAndWait();
                 }
                 taDescription.setText("");
@@ -223,6 +239,9 @@ public class BookingManagementWindowController {
                 if (booking.getEndDate().after(booking.getStartDate())) {
                     bookingable.updateBooking_XML(booking);
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "Correctly modified", ButtonType.OK);
+                    alert.showAndWait();
+                }else{
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong, please check that at least one field is changed and that the start date is before that the end date.", ButtonType.OK);
                     alert.showAndWait();
                 }
 
@@ -498,6 +517,33 @@ public class BookingManagementWindowController {
             //lvPacks.setItems(FXCollections.observableArrayList(packs));
 
         }
+    }
+    
+    private void printReport(){
+       try {
+            LOGGER.info("Beginning printing action...");
+            JasperReport report=JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/BookingReport.jrxml"));
+            //Data for the report: a collection of UserBean passed as a JRDataSource 
+            //implementation 
+            JRBeanCollectionDataSource dataItems= new JRBeanCollectionDataSource((Collection<Booking>)this.tvBooking.getItems());
+            //Map of parameter to be passed to the report
+            Map<String,Object> parameters=new HashMap<>();
+            //Fill report with data
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report,parameters,dataItems);
+            //Create and show the report window. The second parameter false value makes 
+            //report window not to close app.
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint,false);
+            jasperViewer.setVisible(true);
+           // jasperViewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            //If there is an error show message and
+            //log it.
+            LOGGER.log(Level.SEVERE,
+                        "UI GestionUsuariosController: Error printing report: {0}",
+                        ex.getMessage());
+        }
+        
     }
 
 }
