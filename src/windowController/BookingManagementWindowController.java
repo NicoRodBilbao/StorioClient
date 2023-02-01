@@ -47,6 +47,7 @@ import javafx.stage.WindowEvent;
 import javax.ws.rs.core.GenericType;
 import factories.PackFactory;
 import interfaces.Packable;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -55,21 +56,22 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.paint.Color;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.TableCell;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
-import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
+import storioclient.StorioClient;
 
 /**
  *
@@ -82,9 +84,8 @@ public class BookingManagementWindowController {
 
     private BookingFactory bookingFactory = new BookingFactory();
     private Bookingable bookingable = bookingFactory.getAccessBooking();
-    private Pane paneWindow;
     @FXML
-    private Pane paneForm;
+    private Pane paneWindow;
     @FXML
     private TextField tfId;
     @FXML
@@ -114,11 +115,12 @@ public class BookingManagementWindowController {
     private Packable packManager = PackFactory.getAccessPack();
     private List<Item> items = null;
     private Pack pack = new Pack(1, "siu", Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()), items, PackState.AVAILABLE, PackType.TRIPOD, bookingsData);
-    private Client user = new Client();
+    private User user = null;
+    private Client client = new Client();
     @FXML
     private MenuBar menuBar;
 
-    public void initStage(Parent root, User user) {
+    public void initStage(Parent root) {
         try {
             LOGGER.info("Initializing BookingController stage.");
             Scene scene = new Scene(root);
@@ -135,30 +137,18 @@ public class BookingManagementWindowController {
             lblEndDate.setVisible(true);
             lblId.setVisible(true);
             lblPacks.setVisible(true);
-            //packs.add(0, pack);
-            //lvPacks.setItems(FXCollections.observableList(packs));
-            //packs = FXCollections.observableArrayList(packManager.getAllPacks());
-            //lvPacks.setItems( packs);
+            /*if(user.getPrivilege().toString().equals("MANAGER") || user.getPrivilege().toString().equals("USER")){
+                miItem.setDisable(true);
+                miModel.setDisable(true);
+                miPack.setDisable(true);
+                miReport.setDisable(true);
+                this.user = (Client) user;
+            }*/
+            packs = FXCollections.observableArrayList(packManager.getAllPacks());
+            lvPacks.setItems(FXCollections.observableArrayList(packs));
             lblStartDate.setVisible(true);
             lblState.setVisible(true);
             cbState.getItems().addAll(BookingState.values());
-            miChangeMode.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    darkMode();
-                }
-            });
-            miPrintReport.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    printReport();
-                }
-            });
-            //if(user.getPrivilege().equals("USER") || user.getPrivilege().equals("MANAGER")){
-            miItem.setDisable(true);
-            miModel.setDisable(true);
-            miPack.setDisable(true);
-            miReport.setDisable(true);
             tvBooking.setOnMouseClicked(event -> this.handleOnMouseClick(event));
 
             refreshTable();
@@ -167,6 +157,7 @@ public class BookingManagementWindowController {
             //}
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
+            e.printStackTrace();
         }
     }
 
@@ -189,8 +180,8 @@ public class BookingManagementWindowController {
                 btnDelete.setDisable(false);
                 btnModify.setDisable(false);
                 btnSearch.setDisable(false);
-                if (!taDescription.getText().trim().isEmpty() && dpEndDate.getValue() != null && dpStartDate.getValue() != null && dpEndDate.getValue().isAfter(dpStartDate.getValue())) {
-                    bookingable.createBooking_XML(new Booking(user, packs, Date.from(dpStartDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()), Date.from(dpEndDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()), taDescription.getText(), BookingState.PENDING));
+                if (!taDescription.getText().trim().isEmpty() || dpEndDate.getValue() != null || dpStartDate.getValue() != null && dpEndDate.getValue().isAfter(dpStartDate.getValue())) {
+                    bookingable.createBooking_XML(new Booking(client, packs, Date.from(dpStartDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()), Date.from(dpEndDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()), taDescription.getText(), BookingState.PENDING));
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "Correctly created", ButtonType.OK);
                     alert.showAndWait();
                 } else {
@@ -236,12 +227,17 @@ public class BookingManagementWindowController {
                 booking.setState((BookingState) cbState.getSelectionModel().getSelectedItem());
 
                 btnSearch.setDisable(false);
-                if (booking.getEndDate().after(booking.getStartDate())) {
-                    bookingable.updateBooking_XML(booking);
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Correctly modified", ButtonType.OK);
-                    alert.showAndWait();
-                }else{
-                    Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong, please check that at least one field is changed and that the start date is before that the end date.", ButtonType.OK);
+                if (!booking.getEndDate().equals(Date.from(dpEndDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant())) || !booking.getStartDate().equals(Date.from(dpStartDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant())) || !booking.getDescription().equals(taDescription.getText()) || !booking.getState().equals(cbState.getSelectionModel().getSelectedItem())) {
+                    if (booking.getEndDate().after(booking.getStartDate())) {
+                        bookingable.updateBooking_XML(booking);
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Correctly modified", ButtonType.OK);
+                        alert.showAndWait();
+                    } else {
+                        Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong, please check that the start date is before that the end date.", ButtonType.OK);
+                        alert.showAndWait();
+                    }
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong, please check that at least one field is changed.", ButtonType.OK);
                     alert.showAndWait();
                 }
 
@@ -250,6 +246,9 @@ public class BookingManagementWindowController {
                 dpStartDate.setValue(null);
                 lvPacks.setItems(null);
                 cbState.setItems(null);
+                btnCreate.setDisable(false);
+                btnDelete.setDisable(false);
+                btnSearch.setDisable(false);
                 refreshTable();
             } else {
                 btnDelete.setDisable(true);
@@ -365,9 +364,7 @@ public class BookingManagementWindowController {
         }
     }
 
-    public void setStage(Stage stage) {
-        this.primaryStage = stage;
-    }
+
 
     public void closeWindow(WindowEvent event) {
 
@@ -441,11 +438,12 @@ public class BookingManagementWindowController {
         tvBooking.setItems(FXCollections.observableArrayList(bookings));
     }
 
+    @FXML
     /**
      * This method changes atributes of the window in order to change the visual
      * theme.
      */
-    private void darkMode() {
+    private void handleButtondarkMode(ActionEvent event) {
 
         if (lblDescription.getTextFill().equals(Color.WHITE)) {
             // Los background de los tfUsername, tfEmail, tfFullName, tfPassword y tfRepeatPassword cambiar�n de #3A3A3A a #DDDDDD
@@ -471,7 +469,6 @@ public class BookingManagementWindowController {
             lblState.setTextFill(Color.BLACK);
             // El fondo cambia el color de #333333, a WHITE.
             paneWindow.setStyle("-fx-background-color:WHITE");
-            paneForm.setStyle("-fx-background-color:WHITE");
         } // En caso de que la imagen sea sol_light_mode, se cambiar� por el sol_dark_mode.
         else {
             // En caso contrario, los background de los tfUsername, tfEmail, tfFullName, tfPassword y tfRepeatPassword cambiar�n de #DDDDDD a #3A3A3A
@@ -495,7 +492,6 @@ public class BookingManagementWindowController {
             lblStartDate.setTextFill(Color.WHITE);
             lblState.setTextFill(Color.WHITE);
             // En caso contrario, pasar� a #333333
-            paneForm.setStyle("-fx-background-color:#333333");
             paneWindow.setStyle("-fx-background-color:#333333");
 
         }
@@ -518,32 +514,55 @@ public class BookingManagementWindowController {
 
         }
     }
-    
-    private void printReport(){
-       try {
+
+    @FXML
+    private void handleButtonprintReport(ActionEvent event) {
+        try {
             LOGGER.info("Beginning printing action...");
-            JasperReport report=JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/BookingReport.jrxml"));
+            JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/BookingReport.jrxml"));
             //Data for the report: a collection of UserBean passed as a JRDataSource 
             //implementation 
-            JRBeanCollectionDataSource dataItems= new JRBeanCollectionDataSource((Collection<Booking>)this.tvBooking.getItems());
+            JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<Booking>) this.tvBooking.getItems());
             //Map of parameter to be passed to the report
-            Map<String,Object> parameters=new HashMap<>();
+            Map<String, Object> parameters = new HashMap<>();
             //Fill report with data
-            JasperPrint jasperPrint = JasperFillManager.fillReport(report,parameters,dataItems);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
             //Create and show the report window. The second parameter false value makes 
             //report window not to close app.
-            JasperViewer jasperViewer = new JasperViewer(jasperPrint,false);
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setVisible(true);
-           // jasperViewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+            // jasperViewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         } catch (Exception ex) {
             ex.printStackTrace();
             //If there is an error show message and
             //log it.
             LOGGER.log(Level.SEVERE,
-                        "UI GestionUsuariosController: Error printing report: {0}",
-                        ex.getMessage());
+                    "UI GestionUsuariosController: Error printing report: {0}",
+                    ex.getMessage());
         }
-        
-    }
 
+    }
+    @FXML
+    private void handleButtonGoToPack(MouseEvent event) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/PackManagementWindow.fxml"));
+        // Crea una escena a partir del Parent
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(StorioClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        BookingManagementWindowController controller = (BookingManagementWindowController) loader.getController();
+        // Establece la escena en el escensario (Stage) y la muestra
+        controller.setStage(primaryStage);
+        controller.setUser(user);
+        controller.initStage(root);
+    }
+    
+    public void setUser(User user){
+        this.user = user;
+    }
+        public void setStage(Stage stage) {
+        this.primaryStage = stage;
+    }
 }

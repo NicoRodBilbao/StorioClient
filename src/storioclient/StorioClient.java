@@ -36,7 +36,8 @@ public class StorioClient extends Application {
         BookingManagementWindowController controller = (BookingManagementWindowController) loader.getController();
         // Establece la escena en el escensario (Stage) y la muestra
         controller.setStage(stage);
-        controller.initStage(root, user);
+        controller.setUser(user);
+        controller.initStage(root);
     }
 
     /**

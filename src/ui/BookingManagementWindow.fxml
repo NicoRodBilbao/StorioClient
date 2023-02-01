@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane id="paneWindow" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="windowController.BookingManagementWindowController">
+<Pane fx:id="paneWindow" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="windowController.BookingManagementWindowController">
     <children>
         <TextField fx:id="tfId" layoutX="14.0" layoutY="88.0" />
         <ComboBox fx:id="cbState" layoutX="453.0" layoutY="88.0" prefWidth="150.0" />
@@ -81,17 +81,17 @@
                         <MenuItem fx:id="miUser" mnemonicParsing="false" text="User Management" />
                         <MenuItem fx:id="miModel" mnemonicParsing="false" text="Model Management" />
                         <MenuItem fx:id="miItem" mnemonicParsing="false" text="Item Management" />
-                        <MenuItem fx:id="miPack" mnemonicParsing="false" text="Pack Management" />
+                        <MenuItem fx:id="miPack" mnemonicParsing="false" onAction="#handleButtonGoToPack" text="Pack Management" />
                     </items>
                 </Menu>
                 <Menu fx:id="mnDarkMode" mnemonicParsing="false" text="Dark Mode">
                <items>
-                  <MenuItem fx:id="miChangeMode" mnemonicParsing="false" text="ChangeMode" />
+                  <MenuItem fx:id="miChangeMode" mnemonicParsing="false" onAction="#handleButtondarkMode" text="ChangeMode" />
                </items></Menu>
                 <Menu fx:id="mnHelp" mnemonicParsing="false" text="Help">
                     <items>
                         <MenuItem fx:id="miUsersManual" mnemonicParsing="false" text="User's manual" />
-                  <MenuItem fx:id="miPrintReport" mnemonicParsing="false" text="Print report" />
+                  <MenuItem fx:id="miPrintReport" mnemonicParsing="false" onAction="#handleButtonprintReport" text="Print report" />
                     </items>
                 </Menu>
             </menus>
