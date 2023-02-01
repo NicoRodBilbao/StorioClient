@@ -10,9 +10,8 @@ import entities.UserPrivilege;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import windowController.UserManagementWindowController;
+import windowController.*;
 
 /**
  *
@@ -22,22 +21,13 @@ public class StorioClient extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/UserManagementWindow.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/LogInWindow.fxml"));
 		Parent root = (Parent) loader.load();
-		UserManagementWindowController umController =
-				(UserManagementWindowController) loader.getController();
+		LogInWindowController loginController =
+				(LogInWindowController) loader.getController();
 
-		User user = new User();
-
-		user.setId(1);
-  		user.setLogin("joana");
-  		user.setFullName("Joana Renteria");
-		user.setPrivilege(UserPrivilege.USER);
-
-		user.setPrivilege(UserPrivilege.USER);
-		umController.initData(user);
-		umController.setStage(stage);
-		umController.initStage(root);
+		loginController.setStage(stage);
+		loginController.initStage(root);
     }
 
     /**
