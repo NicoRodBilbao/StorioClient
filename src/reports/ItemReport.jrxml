@@ -3,31 +3,87 @@
 	<property name="ireport.zoom" value="1.771561000000001"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-                  <field name="ID" class="java.lang.Integer"/>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="model.model" class="java.lang.String"/>
+	<field name="dateAdded" class="java.util.Date"/>
+	<field name="issues" class="java.lang.String"/>
+	<field name="pack.id" class="java.lang.Integer"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="79" splitType="Stretch"/>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="228" y="29" width="120" height="40" uuid="cd611ae9-79b1-4770-8f7c-0641e0bd4978"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Items Report]]></text>
+			</staticText>
+		</band>
 	</title>
 	<pageHeader>
 		<band height="35" splitType="Stretch">
-			<textField>
-				<reportElement x="0" y="0" width="100" height="20" uuid="a0ef1cd3-80ee-4b1b-a76f-28f2e9c7d529"/>
-				<textFieldExpression><![CDATA[ID]]></textFieldExpression>
-			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" uuid="0bec687a-231c-47d1-b67c-d95776325b77"/>
+				<textElement>
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="70" y="0" width="100" height="20" uuid="0bec687a-231c-47d1-b67c-d95776325b77"/>
+				<textElement>
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Model]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="140" y="0" width="100" height="20" uuid="0bec687a-231c-47d1-b67c-d95776325b77"/>
+				<textElement>
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Adding Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="0" width="100" height="20" uuid="0bec687a-231c-47d1-b67c-d95776325b77"/>
+				<textElement>
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Issues]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="210" y="0" width="100" height="20" uuid="0bec687a-231c-47d1-b67c-d95776325b77"/>
+				<textElement>
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Pack]]></text>
+			</staticText>
 		</band>
 	</pageHeader>
-	<columnHeader>
+	<detail>
 		<band height="61" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="12" width="100" height="20" uuid="8c9e5213-aec6-44db-9580-07147e40f4b0"/>
-				<textFieldExpression><![CDATA[$F{field}]]></textFieldExpression>
+				<reportElement x="0" y="0" width="100" height="20" uuid="3c382e20-104b-48f1-8ade-1c5a3286602b"/>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="0" width="100" height="20" uuid="3c382e20-104b-48f1-8ade-1c5a3286602b"/>
+				<textFieldExpression><![CDATA[$F{model.model}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="140" y="0" width="100" height="20" uuid="3c382e20-104b-48f1-8ade-1c5a3286602b"/>
+				<textFieldExpression><![CDATA[$F{dateAdded}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="0" width="100" height="20" uuid="3c382e20-104b-48f1-8ade-1c5a3286602b"/>
+				<textFieldExpression><![CDATA[$F{issues}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="210" y="0" width="100" height="20" uuid="3c382e20-104b-48f1-8ade-1c5a3286602b"/>
+				<textFieldExpression><![CDATA[$F{pack.id}]]></textFieldExpression>
 			</textField>
 		</band>
-	</columnHeader>
-	<detail>
-		<band height="125" splitType="Stretch"/>
 	</detail>
 	<columnFooter>
 		<band height="45" splitType="Stretch"/>

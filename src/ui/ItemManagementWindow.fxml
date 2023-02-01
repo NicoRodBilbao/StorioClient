@@ -14,21 +14,21 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="windowController.ItemManagementWindowController">
+<Pane fx:id="paneItem" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="windowController.ItemManagementWindowController">
    <children>
       <TableView fx:id="tvTableItem" layoutX="37.0" layoutY="275.0" prefHeight="270.0" prefWidth="726.0" style="-fx-background-color: #333333; -fx-border-color: white;">
         <columns>
           <TableColumn fx:id="tcId" prefWidth="56.79998779296875" resizable="false" text="ID" />
           <TableColumn fx:id="tcIssues" minWidth="0.0" prefWidth="229.60004425048828" resizable="false" text="Issues" />
             <TableColumn fx:id="tcModel" prefWidth="151.20001220703125" resizable="false" text="Model" />
-            <TableColumn fx:id="tcDate" prefWidth="220.79998779296875" resizable="false" text="Date" />
-            <TableColumn fx:id="tcPack" prefWidth="68.00006103515625" resizable="false" text="Pack" />
+            <TableColumn fx:id="tcDate" prefWidth="157.60006713867188" resizable="false" text="Date" />
+            <TableColumn fx:id="tcPack" prefWidth="132.0" resizable="false" text="Pack" />
         </columns>
       </TableView>
       <MenuBar fx:id="menuBar" layoutX="-9.0" layoutY="-3.0" prefHeight="30.0" prefWidth="819.0">
         <menus>
-            <Menu fx:id="mnGoBack" mnemonicParsing="false" text="Go Back" >
-                <MenuItem fx:id="miGoBack" mnemonicParsing="false" text="Log Out"/>
+            <Menu fx:id="mnGoBack" mnemonicParsing="false" text="Go Back">
+                <MenuItem fx:id="miGoBack" mnemonicParsing="false" text="Log Out" />
             </Menu>
             <Menu fx:id="mnGoTo" mnemonicParsing="false" text="Go To">
                <items>
@@ -39,11 +39,11 @@
                   <MenuItem fx:id="miUser" mnemonicParsing="false" text="User Management" />
                </items>
             </Menu>
-            <Menu fx:id="mnDarkMode" mnemonicParsing="false" text="Dark Mode" >
-                <MenuItem fx:id="miDarkMode" mnemonicParsing="false" text="Dark Mode"/>
+            <Menu fx:id="mnDarkMode" mnemonicParsing="false" text="Dark Mode">
+                <MenuItem fx:id="miDarkMode" mnemonicParsing="false" text="Dark Mode" />
             </Menu>
-            <Menu fx:id="mnHelp" mnemonicParsing="false" text="Help" >
-                <MenuItem fx:id="miHelp" mnemonicParsing="false" text="Report"/>
+            <Menu fx:id="mnHelp" mnemonicParsing="false" text="Help">
+                <MenuItem fx:id="miHelp" mnemonicParsing="false" text="Report" />
             </Menu>
         </menus>
       </MenuBar>
