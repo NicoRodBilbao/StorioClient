@@ -215,3 +215,9 @@ public class Item implements Serializable {
         return "Item{" + "id=" + id + ", model=" + model + ", dateAdded=" + dateAdded + ", issues=" + issues + ", report=" + report + ", pack=" + pack + '}';
     }
 }
+
+
+
+
+
+

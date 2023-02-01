@@ -5,15 +5,16 @@
  */
 package factories;
 
-import dataAccess.BookingImplementation;
+
 import interfaces.Bookingable;
+import services.BookingClient;
 
 /**
  *
  * @author Markel Fernandez
  */
 public class BookingFactory {
-    private static Bookingable booking = new BookingImplementation();
+    private static Bookingable booking = new BookingClient();
     
     /**
      * This method creates an interface instanced as a Data Access Object.
