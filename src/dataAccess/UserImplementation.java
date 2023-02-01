@@ -1,5 +1,6 @@
 package dataAccess;
 
+import com.sun.istack.internal.logging.Logger;
 import entities.User;
 import entities.UserPrivilege;
 import entities.UserStatus;
@@ -16,6 +17,11 @@ import javax.ws.rs.core.GenericType;
 public class UserImplementation implements Userable {
 
 	public UserClient uc;
+
+	/**
+	 *
+	 */
+	//protected static final Logger LOGGER = Logger.getLogger(UserImplementation.class.getName());
 
 	public UserImplementation() {
 		uc = new UserClient();
@@ -38,7 +44,10 @@ public class UserImplementation implements Userable {
 
 	@Override
 	public User findUserById(Integer id) throws ClientErrorException {
-		return uc.find_XML(User.class, id.toString());
+		System.out.println("GET user by id");
+		User user = uc.find_XML(User.class, id.toString());
+		System.out.println(user);
+		return user;
 	}
 
 	@Override
@@ -58,7 +67,13 @@ public class UserImplementation implements Userable {
 
 	@Override
 	public List<User> findAllUsers() throws ClientErrorException {
-		return uc.findAll_XML(new GenericType<List<User>>() {});
+		List<User> users = null;
+		try {
+			users = uc.findAll_XML(new GenericType<List<User>>() {});
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return users;
 	}
 
 	@Override

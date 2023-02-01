@@ -5,11 +5,14 @@
  */
 package storioclient;
 
+import entities.User;
+import entities.UserPrivilege;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import windowController.UserManagementWindowController;
 
 /**
  *
@@ -19,12 +22,22 @@ public class StorioClient extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
-        
-        Scene scene = new Scene(root);
-        
-        stage.setScene(scene);
-        stage.show();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/UserManagementWindow.fxml"));
+		Parent root = (Parent) loader.load();
+		UserManagementWindowController umController =
+				(UserManagementWindowController) loader.getController();
+
+		User user = new User();
+
+		user.setId(1);
+  		user.setLogin("joana");
+  		user.setFullName("Joana Renteria");
+		user.setPrivilege(UserPrivilege.USER);
+
+		user.setPrivilege(UserPrivilege.USER);
+		umController.initData(user);
+		umController.setStage(stage);
+		umController.initStage(root);
     }
 
     /**

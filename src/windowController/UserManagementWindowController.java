@@ -143,10 +143,18 @@ public class UserManagementWindowController {
 
 	private boolean isAdmin = false;
 
-	Stage primaryStage;
+	protected Stage primaryStage;
 	Userable userable = UserFactory.getAccessUser();
 
-	public void setStage(Parent root) {
+	public void setStage(Stage stage) {
+		primaryStage = stage;
+	}
+
+	public Stage getStage() {
+		return primaryStage;
+	}
+
+	public void initStage(Parent root) {
 		LOGGER.info("Initializing UserManagementWindow");
 
 		Scene scene = new Scene(root);
@@ -304,7 +312,7 @@ public class UserManagementWindowController {
 	 * or refresh the single user data (fields) if the user is not an admin
 	 */
 	private void refreshData() {
-		if(isAdmin) {
+		if(true) {
 			LOGGER.info("Retrieving user list data");
 			tbcolId.setCellValueFactory(new PropertyValueFactory<>("id"));
 			tbcolLogin.setCellValueFactory(new PropertyValueFactory<>("login"));
@@ -317,6 +325,7 @@ public class UserManagementWindowController {
 		} else {
 			LOGGER.info("Retrieving user data");
 			user = userable.findUserById(user.getId());
+			System.out.println(user);
 		}
 	}
 
