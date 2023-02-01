@@ -22,7 +22,8 @@ public class ModelClient {
 
     private WebTarget webTarget;
     private Client client;
-    private static final String BASE_URI = "http://localhost:8080/StorioWeb/webresources";
+    private static final String BASE_URI = "http://localhost:8080/StorioWeb/webresources";// Clase
+    //private static final String BASE_URI = "http://localhost:30753/StorioWeb/webresources";// Casa
 
     public ModelClient() {
         client = javax.ws.rs.client.ClientBuilder.newClient();

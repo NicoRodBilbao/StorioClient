@@ -13,7 +13,6 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
-
 import windowController.ModelManagementWindowController;
 
 /**
@@ -25,10 +24,10 @@ public class StorioClient extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         // Carga el document FXML y obtiene un objeto Parent
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/ModelManagementWindow.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/ItemManagementWindow.fxml"));
         // Crea una escena a partir del Parent
         Parent root = (Parent) loader.load();
-        ModelManagementWindowController controller = (ModelManagementWindowController) loader.getController();
+        ItemManagementWindowController controller = (ItemManagementWindowController) loader.getController();
         // Establece la escena en el escensario (Stage) y la muestra
         controller.setStage(stage);
         controller.setStage(root);

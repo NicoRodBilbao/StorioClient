@@ -13,9 +13,9 @@ public class ModelFactory {
     /**
      * This method creates an interface instanced as a Data Access Object.
      *
-     * @return interface Userable as UserImplementation
+     * @return interface Modelable as ModelImplementation
      */
-    public static Modelable getAccessUser() {
+    public static Modelable getAccessModel() {
         return model;
     }
 }
