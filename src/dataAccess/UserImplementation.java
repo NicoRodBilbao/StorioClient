@@ -1,9 +1,9 @@
 package dataAccess;
 
-import com.sun.istack.internal.logging.Logger;
 import entities.User;
 import entities.UserPrivilege;
 import entities.UserStatus;
+import exceptions.UserManagerException;
 import services.UserClient;
 import interfaces.Userable;
 import java.util.List;
@@ -22,28 +22,37 @@ public class UserImplementation implements Userable {
 	 *
 	 */
 	//protected static final Logger LOGGER = Logger.getLogger(UserImplementation.class.getName());
-
 	public UserImplementation() {
 		uc = new UserClient();
 	}
 
 	@Override
-	public boolean loginUser(String login, String password) throws ClientErrorException {
-		return uc.login(Boolean.class, login, password);
+	public void registerUser(User user) throws UserManagerException {
+		uc.create_XML(user);
 	}
 
 	@Override
-	public void editUser(User user) throws ClientErrorException {
+	public boolean loginUser(String login, String password) throws UserManagerException {
+		try {
+			return uc.login(Boolean.class, login, password);
+		} catch (ClientErrorException ce) {
+			// TODO add logger
+			throw new UserManagerException("Error Login in");
+		}
+	}
+
+	@Override
+	public void editUser(User user) throws UserManagerException {
 		uc.edit_XML(user, user.getId().toString());
 	}
 
 	@Override
-	public void removeUser(User user) throws ClientErrorException {
+	public void removeUser(User user) throws UserManagerException {
 		uc.remove(user.getId().toString());
 	}
 
 	@Override
-	public User findUserById(Integer id) throws ClientErrorException {
+	public User findUserById(Integer id) throws UserManagerException {
 		System.out.println("GET user by id");
 		User user = uc.find_XML(User.class, id.toString());
 		System.out.println(user);
@@ -51,44 +60,48 @@ public class UserImplementation implements Userable {
 	}
 
 	@Override
-	public User findUserByLogin(String login) throws ClientErrorException {
+	public User findUserByLogin(String login) throws UserManagerException {
 		return uc.findByLogin_XML(User.class, login);
 	}
 
 	@Override
-	public User findUserByEmail(String email) throws ClientErrorException {
+	public User findUserByEmail(String email) throws UserManagerException {
 		return uc.findByEmail_XML(User.class, email);
 	}
 
 	@Override
-	public User findUserByPhone(Integer phoneNumber) throws ClientErrorException {
+	public User findUserByPhone(Integer phoneNumber) throws UserManagerException {
 		return uc.findByPhone_XML(User.class, phoneNumber.toString());
 	}
 
 	@Override
-	public List<User> findAllUsers() throws ClientErrorException {
+	public List<User> findAllUsers() throws UserManagerException {
 		List<User> users = null;
 		try {
-			users = uc.findAll_XML(new GenericType<List<User>>() {});
-		} catch(Exception e) {
+			users = uc.findAll_XML(new GenericType<List<User>>() {
+			});
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 		return users;
 	}
 
 	@Override
-	public List<User> findUsersByPrivilege(UserPrivilege privilege) throws ClientErrorException {
-		return uc.findUsersByPrivilege_XML(new GenericType<List<User>>() {}, privilege.toString());
+	public List<User> findUsersByPrivilege(UserPrivilege privilege) throws UserManagerException {
+		return uc.findUsersByPrivilege_XML(new GenericType<List<User>>() {
+		}, privilege.toString());
 	}
 
 	@Override
-	public List<User> findUsersByStatus(UserStatus status) throws ClientErrorException {
-		return uc.findUsersByStatus_XML(new GenericType<List<User>>() {}, status.toString());
+	public List<User> findUsersByStatus(UserStatus status) throws UserManagerException {
+		return uc.findUsersByStatus_XML(new GenericType<List<User>>() {
+		}, status.toString());
 	}
 
 	@Override
-	public List<User> findUsersByFullName(String fullName) throws ClientErrorException {
-		return uc.findUsersByFullName_XML(new GenericType<List<User>>() {}, fullName);
+	public List<User> findUsersByFullName(String fullName) throws UserManagerException {
+		return uc.findUsersByFullName_XML(new GenericType<List<User>>() {
+		}, fullName);
 	}
-	
+
 }

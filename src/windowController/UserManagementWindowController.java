@@ -2,9 +2,11 @@ package windowController;
 
 import entities.User;
 import entities.UserPrivilege;
+import exceptions.UserManagerException;
 import factories.UserFactory;
 import interfaces.Userable;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -287,8 +289,8 @@ public class UserManagementWindowController {
 			// ERROR only one field needs to be informed
 		}
 		User result = null;
-		result = userable.findUserById(Integer.parseInt(tfIdUser.getText()));
-		result = userable.findUserByLogin(tfLoginUser.getText());
+		//result = userable.findUserById(Integer.parseInt(tfIdUser.getText()));
+		//result = userable.findUserByLogin(tfLoginUser.getText());
 	}
 
 	private void createUser() {
@@ -313,19 +315,27 @@ public class UserManagementWindowController {
 	 */
 	private void refreshData() {
 		if(true) {
-			LOGGER.info("Retrieving user list data");
-			tbcolId.setCellValueFactory(new PropertyValueFactory<>("id"));
-			tbcolLogin.setCellValueFactory(new PropertyValueFactory<>("login"));
-			tbcolEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
-			tbcolFullName.setCellValueFactory(new PropertyValueFactory<>("fullName"));
-			tbcolPhoneNumber.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
-			tbcolStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
-			userList = userable.findAllUsers();
-			tvTableUser.setItems(FXCollections.observableArrayList(userList));
+			try {
+				LOGGER.info("Retrieving user list data");
+				tbcolId.setCellValueFactory(new PropertyValueFactory<>("id"));
+				tbcolLogin.setCellValueFactory(new PropertyValueFactory<>("login"));
+				tbcolEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+				tbcolFullName.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+				tbcolPhoneNumber.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
+				tbcolStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
+				userList = userable.findAllUsers();
+				tvTableUser.setItems(FXCollections.observableArrayList(userList));
+			} catch (UserManagerException ex) {
+				Logger.getLogger(UserManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		} else {
-			LOGGER.info("Retrieving user data");
-			user = userable.findUserById(user.getId());
-			System.out.println(user);
+			try {
+				LOGGER.info("Retrieving user data");
+				user = userable.findUserById(user.getId());
+				System.out.println(user);
+			} catch (UserManagerException ex) {
+				Logger.getLogger(UserManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		}
 	}
 

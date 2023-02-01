@@ -5,7 +5,7 @@
  */
 package factories;
 
-import implementations.BookingImplementation;
+//import implementations.BookingImplementation;
 import interfaces.Bookingable;
 
 /**
@@ -13,7 +13,7 @@ import interfaces.Bookingable;
  * @author Markel Fernandez
  */
 public class BookingFactory {
-    private static Bookingable booking = new BookingImplementation();
+    //private static Bookingable booking = new BookingImplementation();
     
     /**
      * This method creates an interface instanced as a Data Access Object.
@@ -21,6 +21,6 @@ public class BookingFactory {
      * @return interface Bookingable as BookingImplementation
      */
     public static Bookingable getAccessBooking() {
-        return booking;
+        return null;
     }
 }

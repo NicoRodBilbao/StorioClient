@@ -18,23 +18,23 @@ import windowController.*;
  * @author 2dam
  */
 public class StorioClient extends Application {
-    
-    @Override
-    public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/LogInWindow.fxml"));
+
+	@Override
+	public void start(Stage stage) throws Exception {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/LogInWindow.fxml"));
 		Parent root = (Parent) loader.load();
-		LogInWindowController loginController =
-				(LogInWindowController) loader.getController();
+		LogInWindowController loginController
+			= (LogInWindowController) loader.getController();
 
 		loginController.setStage(stage);
 		loginController.initStage(root);
-    }
+	}
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
-    }
-    
+	/**
+	 * @param args the command line arguments
+	 */
+	public static void main(String[] args) {
+		launch(args);
+	}
+
 }
