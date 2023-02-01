@@ -321,30 +321,35 @@ public class ItemManagementWindowController {
      */
     private void refreshTable() {
         LOGGER.info("Retrieving model data.");
-        List<Item> listItem = itemable.listAllItems(); // Looks for all the items
-        // Sets the CellValueFactory for all TableColumns
-        tcId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        tcModel.setCellValueFactory(new PropertyValueFactory<>("model"));
+        try {
+            List<Item> listItem = itemable.listAllItems(); // Looks for all the items
+            // Sets the CellValueFactory for all TableColumns
+            tcId.setCellValueFactory(new PropertyValueFactory<>("id"));
+            tcModel.setCellValueFactory(new PropertyValueFactory<>("model"));
 
-        tcDate.setCellValueFactory(
-                new Callback<TableColumn.CellDataFeatures<Item, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<Item, String> item) {
-                SimpleStringProperty property = new SimpleStringProperty();
-                property.setValue(formatDate((item.getValue()).getDateAdded()).toString());
-                return property;
-            }
-        });
+            tcDate.setCellValueFactory(
+                    new Callback<TableColumn.CellDataFeatures<Item, String>, ObservableValue<String>>() {
+                @Override
+                public ObservableValue<String> call(TableColumn.CellDataFeatures<Item, String> item) {
+                    SimpleStringProperty property = new SimpleStringProperty();
+                    property.setValue(formatDate((item.getValue()).getDateAdded()).toString());
+                    return property;
+                }
+            });
 
-        tcIssues.setCellValueFactory(new PropertyValueFactory<>("issues"));
-        tcPack.setCellValueFactory(new PropertyValueFactory<>("pack"));
+            tcIssues.setCellValueFactory(new PropertyValueFactory<>("issues"));
+            tcPack.setCellValueFactory(new PropertyValueFactory<>("pack"));
 
-        tvTableItem.setItems(FXCollections.observableArrayList(listItem)); // Sets the Items on the TableView
+            tvTableItem.setItems(FXCollections.observableArrayList(listItem)); // Sets the Items on the TableView
 
-        List<Model> listModel = modelable.listAllModels();
-        cbModelItem.setItems(FXCollections.observableArrayList(listModel)); // Sets all Models on the ComboBox
-        //List<Pack> listPack = packable.listAllPacks();
-        //cbPackItem.setItems(FXCollections.observableArrayList(listPack)); // Sets all Packs on the ComboBox
+            List<Model> listModel = modelable.listAllModels();
+            cbModelItem.setItems(FXCollections.observableArrayList(listModel)); // Sets all Models on the ComboBox
+            //List<Pack> listPack = packable.listAllPacks();
+            //cbPackItem.setItems(FXCollections.observableArrayList(listPack)); // Sets all Packs on the ComboBox
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR , "The database was inaccessible. Closing Storio.").showAndWait();
+            primaryStage.close();
+        }
     }
 
     /**

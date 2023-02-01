@@ -8,6 +8,7 @@ package dataAccess;
 
 import interfaces.Bookingable;
 import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.core.GenericType;
 
 /**
  *
@@ -60,7 +61,6 @@ public class BookingImplementation implements Bookingable{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
     public <T> T findPacksForBooking_XML(Class<T> responseType, String id) throws ClientErrorException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -70,7 +70,6 @@ public class BookingImplementation implements Bookingable{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
     public <T> T findAll_XML(Class<T> responseType) throws ClientErrorException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -87,6 +86,16 @@ public class BookingImplementation implements Bookingable{
 
     @Override
     public void createBooking_JSON(Object requestEntity) throws ClientErrorException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }   
+
+    @Override
+    public <T> T findPacksForBooking_XML(GenericType<T> responseType, String id) throws ClientErrorException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public <T> T findAll_XML(GenericType<T> responseType) throws ClientErrorException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
