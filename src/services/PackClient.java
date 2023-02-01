@@ -27,7 +27,7 @@ public class PackClient {
 
     private WebTarget webTarget;
     private Client client;
-    private static final String BASE_URI = "http://localhost:8080/StorioWeb2/webresources"; //Parametrizar en un archivo de propiedades
+    private static final String BASE_URI = "http://localhost:8080/Storio-Server/webresources"; //Parametrizar en un archivo de propiedades
 
     public PackClient() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
@@ -117,3 +117,4 @@ public class PackClient {
     }
 
 }
+

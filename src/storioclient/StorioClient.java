@@ -13,7 +13,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
-import windowController.BookingManagementWindowController;
+
+import windowController.ModelManagementWindowController;
 
 /**
  *
@@ -23,21 +24,14 @@ public class StorioClient extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        User user = new User(); 
-         // Carga el document FXML y obtiene un objeto Parent
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/BookingManagementWindow.fxml"));
+        // Carga el document FXML y obtiene un objeto Parent
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/ModelManagementWindow.fxml"));
         // Crea una escena a partir del Parent
-        Parent root = null;
-        try {
-            root = (Parent) loader.load();
-        } catch (IOException ex) {
-            Logger.getLogger(StorioClient.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        BookingManagementWindowController controller = (BookingManagementWindowController) loader.getController();
+        Parent root = (Parent) loader.load();
+        ModelManagementWindowController controller = (ModelManagementWindowController) loader.getController();
         // Establece la escena en el escensario (Stage) y la muestra
         controller.setStage(stage);
-        controller.setUser(user);
-        controller.initStage(root);
+        controller.setStage(root);
     }
 
     /**
