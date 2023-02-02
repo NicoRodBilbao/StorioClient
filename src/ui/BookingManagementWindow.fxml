@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="paneWindow" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="windowController.BookingManagementWindowController">
+<Pane fx:id="paneWindow" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="windowController.BookingManagementWindowController">
     <children>
         <TextField fx:id="tfId" layoutX="14.0" layoutY="88.0" />
         <ComboBox fx:id="cbState" layoutX="453.0" layoutY="88.0" prefWidth="150.0" />
@@ -74,13 +74,15 @@
         <DatePicker fx:id="dpEndDate" layoutX="233.0" layoutY="192.0" prefHeight="25.0" prefWidth="149.0" />
         <MenuBar fx:id="menuBar" layoutX="-9.0" layoutY="1.0" prefHeight="27.0" prefWidth="820.0">
             <menus>
-                <Menu fx:id="mnGoBack" mnemonicParsing="false" text="Go Back" />
+                <Menu fx:id="mnGoBack" mnemonicParsing="false" text="Go Back">
+               <items>
+                  <MenuItem fx:id="miExit" mnemonicParsing="false" onAction="#handleButtonGoBack" text="Exit" />
+               </items></Menu>
                 <Menu fx:id="mnGoTo" mnemonicParsing="false" text="Go To">
                     <items>
-                        <MenuItem fx:id="miReport" mnemonicParsing="false" text="Report Management" />
-                        <MenuItem fx:id="miUser" mnemonicParsing="false" text="User Management" />
-                        <MenuItem fx:id="miModel" mnemonicParsing="false" text="Model Management" />
-                        <MenuItem fx:id="miItem" mnemonicParsing="false" text="Item Management" />
+                        <MenuItem fx:id="miUser" mnemonicParsing="false" onAction="#handleButtonGoToUser" text="User Management" />
+                        <MenuItem fx:id="miModel" mnemonicParsing="false" onAction="#handleButtonGoToModel" text="Model Management" />
+                        <MenuItem fx:id="miItem" mnemonicParsing="false" onAction="#handleButtonGoToItem" text="Item Management" />
                         <MenuItem fx:id="miPack" mnemonicParsing="false" onAction="#handleButtonGoToPack" text="Pack Management" />
                     </items>
                 </Menu>
@@ -90,7 +92,7 @@
                </items></Menu>
                 <Menu fx:id="mnHelp" mnemonicParsing="false" text="Help">
                     <items>
-                        <MenuItem fx:id="miUsersManual" mnemonicParsing="false" text="User's manual" />
+                        <MenuItem fx:id="miUsersManual" mnemonicParsing="false" onAction="#handleHelpAction" text="User's manual" />
                   <MenuItem fx:id="miPrintReport" mnemonicParsing="false" onAction="#handleButtonprintReport" text="Print report" />
                     </items>
                 </Menu>

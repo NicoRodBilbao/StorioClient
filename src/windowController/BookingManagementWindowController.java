@@ -101,9 +101,7 @@ public class BookingManagementWindowController {
     @FXML
     private Button btnCreate, btnSearch, btnDelete, btnModify;
     @FXML
-    private Menu mnDarkMode, mnHelp, mnGoTo, mnGoBack;
-    @FXML
-    private MenuItem miReport, miPack, miModel, miItem, miUser, miUsersManual, miPrintReport, miChangeMode;
+    private MenuItem  miUsersManual, miPrintReport;
     @FXML
     private ListView lvPacks;
     @FXML
@@ -144,13 +142,14 @@ public class BookingManagementWindowController {
                 miReport.setDisable(true);
                 this.user = (Client) user;
             }*/
+            miPrintReport.setOnAction(this::handleButtonprintReport);
+            miUsersManual.setOnAction(this::handleHelpAction);
             packs = FXCollections.observableArrayList(packManager.getAllPacks());
             lvPacks.setItems(FXCollections.observableArrayList(packs));
             lblStartDate.setVisible(true);
             lblState.setVisible(true);
             cbState.getItems().addAll(BookingState.values());
             tvBooking.setOnMouseClicked(event -> this.handleOnMouseClick(event));
-
             refreshTable();
             primaryStage.show();
             //}else{
@@ -180,6 +179,7 @@ public class BookingManagementWindowController {
                 btnDelete.setDisable(false);
                 btnModify.setDisable(false);
                 btnSearch.setDisable(false);
+                packs = lvPacks.getSelectionModel().getSelectedItems();
                 if (!taDescription.getText().trim().isEmpty() || dpEndDate.getValue() != null || dpStartDate.getValue() != null && dpEndDate.getValue().isAfter(dpStartDate.getValue())) {
                     bookingable.createBooking_XML(new Booking(client, packs, Date.from(dpStartDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()), Date.from(dpEndDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()), taDescription.getText(), BookingState.PENDING));
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "Correctly created", ButtonType.OK);
@@ -244,7 +244,6 @@ public class BookingManagementWindowController {
                 taDescription.setText("");
                 dpEndDate.setValue(null);
                 dpStartDate.setValue(null);
-                lvPacks.setItems(null);
                 cbState.setItems(null);
                 btnCreate.setDisable(false);
                 btnDelete.setDisable(false);
@@ -299,7 +298,6 @@ public class BookingManagementWindowController {
                     taDescription.setText("");
                     dpEndDate.setValue(null);
                     dpStartDate.setValue(null);
-                    lvPacks.setItems(null);
                     refreshTable();
                 }
             } else {
@@ -340,13 +338,18 @@ public class BookingManagementWindowController {
                 btnModify.setDisable(false);
                 btnCreate.setDisable(false);
                 booking = bookingable.find_XML(Booking.class, id);
-                bookings.add(booking);
-                tvBooking.setItems(FXCollections.observableArrayList(bookings));
+                if (booking != null) {
+                    bookings.add(booking);
+                    tvBooking.setItems(FXCollections.observableArrayList(bookings));
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Not found.", ButtonType.OK);
+                    alert.showAndWait();
+                }
+
                 tfId.setText("");
                 taDescription.setText("");
                 dpEndDate.setValue(null);
                 dpStartDate.setValue(null);
-                lvPacks.setItems(null);
             } else {
                 btnDelete.setDisable(true);
                 btnModify.setDisable(true);
@@ -361,21 +364,6 @@ public class BookingManagementWindowController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-
-
-    public void closeWindow(WindowEvent event) {
-
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setContentText("Do you want to exit the application?");
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK) {
-            Platform.exit();
-        } else {
-            event.consume();
         }
     }
 
@@ -542,27 +530,126 @@ public class BookingManagementWindowController {
         }
 
     }
+
     @FXML
     private void handleButtonGoToPack(MouseEvent event) {
+        primaryStage.close();
+        Stage stage = new Stage();
+        // Carga el document FXML y obtiene un objeto Parent
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/PackManagementWindow.fxml"));
         // Crea una escena a partir del Parent
         Parent root = null;
         try {
             root = (Parent) loader.load();
         } catch (IOException ex) {
-            Logger.getLogger(StorioClient.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PackManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        BookingManagementWindowController controller = (BookingManagementWindowController) loader.getController();
+        PackManagementWindowController controller = (PackManagementWindowController) loader.getController();
         // Establece la escena en el escensario (Stage) y la muestra
-        controller.setStage(primaryStage);
-        controller.setUser(user);
+        controller.setStage(stage);
         controller.initStage(root);
     }
     
-    public void setUser(User user){
+    @FXML
+    private void handleButtonGoToModel(MouseEvent event) {
+        primaryStage.close();
+        Stage stage = new Stage();
+        // Carga el document FXML y obtiene un objeto Parent
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/ModelManagementWindow.fxml"));
+        // Crea una escena a partir del Parent
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(ModelManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        ModelManagementWindowController controller = (ModelManagementWindowController) loader.getController();
+        // Establece la escena en el escensario (Stage) y la muestra
+        controller.setStage(stage);
+        controller.setStage(root);
+    }
+    
+    @FXML
+    private void handleButtonGoToItem(MouseEvent event) {
+        primaryStage.close();
+        Stage stage = new Stage();
+        // Carga el document FXML y obtiene un objeto Parent
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/ItemManagementWindow.fxml"));
+        // Crea una escena a partir del Parent
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(ItemManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        ItemManagementWindowController controller = (ItemManagementWindowController) loader.getController();
+        // Establece la escena en el escensario (Stage) y la muestra
+        controller.setStage(stage);
+        controller.setStage(root);
+    }
+    
+    @FXML
+    private void handleButtonGoToUser(MouseEvent event) {
+        primaryStage.close();
+        Stage stage = new Stage();
+        // Carga el document FXML y obtiene un objeto Parent
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/UserManagementWindow.fxml"));
+        // Crea una escena a partir del Parent
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(UserManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        UserManagementWindowController controller = (UserManagementWindowController) loader.getController();
+        // Establece la escena en el escensario (Stage) y la muestra
+        controller.setStage(stage);
+        controller.initStage(root);
+    }
+    
+    @FXML
+    private void handleButtonGoBack(MouseEvent event) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText("Do you want to exit the application?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            Platform.exit();
+        } else {
+            event.consume();
+        }
+    }
+
+    /**
+     * Action event handler for help button. It shows a Stage containing a scene
+     * with a web viewer showing a help page for the window.
+     *
+     * @param event The ActionEvent object for the event.
+     */
+    @FXML
+    private void handleHelpAction(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/Help.fxml"));
+            Parent root = (Parent) loader.load();
+            HelpController helpController
+                    = ((HelpController) loader.getController());
+            //Initializes and shows help stage
+            helpController.initAndShowStage(root);
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE,
+                    "UI GestionUsuariosController: Error loading help window: {0}",
+                    ex.getMessage());
+            ex.printStackTrace();
+        }
+
+    }
+
+    public void setUser(User user) {
         this.user = user;
     }
-        public void setStage(Stage stage) {
+
+    public void setStage(Stage stage) {
         this.primaryStage = stage;
     }
+
 }

@@ -32,4 +32,3 @@ public interface Packable {
     public List<Pack> getPacksByBooking(Integer id) throws PackManagerException;
     
 }
-

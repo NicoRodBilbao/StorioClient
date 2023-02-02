@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3181b33d-7ce5-4f02-9084-67e0071fd039">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Heading 1" fontSize="16" isBold="true"/>
+	<style name="Text Body"/>
+	<style name="Heading" fontSize="14"/>
+	<style name="Heading 2" fontSize="14" isBold="true" isItalic="true"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#81AAB8">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#CFE0E6">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#F3F7F8"/>
+		</conditionalStyle>
+	</style>
+	<subDataset name="Users Dataset" uuid="e3ed887a-97dd-43e1-b26a-e695bfc2f9f7">
+		<queryString language="SQL">
+			<![CDATA[SELECT * FROM storio_user;]]>
+		</queryString>
+		<field name="id" class="java.lang.Integer">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="email" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="fullName" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="login" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="password" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="phoneNumber" class="java.lang.Integer">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="privilege" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="status" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<group name="privilege">
+			<groupExpression><![CDATA[$F{privilege}]]></groupExpression>
+		</group>
+		<group name="status">
+			<groupExpression><![CDATA[$F{status}]]></groupExpression>
+		</group>
+	</subDataset>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="47" splitType="Stretch">
+			<staticText>
+				<reportElement style="Heading 1" x="0" y="0" width="555" height="47" uuid="30bc86c3-7f02-4600-890b-76a300d80a9b"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[User Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="42" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="152" splitType="Stretch">
+			<componentElement>
+				<reportElement key="table" style="table" x="0" y="0" width="555" height="152" uuid="ec411a5d-1a0a-4e8e-b41b-7a40fa06e54f"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Users Dataset" uuid="bcfe3c71-f035-4a80-91ee-c2e807f11a38">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource(1)]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="90" uuid="67c59bab-929a-42d8-a987-7392906c9d28">
+						<jr:tableHeader style="table_TH" height="31" rowSpan="1"/>
+						<jr:tableFooter style="table_TH" height="40" rowSpan="1"/>
+						<jr:columnHeader style="table_CH" height="30" rowSpan="1"/>
+						<jr:columnFooter style="table_CH" height="30" rowSpan="1"/>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1"/>
+					</jr:column>
+					<jr:column width="90" uuid="42284fbc-5682-456a-9745-5804c10b15ff">
+						<jr:tableHeader style="table_TH" height="31" rowSpan="1"/>
+						<jr:tableFooter style="table_TH" height="40" rowSpan="1"/>
+						<jr:columnHeader style="table_CH" height="30" rowSpan="1"/>
+						<jr:columnFooter style="table_CH" height="30" rowSpan="1"/>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1"/>
+					</jr:column>
+					<jr:column width="90" uuid="8511f9ba-f172-414c-bf49-fcf09bceff14">
+						<jr:tableHeader style="table_TH" height="31" rowSpan="1"/>
+						<jr:tableFooter style="table_TH" height="40" rowSpan="1"/>
+						<jr:columnHeader style="table_CH" height="30" rowSpan="1"/>
+						<jr:columnFooter style="table_CH" height="30" rowSpan="1"/>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1"/>
+					</jr:column>
+					<jr:column width="288" uuid="dd96239f-8637-4a28-8972-c2d1ea590588">
+						<jr:tableHeader style="table_TH" height="31" rowSpan="1"/>
+						<jr:tableFooter style="table_TH" height="40" rowSpan="1"/>
+						<jr:columnHeader style="table_CH" height="30" rowSpan="1"/>
+						<jr:columnFooter style="table_CH" height="30" rowSpan="1"/>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1"/>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

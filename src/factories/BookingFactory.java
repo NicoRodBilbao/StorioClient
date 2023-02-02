@@ -5,7 +5,6 @@
  */
 package factories;
 
-
 import interfaces.Bookingable;
 import services.BookingClient;
 
@@ -22,6 +21,6 @@ public class BookingFactory {
      * @return interface Bookingable as BookingImplementation
      */
     public static Bookingable getAccessBooking() {
-        return booking;
+        return null;
     }
 }
