@@ -200,7 +200,7 @@ public class PackManagementWindowController {
                 tfIdPack.clear();
                 taDescriptionPack.clear();
                 cbTypePack.setValue("");
-                cbStatePack.setValue("");
+                cbStatePack.getSelectionModel().selectFirst();
                 dpCreateDatePack.setValue(LocalDate.now());
                 tvTablePack.setDisable(true);
 
@@ -236,7 +236,6 @@ public class PackManagementWindowController {
             new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
         }
     }
-
     /**
      * Al pulsar este botón se alternará entre dos estados: Estado Activado: Los
      * Button btnCreate, btnModify y btnDelete se deshabilitarán. Se habilitarán
