@@ -10,9 +10,7 @@ import interfaces.Itemable;
 import interfaces.Modelable;
 import interfaces.Packable;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -25,14 +23,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.Observable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -47,7 +42,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -64,7 +58,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
-import javafx.util.StringConverter;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -92,7 +85,7 @@ public class ItemManagementWindowController {
     @FXML
     private Menu mnGoBack, mnGoTo, mnHelp, mnDarkMode;
     @FXML
-    private MenuItem miBooking, miReport, miPack, miModel, miUser, miGoBack, miHelp, miDarkMode;
+    private MenuItem miBooking, miPack, miModel, miUser, miGoBack, miHelp, miDarkMode, miUsersManual;
     @FXML
     private Pane paneItem;
     @FXML
@@ -148,12 +141,14 @@ public class ItemManagementWindowController {
         miModel.setOnAction(event -> this.handleOnMouseClickNavModel(event));// Adds an event handler that records every time the miModel element is clicked
         miGoBack.setOnAction(event -> this.handleOnMouseClickLogOut(event));// Adds an event handler that records every time the miGoBack element is clicked
         miHelp.setOnAction(event -> this.handleOnMouseClickHelp(event));// Adds an event handler that records every time the miHelp element is clicked
+        miUsersManual.setOnAction(event -> this.handleOnMouseClickUserMan(event));// Adds an event handler that records every time the miUsersManual element is clicked
         miDarkMode.setOnAction(event -> this.handleOnMouseClickDarkMode(event));// Adds an event handler that records every time the miDarkMode element is clicked
         refreshTable(); // Refresh the table's data
         LOGGER.info("Showing window.");
         primaryStage.show(); // Show the window
     }
 
+                // TODO Javadoc
     private void windowShowing(WindowEvent event) {
         tfIdItem.requestFocus();
         disableTextFields(); // Disables all fields
@@ -501,31 +496,6 @@ public class ItemManagementWindowController {
     }
 
     /**
-     * This method listens for an event onClick on the TableView for it to
-     * retrieve the information from the selected row and set it on the
-     * respective fields.
-     *
-     * @param event The window event
-     */
-    private void handleOnMouseClick(MouseEvent event) {
-        TableView tv = (TableView) event.getSource();
-        if (tv.getSelectionModel().getSelectedItem() != null) { // Checks if the table view is selected
-            ObservableList selectedItems = tv.getSelectionModel().getSelectedItems();
-            Item item = (Item) selectedItems.get(0);
-
-            LOGGER.log(Level.INFO, "Selecting table row: {0}", item.getId());
-            if (!(btnModifyItem.isDisabled() && btnSearchItem.isDisabled() && btnDeleteItem.isDisabled() && !btnCreateItem.isDisabled())) // If the creation mode is enabled, 
-            {
-                tfIdItem.setText(String.valueOf(item.getId()));
-            }
-            taIssuesItem.setText(item.getIssues());
-            cbModelItem.getSelectionModel().select(item.getModel());
-            dpCreateDateItem.setValue(formatDate(item.getDateAdded()));
-            formatDate(item.getDateAdded());
-        }
-    }
-
-    /**
      * This method converts the an object Date to LocalDate.
      *
      * @param dateToConvert The date in java.util.Date form
@@ -583,6 +553,38 @@ public class ItemManagementWindowController {
         return localDate;
     }
 
+    /**
+     * This method listens for an event onClick on the TableView for it to
+     * retrieve the information from the selected row and set it on the
+     * respective fields.
+     *
+     * @param event The window event
+     */
+    private void handleOnMouseClick(MouseEvent event) {
+        TableView tv = (TableView) event.getSource();
+        if (tv.getSelectionModel().getSelectedItem() != null) { // Checks if the table view is selected
+            ObservableList selectedItems = tv.getSelectionModel().getSelectedItems();
+            Item item = (Item) selectedItems.get(0);
+
+            LOGGER.log(Level.INFO, "Selecting table row: {0}", item.getId());
+            if (!(btnModifyItem.isDisabled() && btnSearchItem.isDisabled() && btnDeleteItem.isDisabled() && !btnCreateItem.isDisabled())) // If the creation mode is enabled, 
+            {
+                tfIdItem.setText(String.valueOf(item.getId()));
+            }
+            taIssuesItem.setText(item.getIssues());
+            cbModelItem.getSelectionModel().select(item.getModel());
+            cbPackItem.getSelectionModel().select(item.getPack());
+            dpCreateDateItem.setValue(formatDate(item.getDateAdded()));
+            formatDate(item.getDateAdded());
+        }
+    }
+    
+    /**
+     * This method opens the Report template for Item and fills it with the
+     * information in the table.
+     *
+     * @param event The window event
+     */
     public void handleOnMouseClickHelp(ActionEvent event) {
         try {
             JasperReport report
@@ -591,13 +593,19 @@ public class ItemManagementWindowController {
                     = new JRBeanCollectionDataSource((Collection<Item>) this.tvTableItem.getItems());
             Map<String, Object> parameters = new HashMap<>();
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
-            JasperViewer jasperViewer = new JasperViewer(jasperPrint);
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setVisible(true);
         } catch (JRException ex) {
             Logger.getLogger(ItemManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
+    /**
+     * This method changes from the bright to dark mode and viceversa. Meaning
+     * most of the elements of the window change colours.
+     *
+     * @param event The window event
+     */
     private void handleOnMouseClickDarkMode(ActionEvent event) {
         if (lblCreateDateItem.getTextFill().equals(Color.WHITE)) {
             // Los background de los tfUsername, tfEmail, tfFullName, tfPassword y tfRepeatPassword cambiar�n de WHITE a #DDDDDD
@@ -648,6 +656,12 @@ public class ItemManagementWindowController {
         }
     }
 
+    /**
+     * This method opens the Report template for Item and fills it with the
+     * information in the table.
+     *
+     * @param event The window event
+     */
     private void handleOnMouseClickLogOut(ActionEvent event) {
         primaryStage.close();
         Stage stage = new Stage();
@@ -666,6 +680,11 @@ public class ItemManagementWindowController {
         controller.initStage(root);
     }
 
+    /**
+     * This method closes the current window and opens ModelManagementWindow.
+     *
+     * @param event The window event
+     */
     private void handleOnMouseClickNavModel(ActionEvent event) {
         primaryStage.close();
         Stage stage = new Stage();
@@ -684,6 +703,11 @@ public class ItemManagementWindowController {
         controller.setStage(root);
     }
 
+    /**
+     * This method closes the current window and opens PackManagementWindow.
+     *
+     * @param event The window event
+     */
     private void handleOnMouseClickNavPack(ActionEvent event) {
         primaryStage.close();
         Stage stage = new Stage();
@@ -702,6 +726,11 @@ public class ItemManagementWindowController {
         controller.initStage(root);
     }
 
+    /**
+     * This method closes the current window and opens UserManagementWindow.
+     *
+     * @param event The window event
+     */
     private void handleOnMouseClickNavUser(ActionEvent event) {
 //        primaryStage.close();
 //        Stage stage = new Stage();
@@ -720,6 +749,11 @@ public class ItemManagementWindowController {
 //        controller.setStage(root);
     }
 
+    /**
+     * This method closes the current window and opens BookingManagementWindow.
+     *
+     * @param event The window event
+     */
     private void handleOnMouseClickNavBooking(ActionEvent event) {
 //        primaryStage.close();
 //        Stage stage = new Stage();
@@ -736,5 +770,27 @@ public class ItemManagementWindowController {
 //        // Establece la escena en el escensario (Stage) y la muestra
 //        controller.setStage(stage);
 //        controller.setStage(root);
+    }
+
+    /**
+     * This method opens the ItemHelpWindow and shows the user manual for the
+     * ItemWindow.
+     *
+     * @param event The window event
+     */
+    private void handleOnMouseClickUserMan(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/HelpItem.fxml"));
+            Parent root = (Parent) loader.load();
+            ItemHelpWindowController helpController
+                    = ((ItemHelpWindowController) loader.getController());
+            //Initializes and shows help stage
+            helpController.initAndShowStage(root);
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE,
+                    "UI GestionUsuariosController: Error loading help window: {0}",
+                    ex.getMessage());
+            ex.printStackTrace();
+        }
     }
 }
