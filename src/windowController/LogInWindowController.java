@@ -30,7 +30,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import javax.ws.rs.ClientErrorException;
 
 /**
  *
@@ -114,13 +113,10 @@ public class LogInWindowController {
 			} else {
 				LOGGER.info("OK!!");
 				boolean login = UserFactory.getAccessUser().loginUser(tfUsername.getText(), tfPassword.getText());
-				LOGGER.info(login ? "Valid credentials" : "Invalid Credentials");
 				if (!login) {
 					decorPassword.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
 					throw new UserManagerException("Invalid credentials");
 				} else {
-					System.out.println(user.toString());
-					/*
 					primaryStage.close();
 					Stage stage = new Stage();
 					// Carga el document FXML y obtiene un objeto Parent
@@ -132,11 +128,11 @@ public class LogInWindowController {
 					controller.setStage(stage);
 					controller.setUser(user);
 					controller.initStage(root);
-					*/
+					new Alert(Alert.AlertType.INFORMATION, "You are now logged in", ButtonType.OK).showAndWait();
 				}
 			}
 		} catch (UserManagerException e) {
-			LOGGER.severe("a" + e.getMessage());
+			LOGGER.severe(e.getMessage());
 			new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
 		}
 

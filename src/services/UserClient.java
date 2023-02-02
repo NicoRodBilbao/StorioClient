@@ -1,6 +1,8 @@
 package services;
 
+import java.util.logging.Logger;
 import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
@@ -24,6 +26,8 @@ public class UserClient {
 	private WebTarget webTarget;
 	private Client client;
 	private static final String BASE_URI = "http://localhost:8080/StorioWeb/webresources";
+
+	protected static final Logger LOGGER = Logger.getLogger(UserClient.class.getName());
 
 	public UserClient() {
 		client = javax.ws.rs.client.ClientBuilder.newClient();
@@ -70,12 +74,17 @@ public class UserClient {
 		return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
 	}
 
-	public <T> T login(Class<T> responseType, String login, String password) throws ClientErrorException {
+	public <T> boolean login(Class<T> responseType, String login, String password) throws ClientErrorException {
 		WebTarget resource = webTarget;
-		return resource
-				.path(java.text.MessageFormat.format("login/{0}/{1}", new Object[]{login, password}))
-				.request(javax.ws.rs.core.MediaType.APPLICATION_XML)
-				.get(responseType);
+		try {
+			Object response = resource
+					.path(java.text.MessageFormat.format("login/{0}/{1}", new Object[]{login, password}))
+					.request(javax.ws.rs.core.MediaType.APPLICATION_XML)
+					.get(responseType);
+		return (response.toString().equals(""));
+		} catch (InternalServerErrorException ise) {
+			return false;
+		}
 	}
 
 	public <T> T findUsersByPrivilege_XML(GenericType<T> responseType, String privilege) throws ClientErrorException {

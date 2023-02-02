@@ -19,7 +19,7 @@ public interface Userable {
 	public void registerUser(User user) throws UserManagerException;
 
 	/**
-	 * Returns OK if the login and password are correct
+	 * Returns true if the login and password are correct
 	 *
 	 * @param login Username
 	 * @param password PlainText Password

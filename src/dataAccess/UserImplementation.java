@@ -7,6 +7,8 @@ import exceptions.UserManagerException;
 import services.UserClient;
 import interfaces.Userable;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
 
@@ -16,12 +18,13 @@ import javax.ws.rs.core.GenericType;
  */
 public class UserImplementation implements Userable {
 
+	protected static final Logger LOGGER = Logger.getLogger(UserImplementation.class.getName());
+
 	public UserClient uc;
 
 	/**
 	 *
 	 */
-	//protected static final Logger LOGGER = Logger.getLogger(UserImplementation.class.getName());
 	public UserImplementation() {
 		uc = new UserClient();
 	}
@@ -34,9 +37,10 @@ public class UserImplementation implements Userable {
 	@Override
 	public boolean loginUser(String login, String password) throws UserManagerException {
 		try {
-			return uc.login(Boolean.class, login, password);
+			LOGGER.log(Level.INFO, "Login in user {0}", login);
+			return uc.login(String.class, login, password);
 		} catch (ClientErrorException ce) {
-			// TODO add logger
+			LOGGER.severe(ce.getMessage());
 			throw new UserManagerException("Error Login in");
 		}
 	}
