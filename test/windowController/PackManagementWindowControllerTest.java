@@ -105,7 +105,6 @@ public class PackManagementWindowControllerTest extends ApplicationTest {
         verifyThat("#tbcolDateAdded", isVisible());
         verifyThat("#tbcolPackType", isVisible());
     }
-
     /**
      * Test Create Pack Method from PackManagerWindowController
      */
@@ -126,9 +125,7 @@ public class PackManagementWindowControllerTest extends ApplicationTest {
         clickOn("#taDescriptionPack");
         write("Any description");
         clickOn("#cbTypePack");
-        clickOn("SOUND");
-        clickOn("#cbStatePack");
-        clickOn("AVAILABLE");
+        press(KeyCode.DOWN);
         clickOn("#btnCreatePack");
         verifyThat("New pack created", isVisible());
         clickOn("Aceptar");
