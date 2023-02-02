@@ -16,7 +16,15 @@ public interface Userable {
 	 * @param user The user to be added
 	 * @throws UserManagerException 
 	 */
-	public void registerUser(User user) throws UserManagerException;
+	public void registerClient(Client user) throws UserManagerException;
+
+	/**
+	 * Creates a user in the data store
+	 * 
+	 * @param user The user to be added
+	 * @throws UserManagerException 
+	 */
+	public void registerAdmin(Admin user) throws UserManagerException;
 
 	/**
 	 * Returns true if the login and password are correct
@@ -60,7 +68,7 @@ public interface Userable {
 	 * @return The matching user, if found
 	 * @throws UserManagerException
 	 */
-	public User findUserByLogin(String login) throws UserManagerException;
+	public User findClientByLogin(String login) throws UserManagerException;
 
 	/**
 	 * This method finds a user with a matching email

@@ -1,8 +1,11 @@
 package windowController;
 
+import entities.Client;
 import entities.User;
+import entities.UserPrivilege;
 import exceptions.UserManagerException;
 import factories.UserFactory;
+import interfaces.Userable;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,12 +62,14 @@ public class LogInWindowController {
 	private Separator decorUsername, decorPassword;
 	@FXML
 	private ImageView btnImgDarkMode;
-
-	private User user;
 	@FXML
 	private Rectangle decoLogo;
 	@FXML
 	private ImageView imgLogo;
+
+	private User user;
+
+	private Userable userable;
 
 	/**
 	 * The stage is initialized in this method, setting all the listeners and
@@ -85,6 +90,7 @@ public class LogInWindowController {
 		tfUsername.textProperty().addListener((event) -> this.textChange(KeyEvent.KEY_TYPED));
 		tfPassword.textProperty().addListener((event) -> this.textChange(KeyEvent.KEY_TYPED));
 		btnLogIn.setDisable(true);
+		userable = UserFactory.getAccessUser();
 		primaryStage.show();
 
 	}
@@ -103,34 +109,42 @@ public class LogInWindowController {
 			// El decorUsername se mostrará en rojo en caso de que falle tfUsername
 			if (tfUsername.getText().length() > 255 || tfUsername.getText().contains(" ")) {
 				decorUsername.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
-				LOGGER.severe("Username!!");
 				throw new UserManagerException("Invalid Username: Spaces aren't allowed and the character limit is 255");
 			}
 			//En caso de que la contrase�a no sea válida con más de 30 caracteres o que haya espacios en blanco, llama al IncorrectPasswordException
 			//DecorPassword se mostrará en rojo en caso de que falle tfPassword
 			if (tfPassword.getText().length() > 30 || tfPassword.getText().contains(" ")) {
 				decorPassword.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
-				LOGGER.severe("Password!!");
 				throw new UserManagerException("Invalid credentials");
 			} else {
-				LOGGER.info("OK!!");
-				boolean login = UserFactory.getAccessUser().loginUser(tfUsername.getText(), tfPassword.getText());
+				boolean login = userable.loginUser(tfUsername.getText(), tfPassword.getText());
 				if (!login) {
 					decorPassword.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
 					throw new UserManagerException("Invalid credentials");
 				} else {
-					primaryStage.close();
-					Stage stage = new Stage();
-					// Carga el document FXML y obtiene un objeto Parent
-					FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/ApplicationWindow.fxml"));
-					// Crea una escena a partir del Parent
-					Parent root = (Parent) loader.load();
-					BookingManagementWindowController controller = (BookingManagementWindowController) loader.getController();
-					// Establece la escena en el escensario (Stage) y la muestra
-					controller.setStage(stage);
-					controller.setUser(user);
-					controller.initStage(root);
-					new Alert(Alert.AlertType.INFORMATION, "You are now logged in", ButtonType.OK).showAndWait();
+					LOGGER.info("Finding user");
+					user = userable.findAllUsers().stream()
+							.filter(u -> u.getLogin().equals(tfUsername.getText()))
+							.findFirst()
+							.get();
+					// Check user privilege
+					if(user.getPrivilege() == null)
+						throw new UserManagerException("Corrupt user!");
+					if (user.getPrivilege().equals(UserPrivilege.ADMIN)) {
+						primaryStage.close();
+						Stage stage = new Stage();
+						// Carga el document FXML y obtiene un objeto Parent
+						FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/BookingManagementWindow.fxml"));
+						// Crea una escena a partir del Parent
+						Parent root = (Parent) loader.load();
+						BookingManagementWindowController controller = (BookingManagementWindowController) loader.getController();
+						// Establece la escena en el escensario (Stage) y la muestra
+						controller.setStage(stage);
+						controller.setUser(user);
+						controller.initStage(root);
+					} else {
+						new Alert(Alert.AlertType.WARNING, "User login is not implemented yet", ButtonType.OK).showAndWait();
+					}
 				}
 			}
 		} catch (UserManagerException e) {

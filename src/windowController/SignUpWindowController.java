@@ -1,5 +1,6 @@
 package windowController;
 
+import entities.Client;
 import entities.User;
 import entities.UserPrivilege;
 import entities.UserStatus;
@@ -193,17 +194,17 @@ public class SignUpWindowController {
 			}
 
 			// String login, String email, String fullName, UserStatus status, UserPrivilege privilege, String password
-			User user = new User();
+			Client user = new Client();
 			user.setLogin(tfUsername.getText());
 			user.setEmail(tfEmail.getText());
 			user.setFullName(tfFullName.getText());
 			user.setStatus(UserStatus.ENABLED);
 			user.setPrivilege(UserPrivilege.USER);
 			user.setPassword(tfPassword.getText());
-			userable.registerUser(user);
+			userable.registerClient(user);
 			new Alert(Alert.AlertType.INFORMATION, "The user has been successfully registered.", ButtonType.OK).showAndWait();
 			//En caso de que alguna validación sea errónea. 
-		} catch (Exception e) {
+		} catch (UserManagerException e) {
 			new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
 		}
 	}

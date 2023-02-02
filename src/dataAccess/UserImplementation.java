@@ -1,5 +1,7 @@
 package dataAccess;
 
+import entities.Admin;
+import entities.Client;
 import entities.User;
 import entities.UserPrivilege;
 import entities.UserStatus;
@@ -30,8 +32,23 @@ public class UserImplementation implements Userable {
 	}
 
 	@Override
-	public void registerUser(User user) throws UserManagerException {
-		uc.create_XML(user);
+	public void registerClient(Client user) throws UserManagerException {
+		try {
+			uc.create_XML(user);
+		} catch (ClientErrorException ce) {
+			LOGGER.severe(ce.getMessage());
+			throw new UserManagerException("Error registering user");
+		}
+	}
+
+	@Override
+	public void registerAdmin(Admin user) throws UserManagerException {
+		try {
+			uc.create_XML(user);
+		} catch (ClientErrorException ce) {
+			LOGGER.severe(ce.getMessage());
+			throw new UserManagerException("Error registering user");
+		}
 	}
 
 	@Override
@@ -64,8 +81,14 @@ public class UserImplementation implements Userable {
 	}
 
 	@Override
-	public User findUserByLogin(String login) throws UserManagerException {
-		return uc.findByLogin_XML(User.class, login);
+	public Client findClientByLogin(String login) throws UserManagerException {
+		try {
+			Client user = uc.findByLogin_XML(Client.class, login);
+			return user;
+		} catch (ClientErrorException ce) {
+			LOGGER.severe(ce.getMessage());
+			throw new UserManagerException("Could not find user");
+		}
 	}
 
 	@Override
