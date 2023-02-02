@@ -48,7 +48,6 @@ public class HelpController {
     private void handleWindowShowing(WindowEvent event){
         WebEngine webEngine = webView.getEngine();
         //Load help page.
-        webEngine.load(getClass()
-                .getResource("windowController/HelpBooking.html").toExternalForm());
+        webEngine.load(getClass().getResource("/windowController/HelpBooking.html").toExternalForm());
     }
 }
