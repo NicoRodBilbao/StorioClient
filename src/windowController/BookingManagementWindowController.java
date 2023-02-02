@@ -101,7 +101,7 @@ public class BookingManagementWindowController {
     @FXML
     private Button btnCreate, btnSearch, btnDelete, btnModify;
     @FXML
-    private MenuItem  miUsersManual, miPrintReport;
+    private MenuItem  miUsersManual, miPrintReport, miModel,miUser,miItem,miPack;
     @FXML
     private ListView lvPacks;
     @FXML
@@ -142,6 +142,10 @@ public class BookingManagementWindowController {
                 miReport.setDisable(true);
                 this.user = (Client) user;
             }*/
+            miModel.setOnAction(event -> this.handleButtonGoToModel(event));
+            miUser.setOnAction(event -> this.handleButtonGoToUser(event));
+            miItem.setOnAction(event -> this.handleButtonGoToItem(event));
+            miPack.setOnAction(event -> this.handleButtonGoToPack(event));
             miPrintReport.setOnAction(this::handleButtonprintReport);
             miUsersManual.setOnAction(this::handleHelpAction);
             packs = FXCollections.observableArrayList(packManager.getAllPacks());
@@ -420,10 +424,10 @@ public class BookingManagementWindowController {
         this.tcPacks.setCellValueFactory(
                 new PropertyValueFactory<>("packs")
         );
-        List<Booking> bookings = bookingable.findAll_XML(new GenericType<List<Booking>>() {
-        });
+//        List<Booking> bookings = bookingable.findAll_XML(new GenericType<List<Booking>>() {
+//        });
 
-        tvBooking.setItems(FXCollections.observableArrayList(bookings));
+//        tvBooking.setItems(FXCollections.observableArrayList(bookings));
     }
 
     @FXML
@@ -532,7 +536,7 @@ public class BookingManagementWindowController {
     }
 
     @FXML
-    private void handleButtonGoToPack(MouseEvent event) {
+    private void handleButtonGoToPack(ActionEvent event) {
         primaryStage.close();
         Stage stage = new Stage();
         // Carga el document FXML y obtiene un objeto Parent
@@ -551,7 +555,7 @@ public class BookingManagementWindowController {
     }
     
     @FXML
-    private void handleButtonGoToModel(MouseEvent event) {
+    private void handleButtonGoToModel(ActionEvent event) {
         primaryStage.close();
         Stage stage = new Stage();
         // Carga el document FXML y obtiene un objeto Parent
@@ -561,7 +565,7 @@ public class BookingManagementWindowController {
         try {
             root = (Parent) loader.load();
         } catch (IOException ex) {
-            Logger.getLogger(ModelManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ItemManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
         ModelManagementWindowController controller = (ModelManagementWindowController) loader.getController();
         // Establece la escena en el escensario (Stage) y la muestra
@@ -570,7 +574,7 @@ public class BookingManagementWindowController {
     }
     
     @FXML
-    private void handleButtonGoToItem(MouseEvent event) {
+    private void handleButtonGoToItem(ActionEvent event) {
         primaryStage.close();
         Stage stage = new Stage();
         // Carga el document FXML y obtiene un objeto Parent
@@ -589,7 +593,7 @@ public class BookingManagementWindowController {
     }
     
     @FXML
-    private void handleButtonGoToUser(MouseEvent event) {
+    private void handleButtonGoToUser(ActionEvent event) {
         primaryStage.close();
         Stage stage = new Stage();
         // Carga el document FXML y obtiene un objeto Parent
@@ -608,7 +612,7 @@ public class BookingManagementWindowController {
     }
     
     @FXML
-    private void handleButtonGoBack(MouseEvent event) {
+    private void handleButtonGoBack(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setContentText("Do you want to exit the application?");
 
