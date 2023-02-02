@@ -5,8 +5,10 @@ import entities.Model;
 import entities.Pack;
 import factories.ItemFactory;
 import factories.ModelFactory;
+import factories.PackFactory;
 import interfaces.Itemable;
 import interfaces.Modelable;
+import interfaces.Packable;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -113,8 +115,8 @@ public class ItemManagementWindowController {
     Stage primaryStage;
     private final Itemable itemable = ItemFactory.getAccessItem();
     private final Modelable modelable = ModelFactory.getAccessModel();
+    private final Packable packable = PackFactory.getAccessPack();
 
-    //private final Packable packable = PackFactory.getAccessPack();
     /**
      * Initializes the stage for the window for ItemManagementWindow.
      *
@@ -259,10 +261,9 @@ public class ItemManagementWindowController {
             LOGGER.info("Search enabled state.");
             changeMode(3); // Change to search mode
         } else { // Find and change to default mode
-            if (tfIdItem.getText().trim().isEmpty()) {  // Unfindable
-                new Alert(Alert.AlertType.ERROR, "Fill the ID field before trying to search.", ButtonType.OK).showAndWait();
-                refreshTable(); // Refresh table content
-            } else {
+            LOGGER.info(cbModelItem.getSelectionModel().getSelectedIndex() + "");
+
+            if (!tfIdItem.getText().trim().isEmpty()) { // Find by id
                 LOGGER.log(Level.INFO, "Searching for Item {0}.", tfIdItem.getText());
                 List<Item> listItem = itemable.findItemById(Integer.parseInt(tfIdItem.getText()));
                 if (listItem.get(0) == null) { // Item wasn't found
@@ -271,6 +272,30 @@ public class ItemManagementWindowController {
                 } else { // Set the found item on the table
                     tvTableItem.setItems(FXCollections.observableArrayList(listItem));
                 }
+
+            } else if (!(cbModelItem.getSelectionModel().getSelectedIndex() == -1)) { // Find by Model
+                LOGGER.log(Level.INFO, "Searching for Item model {0}.", ((Model) cbModelItem.getSelectionModel().getSelectedItem()).getModel());
+                List<Item> listItem = itemable.findItemByModel(((Model) cbModelItem.getSelectionModel().getSelectedItem()).getId() + "");
+                if (listItem.get(0) == null) { // Item wasn't found
+                    new Alert(Alert.AlertType.ERROR, "Could not find the item.", ButtonType.OK).showAndWait();
+                    refreshTable(); // Refresh table content
+                } else { // Set the found item on the table
+                    tvTableItem.setItems(FXCollections.observableArrayList(listItem));
+                }
+
+            } else if (!(cbPackItem.getSelectionModel().getSelectedIndex() == -1)) { // Find by Pack
+                LOGGER.log(Level.INFO, "Searching for Item model {0}.", ((Pack) cbPackItem.getSelectionModel().getSelectedItem()).getId());
+                List<Item> listItem = itemable.findItemByPack(((Pack) cbPackItem.getSelectionModel().getSelectedItem()).getId() + "");
+                if (listItem.get(0) == null) { // Item wasn't found
+                    new Alert(Alert.AlertType.ERROR, "Could not find the item.", ButtonType.OK).showAndWait();
+                    refreshTable(); // Refresh table content
+                } else { // Set the found item on the table
+                    tvTableItem.setItems(FXCollections.observableArrayList(listItem));
+                }
+
+            } else { // Unfindable
+                new Alert(Alert.AlertType.ERROR, "Fill the ID, Model or Pack field before trying to search.", ButtonType.OK).showAndWait();
+                refreshTable(); // Refresh table content               
             }
             changeMode(0); // Change to default mode
         }
@@ -291,7 +316,8 @@ public class ItemManagementWindowController {
      * @param event The window event
      */
     @FXML
-    public void deleteItem(ActionEvent event) {
+    public void deleteItem(ActionEvent event
+    ) {
         LOGGER.info("Initializing deletion.");
         if (!btnDeleteItem.isDisabled() & !btnModifyItem.isDisabled()) { // Change to deletion mode
             LOGGER.info("Delete enabled state.");
@@ -344,10 +370,10 @@ public class ItemManagementWindowController {
 
             List<Model> listModel = modelable.listAllModels();
             cbModelItem.setItems(FXCollections.observableArrayList(listModel)); // Sets all Models on the ComboBox
-            //List<Pack> listPack = packable.listAllPacks();
-            //cbPackItem.setItems(FXCollections.observableArrayList(listPack)); // Sets all Packs on the ComboBox
+            List<Pack> listPack = packable.getAllPacks();
+            cbPackItem.setItems(FXCollections.observableArrayList(listPack)); // Sets all Packs on the ComboBox
         } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR , "The database was inaccessible. Closing Storio.").showAndWait();
+            new Alert(Alert.AlertType.ERROR, "The database was inaccessible. Closing Storio.").showAndWait();
             primaryStage.close();
         }
     }
@@ -361,8 +387,8 @@ public class ItemManagementWindowController {
         tfIdItem.setText("");
         taIssuesItem.setText("");
         dpCreateDateItem.setValue(null);
-        cbPackItem.setValue(null);
-        cbModelItem.getSelectionModel().select(0);
+        cbPackItem.getSelectionModel().select(-1);
+        cbModelItem.getSelectionModel().select(-1);
     }
 
     /**
@@ -434,6 +460,7 @@ public class ItemManagementWindowController {
                 dpCreateDateItem.setDisable(false);
                 taIssuesItem.setDisable(false);
                 cbModelItem.setDisable(false);
+                cbPackItem.setDisable(false);
                 tfIdItem.setText("" + (modelable.countModel() + 1));
                 LOGGER.log(Level.INFO, "Setting up Model for id {0}.", tfIdItem.getId());
                 LOGGER.info("Refreshing table.");
@@ -457,6 +484,8 @@ public class ItemManagementWindowController {
                 btnDeleteItem.setDisable(true);
                 btnCreateItem.setDisable(true);
                 tfIdItem.setDisable(false);
+                cbPackItem.setDisable(false);
+                cbModelItem.setDisable(false);
                 refreshTable();
                 break;
             case 4: // Deletion mode
@@ -537,7 +566,7 @@ public class ItemManagementWindowController {
         LOGGER.info(localDate.toString());
         return localDate;
     }
-    
+
     /**
      * This method formats a {@link java.lang.String} object to a
      * {@link java.time.LocalDate} with the default format of the system.
@@ -598,7 +627,7 @@ public class ItemManagementWindowController {
             // En caso contrario, los background de los tfUsername, tfEmail, tfFullName, tfPassword y tfRepeatPassword cambiar�n de #DDDDDD a WHITE
             tfIdItem.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
             taIssuesItem.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-            dpCreateDateItem.setBackground(new Background(new BackgroundFill(Color.WHITE,CornerRadii.EMPTY, Insets.EMPTY)));
+            dpCreateDateItem.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
             cbModelItem.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
             cbPackItem.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
             // la letra pasar� de BLACK a WHITE
@@ -656,21 +685,21 @@ public class ItemManagementWindowController {
     }
 
     private void handleOnMouseClickNavPack(ActionEvent event) {
-//        primaryStage.close();
-//        Stage stage = new Stage();
-//        // Carga el document FXML y obtiene un objeto Parent
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/PackManagementWindow.fxml"));
-//        // Crea una escena a partir del Parent
-//        Parent root = null;
-//        try {
-//            root = (Parent) loader.load();
-//        } catch (IOException ex) {
-//            Logger.getLogger(ItemManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        PackManagementWindowController controller = (PackManagementWindowController) loader.getController();
-//        // Establece la escena en el escensario (Stage) y la muestra
-//        controller.setStage(stage);
-//        controller.setStage(root);
+        primaryStage.close();
+        Stage stage = new Stage();
+        // Carga el document FXML y obtiene un objeto Parent
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/PackManagementWindow.fxml"));
+        // Crea una escena a partir del Parent
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(ItemManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        PackManagementWindowController controller = (PackManagementWindowController) loader.getController();
+        // Establece la escena en el escensario (Stage) y la muestra
+        controller.setStage(stage);
+        controller.initStage(root);
     }
 
     private void handleOnMouseClickNavUser(ActionEvent event) {

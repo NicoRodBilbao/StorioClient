@@ -5,6 +5,7 @@
  */
 package services;
 
+import java.util.ResourceBundle;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -27,7 +28,7 @@ public class PackClient {
 
     private WebTarget webTarget;
     private Client client;
-    private static final String BASE_URI = "http://localhost:8080/Storio-Server/webresources"; //Parametrizar en un archivo de propiedades
+    private static final String BASE_URI = ResourceBundle.getBundle("services.config").getString("URL"); //Parametrizar en un archivo de propiedades
 
     public PackClient() {
         client = javax.ws.rs.client.ClientBuilder.newClient();

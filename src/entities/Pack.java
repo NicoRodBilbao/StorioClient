@@ -143,7 +143,7 @@ public class Pack implements Serializable {
 
     @Override
     public String toString() {
-        return "Pack{" + "id=" + id + ", description=" + description + ", datePackAdd=" + datePackAdd + ", items=" + items + ", state=" + state + ", type=" + type + ", bookings=" + bookings + '}';
+        return "Pack "+id+" "+type;
     }
 
 }

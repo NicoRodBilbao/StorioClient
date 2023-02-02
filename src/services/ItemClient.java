@@ -73,7 +73,7 @@ public class ItemClient {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
 
-    public <T> T findAllPacksItems_XML(Class<T> responseType, String id) throws ClientErrorException {
+    public <T> T findAllPacksItems_XML(GenericType<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("{0}/AllPacksItems", new Object[]{id}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -95,7 +95,7 @@ public class ItemClient {
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
-    public <T> T findAllModelsItems_XML(Class<T> responseType, String id) throws ClientErrorException {
+    public <T> T findAllModelsItems_XML(GenericType<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("{0}/AllModelsItems", new Object[]{id}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
