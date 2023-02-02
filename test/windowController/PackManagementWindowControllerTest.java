@@ -48,7 +48,6 @@ import storioclient.StorioClient;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PackManagementWindowControllerTest extends ApplicationTest {
 
-    Pack pack;
     private TextField tfIdPack;
     private ComboBox cbTypePack, cbStatePack;
     private DatePicker dpCreateDatePack;
@@ -79,6 +78,12 @@ public class PackManagementWindowControllerTest extends ApplicationTest {
 
     @Test
     public void test1_openSignUp() {
+        clickOn("#tfUsername");
+        write("a");
+        clickOn("#tfPassword");
+        write("a");
+        clickOn("#mnGoTo");
+        clickOn("#miPack");
         verifyThat("#packManagementWindow", isVisible());
     }
 
@@ -100,45 +105,6 @@ public class PackManagementWindowControllerTest extends ApplicationTest {
         verifyThat("#tbcolDateAdded", isVisible());
         verifyThat("#tbcolPackType", isVisible());
     }
-
-    /*
-    @Test
-    public void test3_createUncompletePack() {
-        clickOn("#btnCreatePack");
-        verifyThat("#cbTypePack", isEnabled());
-        verifyThat("#dpCreateDatePack", isEnabled());
-        verifyThat("#cbStatePack", isEnabled());
-        verifyThat("#taDescriptionPack", isEnabled());
-
-        verifyThat("#tvTablePack", isDisabled());
-        verifyThat("#btnSearchPack", isDisabled());
-        verifyThat("#btnModifyPack", isDisabled());
-        verifyThat("#btnDeletePack", isDisabled());
-
-        clickOn("#taDescriptionPack");
-        write("Any description");
-
-        clickOn("#btnCreatePack");
-        verifyThat("Pack data is't complete, please complete all fields", isVisible());
-        clickOn("Aceptar");
-
-        clickOn("#btnCreatePack");
-        clickOn("#cbTypePack");
-        clickOn("SOUND");
-
-        clickOn("#btnCreatePack");
-        verifyThat("Pack data is't complete, please complete all fields", isVisible());
-        clickOn("Aceptar");
-
-        clickOn("#btnCreatePack");
-        clickOn("#cbStatePack");
-        clickOn("AVAILABLE");
-
-        clickOn("#btnCreatePack");
-        verifyThat("Pack data is't complete, please complete all fields", isVisible());
-        clickOn("Aceptar");
-    }
-     */
     /**
      * Test Create Pack Method from PackManagerWindowController
      */
@@ -159,9 +125,7 @@ public class PackManagementWindowControllerTest extends ApplicationTest {
         clickOn("#taDescriptionPack");
         write("Any description");
         clickOn("#cbTypePack");
-        clickOn("SOUND");
-        clickOn("#cbStatePack");
-        clickOn("AVAILABLE");
+        press(KeyCode.DOWN);
         clickOn("#btnCreatePack");
         verifyThat("New pack created", isVisible());
         clickOn("Aceptar");
@@ -197,6 +161,7 @@ public class PackManagementWindowControllerTest extends ApplicationTest {
     @Test
     public void test6_searchPackById() {
         assertNotEquals("Table has no data: Cannot test.", tvTablePack.getItems().size(), 0);
+
         clickOn("#btnSearchPack");
         verifyThat("#tfIdPack", isEnabled());
         verifyThat("#cbTypePack", isEnabled());
@@ -207,9 +172,10 @@ public class PackManagementWindowControllerTest extends ApplicationTest {
         verifyThat("#btnDeletePack", isDisabled());
 
         Node row = lookup(".table-row-cell").nth(0).query();
-
-        String id = ((Pack) tvTablePack.getItems().get(tvTablePack.getItems().size())).getId().toString();
         clickOn(row);
+        Pack pack = (Pack) tvTablePack.getSelectionModel().getSelectedItem();
+        String id = pack.getId().toString();
+
         clickOn("#btnSearchPack");
         verifyThat("Only can search for one parameter", isVisible());
         clickOn("Aceptar");
@@ -242,17 +208,7 @@ public class PackManagementWindowControllerTest extends ApplicationTest {
         verifyThat("#btnDeletePack", isDisabled());
 
         clickOn("#cbTypePack");
-        clickOn("SOUND");
-        clickOn("#cbStatePack");
-        clickOn("AVAILABLE");
-
-        clickOn("#btnSearchPack");
-        verifyThat("Only can search for one parameter", isVisible());
-        clickOn("Aceptar");
-
-        clickOn("#btnSearchPack");
-        clickOn("#cbTypePack");
-        clickOn("SOUND");
+        press(KeyCode.DOWN);
         clickOn("#btnSearchPack");
 
         assertEquals("Pack by Type search correctly", packsSound.size(), tvTablePack.getItems().size());
@@ -264,7 +220,6 @@ public class PackManagementWindowControllerTest extends ApplicationTest {
      */
     @Test
     public void test8_searchPackByState() {
-        clickOn("Aceptar");
         assertNotEquals("Table has no data: Cannot test.", tvTablePack.getItems().size(), 0);
         clickOn("#btnSearchPack");
         List<Pack> packs = tvTablePack.getItems();
@@ -279,7 +234,7 @@ public class PackManagementWindowControllerTest extends ApplicationTest {
         verifyThat("#btnDeletePack", isDisabled());
 
         clickOn("#cbStatePack");
-        clickOn("AVAILABLE");
+        press(KeyCode.DOWN);
 
         clickOn("#btnSearchPack");
         assertEquals("Pack by Type search correctly", packsAvailable.size(), tvTablePack.getItems().size());
@@ -297,17 +252,20 @@ public class PackManagementWindowControllerTest extends ApplicationTest {
         clickOn("Aceptar");
 
         Node row = lookup(".table-row-cell").nth(0).query();
-        pack = (Pack) tvTablePack.getSelectionModel().getSelectedItem();
         clickOn(row);
+        Pack pack = (Pack) tvTablePack.getSelectionModel().getSelectedItem();
+
         clickOn("#btnModifyPack");
         clickOn("#cbStatePack");
-        clickOn("UNAVAILABLE");
+        press(KeyCode.DOWN);
+        press(KeyCode.DOWN);
         clickOn("#btnModifyPack");
         clickOn("Aceptar");
 
         row = lookup(".table-row-cell").nth(0).query();
-        Pack p = (Pack) tvTablePack.getSelectionModel().getSelectedItem();
         clickOn(row);
+        Pack p = (Pack) tvTablePack.getSelectionModel().getSelectedItem();
+
         assertNotEquals("Modificado", p, pack);
 
     }
@@ -321,7 +279,6 @@ public class PackManagementWindowControllerTest extends ApplicationTest {
         List<Pack> packs = tvTablePack.getItems();
 
         clickOn("#btnDeletePack");
-        clickOn("#tfIdPack");
         Node row = lookup(".table-row-cell").nth(0).query();
         Pack pack = (Pack) tvTablePack.getSelectionModel().getSelectedItem();
         clickOn(row);
