@@ -43,6 +43,7 @@
                 <MenuItem fx:id="miDarkMode" mnemonicParsing="false" text="Dark Mode" />
             </Menu>
             <Menu fx:id="mnHelp" mnemonicParsing="false" text="Help">
+                <MenuItem fx:id="miUsersManual" mnemonicParsing="false" text="User's manual" />
                 <MenuItem fx:id="miHelp" mnemonicParsing="false" text="Report" />
             </Menu>
         </menus>
