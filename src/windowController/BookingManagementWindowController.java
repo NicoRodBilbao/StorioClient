@@ -101,9 +101,7 @@ public class BookingManagementWindowController {
     @FXML
     private Button btnCreate, btnSearch, btnDelete, btnModify;
     @FXML
-    private Menu mnDarkMode, mnHelp, mnGoTo, mnGoBack;
-    @FXML
-    private MenuItem miReport, miPack, miModel, miItem, miUser, miUsersManual, miPrintReport, miChangeMode;
+    private MenuItem  miUsersManual, miPrintReport;
     @FXML
     private ListView lvPacks;
     @FXML
@@ -369,19 +367,6 @@ public class BookingManagementWindowController {
         }
     }
 
-    public void closeWindow(WindowEvent event) {
-
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setContentText("Do you want to exit the application?");
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK) {
-            Platform.exit();
-        } else {
-            event.consume();
-        }
-    }
-
     public void refreshTable() {
         this.tcId.setCellValueFactory(
                 new PropertyValueFactory<>("id")
@@ -548,19 +533,91 @@ public class BookingManagementWindowController {
 
     @FXML
     private void handleButtonGoToPack(MouseEvent event) {
+        primaryStage.close();
+        Stage stage = new Stage();
+        // Carga el document FXML y obtiene un objeto Parent
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/PackManagementWindow.fxml"));
         // Crea una escena a partir del Parent
         Parent root = null;
         try {
             root = (Parent) loader.load();
         } catch (IOException ex) {
-            Logger.getLogger(StorioClient.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PackManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        BookingManagementWindowController controller = (BookingManagementWindowController) loader.getController();
+        PackManagementWindowController controller = (PackManagementWindowController) loader.getController();
         // Establece la escena en el escensario (Stage) y la muestra
-        controller.setStage(primaryStage);
-        controller.setUser(user);
+        controller.setStage(stage);
         controller.initStage(root);
+    }
+    
+    @FXML
+    private void handleButtonGoToModel(MouseEvent event) {
+        primaryStage.close();
+        Stage stage = new Stage();
+        // Carga el document FXML y obtiene un objeto Parent
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/ModelManagementWindow.fxml"));
+        // Crea una escena a partir del Parent
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(ModelManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        ModelManagementWindowController controller = (ModelManagementWindowController) loader.getController();
+        // Establece la escena en el escensario (Stage) y la muestra
+        controller.setStage(stage);
+        controller.setStage(root);
+    }
+    
+    @FXML
+    private void handleButtonGoToItem(MouseEvent event) {
+        primaryStage.close();
+        Stage stage = new Stage();
+        // Carga el document FXML y obtiene un objeto Parent
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/ItemManagementWindow.fxml"));
+        // Crea una escena a partir del Parent
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(ItemManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        ItemManagementWindowController controller = (ItemManagementWindowController) loader.getController();
+        // Establece la escena en el escensario (Stage) y la muestra
+        controller.setStage(stage);
+        controller.setStage(root);
+    }
+    
+    @FXML
+    private void handleButtonGoToUser(MouseEvent event) {
+        primaryStage.close();
+        Stage stage = new Stage();
+        // Carga el document FXML y obtiene un objeto Parent
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/UserManagementWindow.fxml"));
+        // Crea una escena a partir del Parent
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(UserManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        UserManagementWindowController controller = (UserManagementWindowController) loader.getController();
+        // Establece la escena en el escensario (Stage) y la muestra
+        controller.setStage(stage);
+        controller.initStage(root);
+    }
+    
+    @FXML
+    private void handleButtonGoBack(MouseEvent event) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText("Do you want to exit the application?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            Platform.exit();
+        } else {
+            event.consume();
+        }
     }
 
     /**
