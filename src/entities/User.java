@@ -2,22 +2,41 @@ package entities;
 
 import java.io.Serializable;
 import java.util.Objects;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement
 public class User implements Serializable {
 
-	private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
 
-	private UserStatus status;
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
 
 	private String login;
+        
+	private String email;
 
-	private Integer phoneNumber;
+    private Integer phoneNumber;
 
-	private String fullName;
+    private String fullName;
 
-	private String password;
+    private String password;
 
-	private UserPrivilege privilege;
+    @Enumerated(EnumType.STRING)
+    private UserPrivilege privilege;
 
 	public Integer getId() {
 		return id;
@@ -41,6 +60,14 @@ public class User implements Serializable {
 
 	public void setLogin(String login) {
 		this.login = login;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public Integer getPhoneNumber() {
@@ -81,6 +108,7 @@ public class User implements Serializable {
 		hash = 53 * hash + Objects.hashCode(this.id);
 		hash = 53 * hash + Objects.hashCode(this.status);
 		hash = 53 * hash + Objects.hashCode(this.login);
+		hash = 53 * hash + Objects.hashCode(this.email);
 		hash = 53 * hash + Objects.hashCode(this.phoneNumber);
 		hash = 53 * hash + Objects.hashCode(this.fullName);
 		hash = 53 * hash + Objects.hashCode(this.password);
@@ -101,6 +129,9 @@ public class User implements Serializable {
 		}
 		final User other = (User) obj;
 		if (!Objects.equals(this.login, other.login)) {
+			return false;
+		}
+		if (!Objects.equals(this.email, other.email)) {
 			return false;
 		}
 		if (!Objects.equals(this.fullName, other.fullName)) {
@@ -126,7 +157,7 @@ public class User implements Serializable {
 
 	@Override
 	public String toString() {
-		return "User{" + "id=" + id + ", status=" + status + ", login=" + login + ", phoneNumber=" + phoneNumber + ", fullName=" + fullName + ", password=" + password + ", privilege=" + privilege + '}';
+		return "User{" + "id=" + id + ", status=" + status + ", login=" + login + ", email=" + email + ", phoneNumber=" + phoneNumber + ", fullName=" + fullName + ", password=" + password + ", privilege=" + privilege + '}';
 	}
 
 }

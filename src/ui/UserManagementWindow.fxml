@@ -13,94 +13,99 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <TableView fx:id="tvTableUser" layoutX="37.0" layoutY="275.0" prefHeight="270.0" prefWidth="726.0" style="-fx-background-color: #333333; -fx-border-color: white;">
-        <columns>
-          <TableColumn prefWidth="56.79998779296875" text="ID" />
-          <TableColumn minWidth="0.0" prefWidth="178.39999389648438" text="Full Name" />
-            <TableColumn prefWidth="153.60003662109375" text="Email" />
-            <TableColumn prefWidth="115.20001220703125" text="Login" />
-            <TableColumn prefWidth="111.99993896484375" text="Phone Number" />
-            <TableColumn prefWidth="108.0" text="Status" />
-        </columns>
-      </TableView>
-      <MenuBar fx:id="menuBar" layoutY="1.0" prefHeight="26.0" prefWidth="800.0">
-        <menus>
-            <Menu fx:id="mnGoBack" mnemonicParsing="false" text="Go Back" />
-            <Menu fx:id="mnGoTo" mnemonicParsing="false" text="Go To">
-               <items>
-                  <MenuItem fx:id="miBooking" mnemonicParsing="false" text="Booking Management" />
-                  <MenuItem fx:id="miReport" mnemonicParsing="false" text="Report Management" />
-                  <MenuItem fx:id="miPack" mnemonicParsing="false" text="Pack Management" />
-                  <MenuItem fx:id="miModel" mnemonicParsing="false" text="Model Management" />
-                  <MenuItem fx:id="miItem" mnemonicParsing="false" text="Item Management" />
-               </items>
-            </Menu>
-            <Menu fx:id="mnDarkMode" mnemonicParsing="false" text="Dark Mode" />
-            <Menu fx:id="mnGoBack1" mnemonicParsing="false" text="Help" />
-        </menus>
-      </MenuBar>
-      <Button fx:id="btnCreateUser" layoutX="660.0" layoutY="70.0" mnemonicParsing="false" onAction="#handleSignUpButtonAction" prefHeight="33.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Create" textFill="WHITE">
-         <font>
-            <Font name="Calibri Bold" size="17.0" />
-         </font>
-      </Button>
-      <Button fx:id="btnSearchUser" layoutX="660.0" layoutY="116.0" mnemonicParsing="false" onAction="#handleSignUpButtonAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Search" textFill="WHITE">
-         <font>
-            <Font name="Calibri Bold" size="17.0" />
-         </font>
-      </Button>
-      <Button fx:id="btnDeleteUser" layoutX="660.0" layoutY="225.0" mnemonicParsing="false" onAction="#handleSignUpButtonAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Delete" textFill="WHITE">
-         <font>
-            <Font name="Calibri Bold" size="17.0" />
-         </font>
-      </Button>
-      <TextField fx:id="tfIdUser" layoutX="37.0" layoutY="86.0" prefHeight="25.0" prefWidth="91.0" />
-      <Label fx:id="lblIdUser" layoutX="37.0" layoutY="53.0" prefHeight="35.0" prefWidth="91.0" text="ID" textFill="WHITE">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Button fx:id="btnModifyUser" layoutX="660.0" layoutY="169.0" mnemonicParsing="false" onAction="#handleSignUpButtonAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Modify" textFill="WHITE">
-         <font>
-            <Font name="Calibri Bold" size="17.0" />
-         </font>
-      </Button>
-      <TextField fx:id="tfFullNameUser" layoutX="37.0" layoutY="146.0" prefHeight="25.0" prefWidth="235.0" />
-      <Label fx:id="lblFullNameUser" layoutX="37.0" layoutY="115.0" prefHeight="35.0" prefWidth="157.0" text="Full Name" textFill="WHITE">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <TextField fx:id="tfEmailUser" layoutX="37.0" layoutY="216.0" prefHeight="25.0" prefWidth="235.0" />
-      <Label fx:id="lblEmailUser" layoutX="37.0" layoutY="185.0" prefHeight="35.0" prefWidth="157.0" text="Email" textFill="WHITE">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <TextField fx:id="tfIdItem3" layoutX="352.0" layoutY="86.0" prefHeight="25.0" prefWidth="197.0" />
-      <Label fx:id="lblLoginUser" layoutX="352.0" layoutY="57.0" prefHeight="35.0" prefWidth="157.0" text="Login" textFill="WHITE">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <TextField fx:id="tfPhoneNumberUser" layoutX="352.0" layoutY="146.0" prefHeight="25.0" prefWidth="197.0" />
-      <Label fx:id="lblPhoneNumberUser" layoutX="352.0" layoutY="115.0" prefHeight="35.0" prefWidth="157.0" text="Phone Number" textFill="WHITE">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label fx:id="lblStatusUser" layoutX="352.0" layoutY="185.0" prefHeight="35.0" prefWidth="157.0" text="Status" textFill="WHITE">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <ComboBox fx:id="cbStatusUser" layoutX="352.0" layoutY="216.0" prefHeight="25.0" prefWidth="197.0" />
-      <CheckBox fx:id="cbManager" layoutX="155.0" layoutY="80.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="103.0" text="MANAGER?" textFill="WHITE">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </CheckBox>
-   </children>
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="windowController.UserManagementWindowController">
+	<children>
+		<TableView fx:id="tvTableUser" layoutX="37.0" layoutY="275.0" prefHeight="270.0" prefWidth="726.0" style="-fx-background-color: #333333; -fx-border-color: white;">
+			<columns>
+				<TableColumn fx:id="tbcolId" prefWidth="56.79998779296875" text="ID" />
+				<TableColumn fx:id="tbcolFullName" minWidth="0.0" prefWidth="178.39999389648438" text="Full Name" />
+				<TableColumn fx:id="tbcolEmail" prefWidth="153.60003662109375" text="Email" />
+				<TableColumn fx:id="tbcolLogin" prefWidth="115.20001220703125" text="Login" />
+				<TableColumn fx:id="tbcolPhoneNumber" prefWidth="111.99993896484375" text="Phone Number" />
+				<TableColumn fx:id="tbcolStatus" prefWidth="108.0" text="Status" />
+			</columns>
+		</TableView>
+		<MenuBar fx:id="menuBar" layoutY="1.0" prefHeight="26.0" prefWidth="800.0">
+			<menus>
+				<Menu fx:id="mnGoBack" mnemonicParsing="false" text="Go Back" />
+				<Menu fx:id="mnGoTo" mnemonicParsing="false" text="Go To">
+					<items>
+						<MenuItem fx:id="miBooking" mnemonicParsing="false" text="Booking Management" />
+						<MenuItem fx:id="miReport" mnemonicParsing="false" text="Report Management" />
+						<MenuItem fx:id="miPack" mnemonicParsing="false" text="Pack Management" />
+						<MenuItem fx:id="miModel" mnemonicParsing="false" text="Model Management" />
+						<MenuItem fx:id="miItem" mnemonicParsing="false" text="Item Management" />
+					</items>
+				</Menu>
+				<Menu fx:id="mnDarkMode" mnemonicParsing="false" text="Dark Mode" />
+				<Menu fx:id="mnGoBack1" mnemonicParsing="false" text="Help" />
+			</menus>
+		</MenuBar>
+		<Button fx:id="btnCreateUser" layoutX="660.0" layoutY="70.0" mnemonicParsing="false" onAction="#handleBtnCreateUserAction" prefHeight="33.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Create" textFill="WHITE">
+			<font>
+				<Font name="Calibri Bold" size="17.0" />
+			</font>
+		</Button>
+		<Button fx:id="btnSearchUser" layoutX="660.0" layoutY="116.0" mnemonicParsing="false" onAction="#handleBtnSearchUserAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Search" textFill="WHITE">
+			<font>
+				<Font name="Calibri Bold" size="17.0" />
+			</font>
+		</Button>
+		<Button fx:id="btnDeleteUser" layoutX="660.0" layoutY="225.0" mnemonicParsing="false" onAction="#handleBtnDeleteUserAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Delete" textFill="WHITE">
+			<font>
+				<Font name="Calibri Bold" size="17.0" />
+			</font>
+		</Button>
+		<Button fx:id="btnChangePassword" layoutX="660.0" layoutY="225.0" mnemonicParsing="false" onAction="#handleBtnChangePasswordAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Delete" textFill="WHITE">
+			<font>
+				<Font name="Calibri Bold" size="17.0" />
+			</font>
+		</Button>
+		<TextField fx:id="tfIdUser" layoutX="37.0" layoutY="86.0" prefHeight="25.0" prefWidth="91.0" />
+		<Label fx:id="lblIdUser" layoutX="37.0" layoutY="53.0" prefHeight="35.0" prefWidth="91.0" text="ID" textFill="WHITE">
+			<font>
+				<Font size="18.0" />
+			</font>
+		</Label>
+		<Button fx:id="btnModifyUser" layoutX="660.0" layoutY="169.0" mnemonicParsing="false" onAction="#handleBtnModifyUserAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Modify" textFill="WHITE">
+			<font>
+				<Font name="Calibri Bold" size="17.0" />
+			</font>
+		</Button>
+		<TextField fx:id="tfFullNameUser" layoutX="37.0" layoutY="146.0" prefHeight="25.0" prefWidth="235.0" />
+		<Label fx:id="lblFullNameUser" layoutX="37.0" layoutY="115.0" prefHeight="35.0" prefWidth="157.0" text="Full Name" textFill="WHITE">
+			<font>
+				<Font size="18.0" />
+			</font>
+		</Label>
+		<TextField fx:id="tfEmailUser" layoutX="37.0" layoutY="216.0" prefHeight="25.0" prefWidth="235.0" />
+		<Label fx:id="lblEmailUser" layoutX="37.0" layoutY="185.0" prefHeight="35.0" prefWidth="157.0" text="Email" textFill="WHITE">
+			<font>
+				<Font size="18.0" />
+			</font>
+		</Label>
+		<TextField fx:id="tfLoginuser" layoutX="352.0" layoutY="86.0" prefHeight="25.0" prefWidth="197.0" />
+		<Label fx:id="lblLoginUser" layoutX="352.0" layoutY="57.0" prefHeight="35.0" prefWidth="157.0" text="Login" textFill="WHITE">
+			<font>
+				<Font size="18.0" />
+			</font>
+		</Label>
+		<TextField fx:id="tfPhoneNumberUser" layoutX="352.0" layoutY="146.0" prefHeight="25.0" prefWidth="197.0" />
+		<Label fx:id="lblPhoneNumberUser" layoutX="352.0" layoutY="115.0" prefHeight="35.0" prefWidth="157.0" text="Phone Number" textFill="WHITE">
+			<font>
+				<Font size="18.0" />
+			</font>
+		</Label>
+		<Label fx:id="lblStatusUser" layoutX="352.0" layoutY="185.0" prefHeight="35.0" prefWidth="157.0" text="Status" textFill="WHITE">
+			<font>
+				<Font size="18.0" />
+			</font>
+		</Label>
+		<ComboBox fx:id="cbStatusUser" layoutX="352.0" layoutY="216.0" prefHeight="25.0" prefWidth="197.0" />
+		<CheckBox fx:id="cbManager" layoutX="155.0" layoutY="80.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="103.0" text="MANAGER?" textFill="WHITE">
+			<font>
+				<Font size="14.0" />
+			</font>
+		</CheckBox>
+	</children>
 </Pane>
