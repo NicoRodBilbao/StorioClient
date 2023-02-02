@@ -14,16 +14,16 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane fx:id="packManagementWindow" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="windowController.PackManagementWindowController">
    <children>
       <TextArea fx:id="taDescriptionPack" layoutX="304.0" layoutY="146.0" prefHeight="109.0" prefWidth="287.0" />
       <TableView fx:id="tvTablePack" layoutX="42.0" layoutY="268.0" prefHeight="270.0" prefWidth="726.0" style="-fx-background-color: #333333; -fx-border-color: white;">
         <columns>
-          <TableColumn prefWidth="119.19998168945312" text="ID" />
-          <TableColumn minWidth="0.0" prefWidth="236.79998779296875" text="Description" />
-            <TableColumn prefWidth="131.99993896484375" text="State" />
-            <TableColumn prefWidth="124.00006103515625" text="Date Added" />
-            <TableColumn minWidth="0.0" prefWidth="110.39996337890625" text="Pack Type" />
+          <TableColumn fx:id="tbcolID" prefWidth="119.19998168945312" text="ID" />
+          <TableColumn fx:id="tbcolDescription" minWidth="0.0" prefWidth="236.79998779296875" text="Description" />
+            <TableColumn fx:id="tbcolState" prefWidth="131.99993896484375" text="State" />
+            <TableColumn fx:id="tbcolDateAdded" prefWidth="124.00006103515625" text="Date Added" />
+            <TableColumn fx:id="tbcolPackType" minWidth="0.0" prefWidth="110.39996337890625" text="Pack Type" />
         </columns>
       </TableView>
       <ComboBox fx:id="cbTypePack" layoutX="42.0" layoutY="150.0" prefHeight="25.0" prefWidth="203.0" />
@@ -37,28 +37,28 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <Button fx:id="btnCreatePack" layoutX="652.0" layoutY="73.0" mnemonicParsing="false" onAction="#handleSignUpButtonAction" prefHeight="33.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Create" textFill="WHITE">
+      <Button fx:id="btnCreatePack" layoutX="652.0" layoutY="73.0" mnemonicParsing="false" onAction="#createPackButtonAction" prefHeight="33.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Create" textFill="WHITE">
          <font>
             <Font name="Calibri Bold" size="17.0" />
          </font>
       </Button>
-      <Button fx:id="btnSearchPack" layoutX="652.0" layoutY="118.0" mnemonicParsing="false" onAction="#handleSignUpButtonAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Search" textFill="WHITE">
+      <Button fx:id="btnSearchPack" layoutX="652.0" layoutY="118.0" mnemonicParsing="false" onAction="#searchPackButtonAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Search" textFill="WHITE">
          <font>
             <Font name="Calibri Bold" size="17.0" />
          </font>
       </Button>
-      <Button fx:id="btnDeletePack" layoutX="652.0" layoutY="222.0" mnemonicParsing="false" onAction="#handleSignUpButtonAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Delete" textFill="WHITE">
+      <TextField fx:id="tfIdPack" layoutX="42.0" layoutY="77.0" prefHeight="25.0" prefWidth="102.0" />
+      <Button fx:id="btnDeletePack" layoutX="652.0" layoutY="210.0" mnemonicParsing="false" onAction="#deletePackButtonAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Delete" textFill="WHITE">
          <font>
             <Font name="Calibri Bold" size="17.0" />
          </font>
       </Button>
-      <TextField fx:id="tfNamePack" layoutX="42.0" layoutY="77.0" prefHeight="25.0" prefWidth="102.0" />
       <Label fx:id="lblIdPack" layoutX="42.0" layoutY="46.0" prefHeight="35.0" prefWidth="102.0" text="ID" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Button fx:id="btnModifyPack" layoutX="652.0" layoutY="172.0" mnemonicParsing="false" onAction="#handleSignUpButtonAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Modify" textFill="WHITE">
+      <Button fx:id="btnModifyPack" layoutX="652.0" layoutY="163.0" mnemonicParsing="false" onAction="#modifyPackButtonAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #FE0001;" text="Modify" textFill="WHITE">
          <font>
             <Font name="Calibri Bold" size="17.0" />
          </font>
@@ -77,19 +77,29 @@
       </Label>
       <MenuBar fx:id="menuBar" layoutY="1.0" prefHeight="26.0" prefWidth="800.0">
         <menus>
-            <Menu fx:id="mnGoBack" mnemonicParsing="false" text="Go Back" />
+            <Menu fx:id="mnGoBack" mnemonicParsing="false" text="Go Back">
+               <items>
+                  <MenuItem fx:id="miLogOut" mnemonicParsing="false" onAction="#logOut" text="Log out" />
+               </items></Menu>
             <Menu fx:id="mnGoTo" mnemonicParsing="false" text="Go To">
                <items>
-                  <MenuItem fx:id="miBooking" mnemonicParsing="false" text="Booking Management" />
-                  <MenuItem fx:id="miReport" mnemonicParsing="false" text="Report Management" />
-                  <MenuItem fx:id="miPack" mnemonicParsing="false" text="Pack Management" />
-                  <MenuItem fx:id="miModel" mnemonicParsing="false" text="Model Management" />
-                  <MenuItem fx:id="miItem" mnemonicParsing="false" text="Item Management" />
-                  <MenuItem fx:id="miUser" mnemonicParsing="false" text="User Management" />
+                  <MenuItem fx:id="miBooking" mnemonicParsing="false" onAction="#goToBookingWindow" text="Booking Management" />
+                  <MenuItem fx:id="miReport" mnemonicParsing="false" onAction="#goToReportWindow" text="Report Management" />
+                  <MenuItem fx:id="miModel" mnemonicParsing="false" onAction="#goToModelWindow" text="Model Management" />
+                  <MenuItem fx:id="miItem" mnemonicParsing="false" onAction="#goToItemWindow" text="Item Management" />
+                  <MenuItem fx:id="miUser" mnemonicParsing="false" onAction="#goToUserWindow" text="User Management" />
                </items>
             </Menu>
-            <Menu fx:id="mnDarkMode" mnemonicParsing="false" text="Dark Mode" />
-            <Menu fx:id="mnGoBack1" mnemonicParsing="false" text="Help" />
+            <Menu fx:id="mnDarkMode" mnemonicParsing="false" text="Dark Mode">
+               <items>
+                  <MenuItem fx:id="miChangeMode" mnemonicParsing="false" onAction="#changeWindow" text="Change" />
+               </items></Menu>
+            <Menu fx:id="mnGoTo1" mnemonicParsing="false" text="Help">
+               <items>
+                  <MenuItem fx:id="miHelpReport" mnemonicParsing="false" onAction="#goToHelpReportWindow" text="Report" />
+                  <MenuItem fx:id="miWindowHelp" mnemonicParsing="false" onAction="#goToHelpWindow" text="WindowHelp" />
+               </items>
+            </Menu>
         </menus>
       </MenuBar>
    </children>

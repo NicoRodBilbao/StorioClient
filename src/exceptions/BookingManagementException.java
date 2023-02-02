@@ -9,8 +9,8 @@ package exceptions;
  *
  * @author 2dam
  */
-public class PackManagerException extends Exception{
-    public PackManagerException(String msg){
+public class BookingManagementException extends Exception{
+    public BookingManagementException(String msg){
         super(msg);
     }
 }

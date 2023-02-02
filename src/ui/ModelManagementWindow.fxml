@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane id="paneWindow" fx:id="paneModel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane id="paneWindow" fx:id="paneModel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="windowController.ModelManagementWindowController">
    <children>
       <TableView fx:id="tvModel" layoutX="16.0" layoutY="233.0" prefHeight="353.0" prefWidth="782.0" style="-fx-background-color: #333333; -fx-border-color: WHITE;">
          <columns>
@@ -24,7 +24,9 @@
       </TableView>
       <MenuBar fx:id="menuBar" layoutY="1.0" prefHeight="27.0" prefWidth="800.0">
          <menus>
-            <Menu fx:id="mnGoBack" mnemonicParsing="false" text="Go Back" />
+            <Menu fx:id="mnGoBack" mnemonicParsing="false" text="Go Back">
+                <MenuItem fx:id="miGoBack" mnemonicParsing="false" text="Log Out"/>
+            </Menu>
             <Menu fx:id="mnGoTo" mnemonicParsing="false" text="Go To">
                <items>
                   <MenuItem fx:id="miBooking" mnemonicParsing="false" text="Booking Management" />
@@ -44,22 +46,22 @@
          </font>
       </Label>
       <TextField fx:id="tfId" layoutX="38.0" layoutY="93.0" prefHeight="27.0" prefWidth="209.0" />
-      <Button fx:id="btnSearch" layoutX="648.0" layoutY="93.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="106.0" style="-fx-background-color: #FE0001;" text="Search" textFill="WHITE">
+      <Button fx:id="btnSearch" layoutX="648.0" layoutY="93.0" mnemonicParsing="false" onAction="#findModel" prefHeight="27.0" prefWidth="106.0" style="-fx-background-color: #FE0001;" text="Search" textFill="WHITE">
          <font>
             <Font name="Calibri Bold" size="14.0" />
          </font>
       </Button>
-      <Button fx:id="btnCreate" layoutX="648.0" layoutY="54.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="106.0" style="-fx-background-color: #FE0001;" text="Create" textFill="WHITE">
+      <Button fx:id="btnCreate" layoutX="648.0" layoutY="54.0" mnemonicParsing="false" onAction="#createModel" prefHeight="27.0" prefWidth="106.0" style="-fx-background-color: #FE0001;" text="Create" textFill="WHITE">
          <font>
             <Font name="Calibri Bold" size="14.0" />
          </font>
       </Button>
-      <Button fx:id="btnModify" layoutX="648.0" layoutY="130.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="106.0" style="-fx-background-color: #FE0001;" text="Modify" textFill="WHITE">
+      <Button fx:id="btnModify" layoutX="648.0" layoutY="130.0" mnemonicParsing="false" onAction="#updateModel" prefHeight="27.0" prefWidth="106.0" style="-fx-background-color: #FE0001;" text="Modify" textFill="WHITE">
          <font>
             <Font name="Calibri Bold" size="14.0" />
          </font>
       </Button>
-      <Button fx:id="btnDelete" layoutX="648.0" layoutY="170.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="106.0" style="-fx-background-color: #FE0001;" text="Delete" textFill="WHITE">
+      <Button fx:id="btnDelete" layoutX="648.0" layoutY="170.0" mnemonicParsing="false" onAction="#deleteModel" prefHeight="27.0" prefWidth="106.0" style="-fx-background-color: #FE0001;" text="Delete" textFill="WHITE">
          <font>
             <Font name="Calibri Bold" size="14.0" />
          </font>

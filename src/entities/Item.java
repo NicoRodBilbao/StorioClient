@@ -4,53 +4,64 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
-
-@Entity
-@Table(name="Item",schema="storio")
-@NamedQueries({
-    @NamedQuery(name="findAllItems",
-            query="SELECT i FROM Item i ORDER BY i.id DESC"),
-    @NamedQuery(name="findAllItemsWithoutPack",
-            query="SELECT i FROM Item i WHERE i.pack is NULL"),
-    @NamedQuery(name="findAllModelsItems",
-            query="SELECT i FROM Item i WHERE i.model = :model ORDER BY i.id DESC"),
-    @NamedQuery(name="findAllPacksItems",
-            query="SELECT i FROM Item i WHERE i.pack = :pack ORDER BY i.id DESC")
-})
+/**
+     *  Entity class Item has the following fields: 
+     *  <ul>
+     *      <li><strong>id:</strong> Identifier field. <em>Integer</em>.</li>
+     *      <li><strong>model:</strong> {@link Model} that an Item is. <em>{@link Model}</em>.</li>
+     *      <li><strong>dateAdded:</strong> Date in which an Item was added. <em>Date</em>.</li>
+     *      <li><strong>issues:</strong> Any issues regarding the Item will be stored here. <em>String</em>.</li>
+     *      <li><strong>report:</strong> List of {@link Report} associated to the item. <em>List</em>.</li>
+     *      <li><strong>pack:</strong> {@link Pack} to which an Item belongs. <em>{@link Pack}</em>.</li>
+     *  </ul>
+     * 
+     * @author Nicolás Rodríguez
+ */
 @XmlRootElement
 public class Item implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    /**
+     * Identifier field for the Item. 
+     */
     private Integer id;
-    @ManyToOne
-    @XmlTransient
+    /**
+     * {@link Model} that an Item is.
+     */
     private Model model;
-    @Temporal(javax.persistence.TemporalType.DATE)
+    /**
+     * Date in which an Item was added.
+     */
     private Date dateAdded;
+    /**
+     * Any issues regarding the Item will be stored here.
+     */
     private String issues;
-    @OneToMany(mappedBy = "item")
+    /**
+     * List of {@link Report} associated to the item.
+     */
     private List<Report> report;
-    @ManyToOne
-    @XmlTransient
+    /**
+     * {@link Pack} to which an Item belongs.
+     */
     private Pack pack;
 
+    /**
+     * Empty constructor for Item.
+     */
     public Item() {
         super();
     }
-
+    /**
+     * Complete constructor for Item.
+     * 
+     * @param id <strong>id:</strong> Identifier field. <em>Integer</em>.
+     * @param model <strong>model:</strong> {@link Model} that an Item is.
+     * @param dateAdded <strong>dateAdded:</strong> Date in which an Item was added.
+     * @param issues <strong>issues:</strong> Any issues regarding the Item will be stored here.
+     * @param report <strong>report:</strong> List of {@link Report} associated to the item.
+     * @param pack <strong>pack:</strong> {@link Pack} to which an Item belongs.
+     */
     public Item(Integer id, Model model, Date dateAdded, String issues, List<Report> report, Pack pack) {
         this.id = id;
         this.model = model;
@@ -59,56 +70,94 @@ public class Item implements Serializable {
         this.report = report;
         this.pack = pack;
     }
-    
+    /**
+     * Gets the id value of the Item.
+     * @return The id value of the Item.
+     */
     public Integer getId() {
         return id;
     }
-
+    /**
+     * Sets the id value of the Item.
+     * @param id The id value of the Item.
+     */
     public void setId(Integer id) {
         this.id = id;
     }
-
+    /**
+     * Gets the {@link Model} of the Item.
+     * @return The {@link Model} of the Item.
+     */
     public Model getModel() {
         return model;
     }
-
+    /**
+     * Sets the {@link Model} type of the Item.
+     * @param model The {@link Model} type of the Item.
+     */
     public void setModel(Model model) {
         this.model = model;
     }
-
+    /**
+     * Gets the adding date of the Item.
+     * @return The adding date of the Item.
+     */
     public Date getDateAdded() {
         return dateAdded;
     }
-
+    /**
+     * Sets the adding date of the Item.
+     * @param dateAdded The adding date of the Item.
+     */
     public void setDateAdded(Date dateAdded) {
         this.dateAdded = dateAdded;
     }
-
+    /**
+     * Gets the issues of the Item.
+     * @return The issues of the Item.
+     */
     public String getIssues() {
         return issues;
     }
-
+    /**
+     * Sets the issues of the Item.
+     * @param issues The issues of the Item.
+     */
     public void setIssues(String issues) {
         this.issues = issues;
     }
-
-    @XmlTransient
+    /**
+     * Gets the {@link Report} List of the Item.
+     * @return The {@link Report} List of the Item.
+     */
     public List<Report> getReport() {
         return report;
     }
-
+    /**
+     * Sets the {@link Report} List of the Item.
+     * @param report The {@link Report} List of the Item.
+     */
     public void setReport(List<Report> report) {
         this.report = report;
     }
-
+    /**
+     * Gets the {@link Pack} of the Item.
+     * @return The {@link Pack} of the Item.
+     */
     public Pack getPack() {
         return pack;
     }
-
+    /**
+     * Sets the {@link Pack} of the Item.
+     * @param pack The {@link Pack}  of the Item.
+     */
     public void setPack(Pack pack) {
         this.pack = pack;
     }
-
+    /**
+     * HashCode method implementation for the entity.
+     * @return An integer value as hashcode for the object. 
+     */
     @Override
     public int hashCode() {
         int hash = 7;
@@ -120,7 +169,11 @@ public class Item implements Serializable {
         hash = 61 * hash + Objects.hashCode(this.pack);
         return hash;
     }
-
+    /**
+     * Compares two Item fully. 
+     * @param obj The object to compare to.
+     * @return True if objects are equals, otherwise false.
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -153,9 +206,18 @@ public class Item implements Serializable {
         }
         return true;
     }
-
+    /**
+     * This method returns a String for a Item instance.
+     * @return The String representation for the Item object. 
+     */
     @Override
     public String toString() {
         return "Item{" + "id=" + id + ", model=" + model + ", dateAdded=" + dateAdded + ", issues=" + issues + ", report=" + report + ", pack=" + pack + '}';
     }
 }
+
+
+
+
+
+
