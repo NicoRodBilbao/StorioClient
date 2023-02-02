@@ -5,8 +5,6 @@
  */
 package storioclient;
 
-import entities.User;
-import entities.UserPrivilege;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

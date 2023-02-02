@@ -24,7 +24,9 @@
       </TableView>
       <MenuBar fx:id="menuBar" layoutY="1.0" prefHeight="27.0" prefWidth="800.0">
          <menus>
-            <Menu fx:id="mnGoBack" mnemonicParsing="false" text="Go Back" />
+            <Menu fx:id="mnGoBack" mnemonicParsing="false" text="Go Back">
+                <MenuItem fx:id="miGoBack" mnemonicParsing="false" text="Log Out"/>
+            </Menu>
             <Menu fx:id="mnGoTo" mnemonicParsing="false" text="Go To">
                <items>
                   <MenuItem fx:id="miBooking" mnemonicParsing="false" text="Booking Management" />

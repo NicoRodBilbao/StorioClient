@@ -15,27 +15,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@Entity
-@Table(name = "storio_user", schema = "storio")
-@Inheritance(strategy = InheritanceType.JOINED)
-@NamedQueries({
-    @NamedQuery(name="findAllUsers",
-                query="SELECT u FROM User u"),
-    @NamedQuery(name="findUsersByPrivilege",
-                query="SELECT u FROM User u WHERE u.privilege = :userPrivilege"),
-    @NamedQuery(name="findUsersByStatus",
-                query="SELECT u FROM User u WHERE u.status = :userStatus"),
-    @NamedQuery(name="findUsersByFullName",
-                query="SELECT u FROM User u WHERE u.fullName LIKE :userFullName"),
-    @NamedQuery(name="findUserById",
-                query="SELECT u FROM User u WHERE u.id = :userId"),
-    @NamedQuery(name="findUserByLogin",
-                query="SELECT u FROM User u WHERE u.login = :userLogin"),
-    @NamedQuery(name="findUserByEmail",
-                query="SELECT u FROM User u WHERE u.email LIKE :userEmail"),
-    @NamedQuery(name="findUserByPhoneNumber",
-                query="SELECT u FROM User u WHERE u.phoneNumber = :userPhoneNumber"),
-    })
 @XmlRootElement
 public class User implements Serializable {
 
@@ -123,7 +102,6 @@ public class User implements Serializable {
 		this.privilege = privilege;
 	}
 
-        
 	@Override
 	public int hashCode() {
 		int hash = 3;

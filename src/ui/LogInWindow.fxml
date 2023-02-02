@@ -12,7 +12,8 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="paneLogInWindow" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="801.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="windowController.LogInWindowController">
+<Pane fx:id="paneLogInWindow" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="801.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="windowController.LogInWindowController">
     <children>
         <Button fx:id="btnSignUp" layoutX="455.0" layoutY="423.0" mnemonicParsing="false" onAction="#signUp" prefHeight="43.0" prefWidth="90.0" style="-fx-background-color: #FE0001;" text="Sign Up" textFill="WHITE">
             <font>
@@ -45,14 +46,14 @@
         <Button fx:id="btnDarkMode" alignment="CENTER" layoutX="741.0" layoutY="24.0" maxHeight="35.0" maxWidth="61.0" mnemonicParsing="false" onAction="#handleDarkModeButtonAction" prefHeight="35.0" prefWidth="40.0" style="-fx-background-color: #333333;" textAlignment="CENTER" />
         <Rectangle fx:id="decoLogo" arcHeight="5.0" arcWidth="5.0" fill="#fe0001" height="572.0" layoutX="14.0" layoutY="14.0" stroke="BLACK" strokeType="INSIDE" width="304.0" />
         <ImageView fx:id="imgLogo" fitHeight="150.0" fitWidth="200.0" layoutX="66.0" layoutY="214.0" pickOnBounds="true" preserveRatio="true">
-            <image>
+            <!--<image>
                 <Image url="@../../../../logos%20pae/Copia%20de%20Logoweb120x230Paestudiosfe0002.jpg" />
-            </image>
+            </image>-->
         </ImageView>
         <ImageView fx:id="btnImgDarkMode" fitHeight="25.0" fitWidth="25.0" layoutX="748.0" layoutY="29.0" preserveRatio="true">
-            <image>
+            <!--<image>
                 <Image url="@../../../../ui/sol_dark_mode.png" />
-            </image>
+            </image>-->
         </ImageView>
         <Label fx:id="lblTitle" alignment="CENTER" contentDisplay="CENTER" layoutX="317.0" layoutY="59.0" prefHeight="75.0" prefWidth="484.0" text="Sign In!" textAlignment="CENTER" textFill="WHITE">
             <font>

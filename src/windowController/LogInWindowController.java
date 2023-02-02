@@ -3,6 +3,8 @@ package windowController;
 import entities.User;
 import exceptions.UserManagerException;
 import factories.UserFactory;
+import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -134,6 +136,8 @@ public class LogInWindowController {
 		} catch (UserManagerException e) {
 			LOGGER.severe(e.getMessage());
 			new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
+		} catch (IOException ex) {
+			Logger.getLogger(LogInWindowController.class.getName()).log(Level.SEVERE, null, ex);
 		}
 
 	}
