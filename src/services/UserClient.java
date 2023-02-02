@@ -1,5 +1,6 @@
 package services;
 
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.InternalServerErrorException;
@@ -25,7 +26,7 @@ public class UserClient {
 
 	private WebTarget webTarget;
 	private Client client;
-	private static final String BASE_URI = "http://localhost:8080/StorioWeb/webresources";
+	private static final String BASE_URI = ResourceBundle.getBundle("services.config").getString("URL");// Clase
 
 	protected static final Logger LOGGER = Logger.getLogger(UserClient.class.getName());
 

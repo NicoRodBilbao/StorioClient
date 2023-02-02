@@ -114,15 +114,15 @@ public class LogInWindowController {
 				throw new UserManagerException("Invalid credentials");
 			} else {
 				LOGGER.info("OK!!");
-				boolean login = UserFactory.getAccessUser().loginUser(tfUsername.getText(), tfPassword.getText());
-				if (!login) {
-					decorPassword.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
-					throw new UserManagerException("Invalid credentials");
-				} else {
+//				boolean login = UserFactory.getAccessUser().loginUser(tfUsername.getText(), tfPassword.getText());
+//				if (!login) {
+//					decorPassword.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
+//					throw new UserManagerException("Invalid credentials");
+//				} else {
 					primaryStage.close();
 					Stage stage = new Stage();
 					// Carga el document FXML y obtiene un objeto Parent
-					FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/ApplicationWindow.fxml"));
+					FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/BookingManagementWindow.fxml"));
 					// Crea una escena a partir del Parent
 					Parent root = (Parent) loader.load();
 					BookingManagementWindowController controller = (BookingManagementWindowController) loader.getController();
@@ -130,8 +130,8 @@ public class LogInWindowController {
 					controller.setStage(stage);
 					controller.setUser(user);
 					controller.initStage(root);
-					new Alert(Alert.AlertType.INFORMATION, "You are now logged in", ButtonType.OK).showAndWait();
-				}
+					//new Alert(Alert.AlertType.INFORMATION, "You are now logged in", ButtonType.OK).showAndWait();
+//				}
 			}
 		} catch (UserManagerException e) {
 			LOGGER.severe(e.getMessage());
