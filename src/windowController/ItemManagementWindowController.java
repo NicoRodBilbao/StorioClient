@@ -47,6 +47,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -119,6 +120,7 @@ public class ItemManagementWindowController {
         LOGGER.info("Initializing ItemManagementWindow.");
 
         Scene scene = new Scene(root);
+        primaryStage.getIcons().add(new Image("windowController/images/logo.png"));
         LOGGER.info("Setting scene.");
         primaryStage.setScene(scene); // Set the stage's propperties
         primaryStage.setTitle("Item Management");
@@ -732,21 +734,21 @@ public class ItemManagementWindowController {
      * @param event The window event
      */
     private void handleOnMouseClickNavUser(ActionEvent event) {
-        primaryStage.close();
-        Stage stage = new Stage();
-        // Carga el document FXML y obtiene un objeto Parent
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/UserManagementWindow.fxml"));
-        // Crea una escena a partir del Parent
-        Parent root = null;
-        try {
-            root = (Parent) loader.load();
-        } catch (IOException ex) {
-            Logger.getLogger(ItemManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        UserManagementWindowController controller = (UserManagementWindowController) loader.getController();
-        // Establece la escena en el escensario (Stage) y la muestra
-        controller.setStage(stage);
-        controller.initStage(root);
+//        primaryStage.close();
+//        Stage stage = new Stage();
+//        // Carga el document FXML y obtiene un objeto Parent
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/UserManagementWindow.fxml"));
+//        // Crea una escena a partir del Parent
+//        Parent root = null;
+//        try {
+//            root = (Parent) loader.load();
+//        } catch (IOException ex) {
+//            Logger.getLogger(ItemManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        UserManagementWindowController controller = (UserManagementWindowController) loader.getController();
+//        // Establece la escena en el escensario (Stage) y la muestra
+//        controller.setStage(stage);
+//        controller.initStage(root);
     }
 
     /**

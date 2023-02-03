@@ -21,6 +21,6 @@ public class BookingFactory {
      * @return interface Bookingable as BookingImplementation
      */
     public static Bookingable getAccessBooking() {
-        return null;
+        return booking;
     }
 }

@@ -8,6 +8,7 @@ package windowController;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
@@ -31,6 +32,7 @@ public class HelpController {
     public void initAndShowStage(Parent root) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
+        stage.getIcons().add(new Image("windowController/images/logo.png"));
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setScene(scene);
         stage.setTitle("Ayuda para la Gestion de Usuarios");
