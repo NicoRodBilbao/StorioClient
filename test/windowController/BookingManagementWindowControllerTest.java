@@ -68,12 +68,23 @@ public class BookingManagementWindowControllerTest extends ApplicationTest {
         FxToolkit.registerPrimaryStage();
         FxToolkit.setupApplication(StorioClient.class);
     }
-
+    
+     @Test
+    public void test1_openSignUp() {
+        clickOn("#tfUsername");
+        write("superMarkel");
+        clickOn("#tfPassword");
+        write("abcd*1234");
+        clickOn("#mnGoTo");
+        clickOn("#miBooking");
+        verifyThat("#BookingManagementWindow", isVisible());
+    }
     /**
      * Tests that the window opens initializing it correctly.
      */
+    
     @Test
-    public void test1_InitialStateLogIn() {
+    public void test2_InitialStateLogIn() {
 
         LOGGER.info("Starting set up test, all fields empty and disabled, buttons enabled.");
         verifyThat("#tfId", org.testfx.matcher.control.TextInputControlMatchers.hasText(""));
@@ -105,7 +116,7 @@ public class BookingManagementWindowControllerTest extends ApplicationTest {
      * Test of createBooking method, of class BookingManagementWindowController.
      */
     @Test
-    public void test2_testCreateBookingCorrect() {
+    public void test3_testCreateBookingCorrect() {
         LOGGER.info("Testing the create Booking method.");
         clickOn("#btnCreate");
         // Test enabled fields
@@ -139,7 +150,7 @@ public class BookingManagementWindowControllerTest extends ApplicationTest {
      * Test of modifyBooking method, of class BookingManagementWindowController.
      */
     @Test
-    public void test3_testModifyBookingCorrect() {
+    public void test4_testModifyBookingCorrect() {
          assertNotEquals("Table has no data: Cannot test.", tvBooking.getItems().size(), 0);
 
         Node row = lookup(".table-row-cell").nth(0).query();
@@ -166,7 +177,7 @@ public class BookingManagementWindowControllerTest extends ApplicationTest {
      * Test of searchBookingById method, of class BookingManagementWindowController.
      */
     @Test
-    public void test6_searchBookingId() {
+    public void test5_searchBookingId() {
         assertNotEquals("Table has no data: Cannot test.", tvBooking.getItems().size(), 0);
 
         clickOn("#btnSearch");
@@ -187,7 +198,7 @@ public class BookingManagementWindowControllerTest extends ApplicationTest {
      * Test of deleteBooking method, of class BookingManagementWindowController.
      */
     @Test
-    public void test7_DeleteBooking() {
+    public void test6_DeleteBooking() {
         assertNotEquals("Table has no data: Cannot test.", tvBooking.getItems().size(), 0);
         List<Booking> bookings = tvBooking.getItems();
 
