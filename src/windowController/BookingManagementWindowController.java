@@ -60,6 +60,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.paint.Color;
 import javafx.geometry.Insets;
 import javafx.scene.control.TableCell;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -122,6 +123,7 @@ public class BookingManagementWindowController {
         try {
             LOGGER.info("Initializing BookingController stage.");
             Scene scene = new Scene(root);
+            primaryStage.getIcons().add(new Image("windowController/images/logo.png"));
             primaryStage.setScene(scene);
             primaryStage.setTitle("Booking Management");
             primaryStage.setResizable(false);
@@ -421,10 +423,10 @@ public class BookingManagementWindowController {
         this.tcPacks.setCellValueFactory(
                 new PropertyValueFactory<>("packs")
         );
-//        List<Booking> bookings = bookingable.findAll_XML(new GenericType<List<Booking>>() {
-//        });
+        List<Booking> bookings = bookingable.findAll_XML(new GenericType<List<Booking>>() {
+        });
 
-//        tvBooking.setItems(FXCollections.observableArrayList(bookings));
+        tvBooking.setItems(FXCollections.observableArrayList(bookings));
     }
 
     @FXML
@@ -591,21 +593,21 @@ public class BookingManagementWindowController {
     
     @FXML
     private void handleButtonGoToUser(ActionEvent event) {
-        primaryStage.close();
-        Stage stage = new Stage();
-        // Carga el document FXML y obtiene un objeto Parent
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/UserManagementWindow.fxml"));
-        // Crea una escena a partir del Parent
-        Parent root = null;
-        try {
-            root = (Parent) loader.load();
-        } catch (IOException ex) {
-            Logger.getLogger(UserManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        UserManagementWindowController controller = (UserManagementWindowController) loader.getController();
-        // Establece la escena en el escensario (Stage) y la muestra
-        controller.setStage(stage);
-        controller.initStage(root);
+//        primaryStage.close();
+//        Stage stage = new Stage();
+//        // Carga el document FXML y obtiene un objeto Parent
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/UserManagementWindow.fxml"));
+//        // Crea una escena a partir del Parent
+//        Parent root = null;
+//        try {
+//            root = (Parent) loader.load();
+//        } catch (IOException ex) {
+//            Logger.getLogger(UserManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        UserManagementWindowController controller = (UserManagementWindowController) loader.getController();
+//        // Establece la escena en el escensario (Stage) y la muestra
+//        controller.setStage(stage);
+//        controller.initStage(root);
     }
     
     @FXML
