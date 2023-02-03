@@ -589,14 +589,26 @@ public class ItemManagementWindowController {
      */
     public void handleOnMouseClickHelp(ActionEvent event) {
         try {
-            JasperReport report
-                    = JasperCompileManager.compileReport("src/reports/ItemReport.jrxml");
-            JRBeanCollectionDataSource dataItems
-                    = new JRBeanCollectionDataSource((Collection<Item>) this.tvTableItem.getItems());
+            JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/ItemReport.jrxml"));
+            //Data for the report: a collection of UserBean passed as a JRDataSource 
+            //implementation 
+            JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<Item>) this.tvTableItem.getItems());
+            //Map of parameter to be passed to the report
             Map<String, Object> parameters = new HashMap<>();
+            //Fill report with data
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
+            //Create and show the report window. The second parameter false value makes 
+            //report window not to close app.
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setVisible(true);
+//            JasperReport report
+//                    = JasperCompileManager.compileReport(getClass().getResource("ItemReport.jrxml").getPath());
+//            JRBeanCollectionDataSource dataItems
+//                    = new JRBeanCollectionDataSource((Collection<Item>) this.tvTableItem.getItems());
+//            Map<String, Object> parameters = new HashMap<>();
+//            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
+//            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+//            jasperViewer.setVisible(true);
         } catch (JRException ex) {
             Logger.getLogger(ItemManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }

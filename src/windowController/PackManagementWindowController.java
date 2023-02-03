@@ -533,12 +533,24 @@ public class PackManagementWindowController {
     @FXML
     private void goToHelpReportWindow(ActionEvent event) {
         try {
-            JasperReport report = JasperCompileManager.compileReport("src/reports/PackReport.jrxml");
-            JRBeanCollectionDataSource dataPack = new JRBeanCollectionDataSource((Collection<Pack>) this.tvTablePack.getItems());
+            JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/PackReport.jrxml"));
+            //Data for the report: a collection of UserBean passed as a JRDataSource 
+            //implementation 
+            JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<Pack>) this.tvTablePack.getItems());
+            //Map of parameter to be passed to the report
             Map<String, Object> parameters = new HashMap<>();
-            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataPack);
+            //Fill report with data
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
+            //Create and show the report window. The second parameter false value makes 
+            //report window not to close app.
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setVisible(true);
+//            JasperReport report = JasperCompileManager.compileReport("/reports/PackReport.jrxml");
+//            JRBeanCollectionDataSource dataPack = new JRBeanCollectionDataSource((Collection<Pack>) this.tvTablePack.getItems());
+//            Map<String, Object> parameters = new HashMap<>();
+//            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataPack);
+//            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+//            jasperViewer.setVisible(true);
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
         }
