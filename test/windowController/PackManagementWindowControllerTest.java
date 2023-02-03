@@ -57,7 +57,6 @@ public class PackManagementWindowControllerTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) throws Exception {
-        new StorioClient().start(stage);
         tfIdPack = lookup("#tfIdPack").query();
         taDescriptionPack = lookup("#taDescriptionPack").query();
         cbTypePack = lookup("#cbTypePack").queryComboBox();
