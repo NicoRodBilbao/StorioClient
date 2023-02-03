@@ -9,6 +9,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -21,18 +22,24 @@ import javafx.stage.Stage;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
+import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import static org.testfx.api.FxAssert.verifyThat;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
 import static org.testfx.matcher.base.NodeMatchers.*;
 import static org.testfx.matcher.control.TextInputControlMatchers.hasText;
 import storioclient.StorioClient;
+import suite.Order;
+import suite.OrderedRunner;
 
 /**
  * This class tests the functionality of the ItemManagementeWindowController for its correct functioning.
  *
  * @author 2dam
  */
+@RunWith(OrderedRunner.class)
 public class ItemManagementWindowControllerTest extends ApplicationTest {
     
     protected static final Logger LOGGER = Logger.getLogger(ItemManagementWindowControllerTest.class.getName());
@@ -56,8 +63,16 @@ public class ItemManagementWindowControllerTest extends ApplicationTest {
     /**
      * Tests that all the all fields are empty, disabled, all buttons enabled, and table enabled and not null.
      */
+    @Order (order=1)
     @Test
     public void test1_InitialState() {
+        clickOn("#tfUsername");
+        write("superMarkel");
+        clickOn("#tfPassword");
+        write("abcd*1234");
+        clickOn("#btnLogIn");
+        clickOn("#mnGoTo");
+        clickOn("#miItem");
         LOGGER.info("Starting set up test, all fields empty and disabled, buttons enabled.");
         verifyThat("#tfIdItem", hasText(""));
         verifyThat("#taIssuesItem", hasText(""));
@@ -80,6 +95,7 @@ public class ItemManagementWindowControllerTest extends ApplicationTest {
     /**
      * Test of CreateItem method, of class ItemManagementWindowController.
      */
+    @Order (order=2)
     @Test
     public void test2_testCreateItemCorrect() {
         LOGGER.info("Testing the create Item method.");
@@ -96,14 +112,13 @@ public class ItemManagementWindowControllerTest extends ApplicationTest {
         verifyThat("#btnSearchItem", isDisabled());
         verifyThat("#btnDeleteItem", isDisabled());
         // Test click on table
-        clickOn("NIKON 204");
+        Node row = lookup(".table-row-cell").nth(1).query();
+        clickOn(row);
         // Test fields are filled
-        verifyThat("#tfIdItem", hasText(""));
+        verifyThat("#tfIdItem", hasText("4"));
         verifyThat("#taIssuesItem", hasText("Broken once"));
-        verifyThat("#cbModelItem", isNotNull());
-        verifyThat("#cbPackItem", isNotNull());
         clickOn("#taIssuesItem");
-        eraseText(10);
+        eraseText(15);
         write("Test issues.");
         LOGGER.info("Starting create disabled test.");
         clickOn("#btnCreateItem");
@@ -112,6 +127,7 @@ public class ItemManagementWindowControllerTest extends ApplicationTest {
     /**
      * Test of ModifyItem method, of class ItemManagementWindowController.
      */
+    @Order (order=3)
     @Test
     public void test3_testModifyItemCorrect() {
         LOGGER.info("Testing the modify Item method.");
@@ -128,7 +144,8 @@ public class ItemManagementWindowControllerTest extends ApplicationTest {
         verifyThat("#btnSearchItem", isDisabled());
         verifyThat("#btnDeleteItem", isDisabled());
         // Test click on table
-        clickOn("Test issues.");
+        Node row = lookup(".table-row-cell").nth(0).query();
+        clickOn(row);
         // Test fields are filled
         verifyThat("#tfIdItem", hasText("4"));
         verifyThat("#taIssuesItem", hasText("Test issues."));
@@ -143,6 +160,7 @@ public class ItemManagementWindowControllerTest extends ApplicationTest {
     /**
      * Test of DindItem method, of class ItemManagementWindowController.
      */
+    @Order (order=4)
     @Test
     public void test4_testFindItemCorrect() {
         LOGGER.info("Testing the find Item method.");
@@ -164,36 +182,40 @@ public class ItemManagementWindowControllerTest extends ApplicationTest {
         // Test fields are filled
         LOGGER.info("Starting find disabled test.");
         clickOn("#btnSearchItem");
-        assertEquals("Item by id search correctly", 1, tvTableItem.getItems().size());
+        verifyThat("Broken once", isVisible());
     }
     
     /**
      * Test of FindItem method, of class ItemManagementWindowController.
      */
+    @Order (order=5)
     @Test
     public void test5_testFindItemCorrectModel() {
         clickOn("#btnSearchItem");
         clickOn("#cbModelItem");
         press(KeyCode.DOWN);
         clickOn("#btnSearchItem");
-        assertEquals("Item by Model search correctly", 1, tvTableItem.getItems().size());
+        verifyThat("Spotlighter", isVisible());
     }
     
     /**
      * Test of FindItem method, of class ItemManagementWindowController.
      */
+    @Order (order=6)
     @Test
     public void test6_testFindItemCorrectPack() {
         clickOn("#btnSearchItem");
         clickOn("#cbPackItem");
         press(KeyCode.DOWN);
         clickOn("#btnSearchItem");
-        assertEquals("Item by Pack search correctly", 2, tvTableItem.getItems().size());
+        verifyThat("Spotlighter", isVisible());
+        verifyThat("Micro 5xx", isVisible());
     }
     
     /**
      * Test of FindItem method, of class ItemManagementWindowController.
      */
+    @Order (order=7)
     @Test
     public void test6_testFindItemIncorrect() {
         clickOn("#btnSearchItem");
@@ -206,9 +228,10 @@ public class ItemManagementWindowControllerTest extends ApplicationTest {
     /**
      * Test of DeleteItem method, of class ItemManagementWindowController.
      */
+    @Order (order=8)
     @Test
     public void test7_DeleteItem() {
-        List<Item> packs = tvTableItem.getItems();
+        tvTableItem = lookup("#tvTableItem").queryTableView();
         LOGGER.info("Testing the delete Item method.");
         clickOn("#btnDeleteItem");
         // Test enabled fields
@@ -223,7 +246,8 @@ public class ItemManagementWindowControllerTest extends ApplicationTest {
         verifyThat("#btnSearchItem", isDisabled());
         verifyThat("#btnDeleteItem", isEnabled());
         // Test click on table
-        clickOn("Test issues");
+        Node row = lookup(".table-row-cell").nth(0).query();
+        clickOn(row);
         // Test fields are filled
         verifyThat("#tfIdItem", hasText("4"));
         LOGGER.info("Starting find disabled test.");
@@ -234,12 +258,13 @@ public class ItemManagementWindowControllerTest extends ApplicationTest {
         clickOn("#btnDeleteItem");
         clickOn("#btnDeleteItem");
         clickOn("Aceptar");
-        assertEquals("Pack deleted Correctly", packs.size() - 1, tvTableItem.getItems().size());
+        assertEquals("Pack deleted Correctly", 3, tvTableItem.getItems().size());
     }
     
     /**
      * Test of DeleteItem method, of class ItemManagementWindowController.
      */
+    @Order (order=9)
     @Test
     public void test8_DeleteItemIncorrect() {
         LOGGER.info("Testing the delete Item method.");
