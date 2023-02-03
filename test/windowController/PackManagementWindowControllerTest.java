@@ -82,6 +82,7 @@ public class PackManagementWindowControllerTest extends ApplicationTest {
         write("superMarkel");
         clickOn("#tfPassword");
         write("abcd*1234");
+        clickOn("#btnLogIn");
         clickOn("#mnGoTo");
         clickOn("#miPack");
         verifyThat("#packManagementWindow", isVisible());
