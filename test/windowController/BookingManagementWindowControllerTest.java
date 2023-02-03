@@ -52,7 +52,6 @@ public class BookingManagementWindowControllerTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) throws Exception {
-        new StorioClient().start(stage);
         tfId = lookup("#tfId").query();
         taDescription = lookup("#taDescription").query();
         cbState = lookup("#cbState").queryComboBox();
@@ -75,8 +74,6 @@ public class BookingManagementWindowControllerTest extends ApplicationTest {
         write("superMarkel");
         clickOn("#tfPassword");
         write("abcd*1234");
-        clickOn("#mnGoTo");
-        clickOn("#miBooking");
         verifyThat("#BookingManagementWindow", isVisible());
     }
     /**
