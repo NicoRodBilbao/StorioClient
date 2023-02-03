@@ -231,17 +231,14 @@ public class BookingManagementWindowController {
                 booking.setState((BookingState) cbState.getSelectionModel().getSelectedItem());
 
                 btnSearch.setDisable(false);
-                if (!booking.getEndDate().equals(Date.from(dpEndDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant())) || !booking.getStartDate().equals(Date.from(dpStartDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant())) || !booking.getDescription().equals(taDescription.getText()) || !booking.getState().equals(cbState.getSelectionModel().getSelectedItem())) {
-                    if (booking.getEndDate().after(booking.getStartDate())) {
-                        bookingable.updateBooking_XML(booking);
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Correctly modified", ButtonType.OK);
-                        alert.showAndWait();
-                    } else {
-                        Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong, please check that the start date is before that the end date.", ButtonType.OK);
-                        alert.showAndWait();
-                    }
+                if (booking.getEndDate().after(booking.getStartDate())) {
+
+                    bookingable.updateBooking_XML(booking);
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Correctly modified", ButtonType.OK);
+                    alert.showAndWait();
+
                 } else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong, please check that at least one field is changed.", ButtonType.OK);
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong, please check that the start date is before that the end date.", ButtonType.OK);
                     alert.showAndWait();
                 }
 
