@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
+import services.ClientClient;
 
 /**
  *
@@ -23,18 +24,20 @@ public class UserImplementation implements Userable {
 	protected static final Logger LOGGER = Logger.getLogger(UserImplementation.class.getName());
 
 	public UserClient uc;
+	public ClientClient cc;
 
 	/**
 	 *
 	 */
 	public UserImplementation() {
 		uc = new UserClient();
+		cc = new ClientClient();
 	}
 
 	@Override
 	public void registerClient(Client user) throws UserManagerException {
 		try {
-			uc.create_XML(user);
+			cc.create_XML(user);
 		} catch (ClientErrorException ce) {
 			LOGGER.severe(ce.getMessage());
 			throw new UserManagerException("Error registering user");

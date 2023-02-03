@@ -1,7 +1,6 @@
 package windowController;
 
 import entities.Client;
-import entities.User;
 import entities.UserPrivilege;
 import entities.UserStatus;
 import exceptions.UserManagerException;
