@@ -90,4 +90,28 @@ public class ItemImplementation implements Itemable {
         return null;
     }
 
+    @Override
+    public List<Item> findItemByModel(String model) {
+        try {
+            LOGGER.log(Level.INFO, "Listing Items from model {0}", model);
+            List<Item> listItem = new ArrayList<>();
+            return ic.findAllModelsItems_XML(new GenericType<List<Item>>() {}, model);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<Item> findItemByPack(String pack) {
+        try {
+            LOGGER.log(Level.INFO, "Listing Items from pack {0}", pack);
+            List<Item> listItem = new ArrayList<>();
+            return ic.findAllPacksItems_XML(new GenericType<List<Item>>() {}, pack);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

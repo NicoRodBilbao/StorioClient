@@ -79,9 +79,9 @@ public class PackManagementWindowControllerTest extends ApplicationTest {
     @Test
     public void test1_openSignUp() {
         clickOn("#tfUsername");
-        write("a");
+        write("superMarkel");
         clickOn("#tfPassword");
-        write("a");
+        write("abcd*1234");
         clickOn("#mnGoTo");
         clickOn("#miPack");
         verifyThat("#packManagementWindow", isVisible());

@@ -16,6 +16,10 @@ public interface Itemable {
     
     public List<Item> findItemById(Integer id);
     
+    public List<Item> findItemByModel(String model);
+    
+    public List<Item> findItemByPack(String pack);
+    
     public void deleteItem(Integer id);
     
     public Integer countItem();

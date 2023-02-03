@@ -6,6 +6,7 @@
 package services;
 
 import interfaces.Bookingable;
+import java.util.ResourceBundle;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -28,7 +29,7 @@ public class BookingClient implements Bookingable{
 
     private WebTarget webTarget;
     private Client client;
-    private static final String BASE_URI = "http://localhost:8080/StorioWeb2/webresources";
+    private static final String BASE_URI = ResourceBundle.getBundle("services.config").getString("URL");// Clase
 
     public BookingClient() {
         client = javax.ws.rs.client.ClientBuilder.newClient();

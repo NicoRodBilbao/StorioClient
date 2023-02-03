@@ -101,9 +101,7 @@ public class BookingManagementWindowController {
     @FXML
     private Button btnCreate, btnSearch, btnDelete, btnModify;
     @FXML
-    private Menu mnDarkMode, mnHelp, mnGoTo, mnGoBack;
-    @FXML
-    private MenuItem miReport, miPack, miModel, miItem, miUser, miUsersManual, miPrintReport, miChangeMode;
+    private MenuItem  miUsersManual, miPrintReport, miModel,miUser,miItem,miPack;
     @FXML
     private ListView lvPacks;
     @FXML
@@ -144,6 +142,10 @@ public class BookingManagementWindowController {
                 miReport.setDisable(true);
                 this.user = (Client) user;
             }*/
+            miModel.setOnAction(event -> this.handleButtonGoToModel(event));
+            miUser.setOnAction(event -> this.handleButtonGoToUser(event));
+            miItem.setOnAction(event -> this.handleButtonGoToItem(event));
+            miPack.setOnAction(event -> this.handleButtonGoToPack(event));
             miPrintReport.setOnAction(this::handleButtonprintReport);
             miUsersManual.setOnAction(this::handleHelpAction);
             packs = FXCollections.observableArrayList(packManager.getAllPacks());
@@ -229,17 +231,14 @@ public class BookingManagementWindowController {
                 booking.setState((BookingState) cbState.getSelectionModel().getSelectedItem());
 
                 btnSearch.setDisable(false);
-                if (!booking.getEndDate().equals(Date.from(dpEndDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant())) || !booking.getStartDate().equals(Date.from(dpStartDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant())) || !booking.getDescription().equals(taDescription.getText()) || !booking.getState().equals(cbState.getSelectionModel().getSelectedItem())) {
-                    if (booking.getEndDate().after(booking.getStartDate())) {
-                        bookingable.updateBooking_XML(booking);
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Correctly modified", ButtonType.OK);
-                        alert.showAndWait();
-                    } else {
-                        Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong, please check that the start date is before that the end date.", ButtonType.OK);
-                        alert.showAndWait();
-                    }
+                if (booking.getEndDate().after(booking.getStartDate())) {
+
+                    bookingable.updateBooking_XML(booking);
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Correctly modified", ButtonType.OK);
+                    alert.showAndWait();
+
                 } else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong, please check that at least one field is changed.", ButtonType.OK);
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong, please check that the start date is before that the end date.", ButtonType.OK);
                     alert.showAndWait();
                 }
 
@@ -369,19 +368,6 @@ public class BookingManagementWindowController {
         }
     }
 
-    public void closeWindow(WindowEvent event) {
-
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setContentText("Do you want to exit the application?");
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK) {
-            Platform.exit();
-        } else {
-            event.consume();
-        }
-    }
-
     public void refreshTable() {
         this.tcId.setCellValueFactory(
                 new PropertyValueFactory<>("id")
@@ -435,10 +421,10 @@ public class BookingManagementWindowController {
         this.tcPacks.setCellValueFactory(
                 new PropertyValueFactory<>("packs")
         );
-        List<Booking> bookings = bookingable.findAll_XML(new GenericType<List<Booking>>() {
-        });
+//        List<Booking> bookings = bookingable.findAll_XML(new GenericType<List<Booking>>() {
+//        });
 
-        tvBooking.setItems(FXCollections.observableArrayList(bookings));
+//        tvBooking.setItems(FXCollections.observableArrayList(bookings));
     }
 
     @FXML
@@ -547,20 +533,92 @@ public class BookingManagementWindowController {
     }
 
     @FXML
-    private void handleButtonGoToPack(MouseEvent event) {
+    private void handleButtonGoToPack(ActionEvent event) {
+        primaryStage.close();
+        Stage stage = new Stage();
+        // Carga el document FXML y obtiene un objeto Parent
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/PackManagementWindow.fxml"));
         // Crea una escena a partir del Parent
         Parent root = null;
         try {
             root = (Parent) loader.load();
         } catch (IOException ex) {
-            Logger.getLogger(StorioClient.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PackManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        BookingManagementWindowController controller = (BookingManagementWindowController) loader.getController();
+        PackManagementWindowController controller = (PackManagementWindowController) loader.getController();
         // Establece la escena en el escensario (Stage) y la muestra
-        controller.setStage(primaryStage);
-        controller.setUser(user);
+        controller.setStage(stage);
         controller.initStage(root);
+    }
+    
+    @FXML
+    private void handleButtonGoToModel(ActionEvent event) {
+        primaryStage.close();
+        Stage stage = new Stage();
+        // Carga el document FXML y obtiene un objeto Parent
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/ModelManagementWindow.fxml"));
+        // Crea una escena a partir del Parent
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(ItemManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        ModelManagementWindowController controller = (ModelManagementWindowController) loader.getController();
+        // Establece la escena en el escensario (Stage) y la muestra
+        controller.setStage(stage);
+        controller.setStage(root);
+    }
+    
+    @FXML
+    private void handleButtonGoToItem(ActionEvent event) {
+        primaryStage.close();
+        Stage stage = new Stage();
+        // Carga el document FXML y obtiene un objeto Parent
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/ItemManagementWindow.fxml"));
+        // Crea una escena a partir del Parent
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(ItemManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        ItemManagementWindowController controller = (ItemManagementWindowController) loader.getController();
+        // Establece la escena en el escensario (Stage) y la muestra
+        controller.setStage(stage);
+        controller.setStage(root);
+    }
+    
+    @FXML
+    private void handleButtonGoToUser(ActionEvent event) {
+        primaryStage.close();
+        Stage stage = new Stage();
+        // Carga el document FXML y obtiene un objeto Parent
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/UserManagementWindow.fxml"));
+        // Crea una escena a partir del Parent
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(UserManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        UserManagementWindowController controller = (UserManagementWindowController) loader.getController();
+        // Establece la escena en el escensario (Stage) y la muestra
+        controller.setStage(stage);
+        controller.initStage(root);
+    }
+    
+    @FXML
+    private void handleButtonGoBack(ActionEvent event) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText("Do you want to exit the application?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            Platform.exit();
+        } else {
+            event.consume();
+        }
     }
 
     /**

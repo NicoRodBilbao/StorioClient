@@ -5,12 +5,12 @@ import entities.Model;
 import entities.Pack;
 import factories.ItemFactory;
 import factories.ModelFactory;
+import factories.PackFactory;
 import interfaces.Itemable;
 import interfaces.Modelable;
+import interfaces.Packable;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -23,14 +23,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.Observable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -45,7 +42,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -62,7 +58,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
-import javafx.util.StringConverter;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -90,7 +85,7 @@ public class ItemManagementWindowController {
     @FXML
     private Menu mnGoBack, mnGoTo, mnHelp, mnDarkMode;
     @FXML
-    private MenuItem miBooking, miReport, miPack, miModel, miUser, miGoBack, miHelp, miDarkMode;
+    private MenuItem miBooking, miPack, miModel, miUser, miGoBack, miHelp, miDarkMode, miUsersManual;
     @FXML
     private Pane paneItem;
     @FXML
@@ -113,8 +108,8 @@ public class ItemManagementWindowController {
     Stage primaryStage;
     private final Itemable itemable = ItemFactory.getAccessItem();
     private final Modelable modelable = ModelFactory.getAccessModel();
+    private final Packable packable = PackFactory.getAccessPack();
 
-    //private final Packable packable = PackFactory.getAccessPack();
     /**
      * Initializes the stage for the window for ItemManagementWindow.
      *
@@ -146,12 +141,14 @@ public class ItemManagementWindowController {
         miModel.setOnAction(event -> this.handleOnMouseClickNavModel(event));// Adds an event handler that records every time the miModel element is clicked
         miGoBack.setOnAction(event -> this.handleOnMouseClickLogOut(event));// Adds an event handler that records every time the miGoBack element is clicked
         miHelp.setOnAction(event -> this.handleOnMouseClickHelp(event));// Adds an event handler that records every time the miHelp element is clicked
+        miUsersManual.setOnAction(event -> this.handleOnMouseClickUserMan(event));// Adds an event handler that records every time the miUsersManual element is clicked
         miDarkMode.setOnAction(event -> this.handleOnMouseClickDarkMode(event));// Adds an event handler that records every time the miDarkMode element is clicked
         refreshTable(); // Refresh the table's data
         LOGGER.info("Showing window.");
         primaryStage.show(); // Show the window
     }
 
+                // TODO Javadoc
     private void windowShowing(WindowEvent event) {
         tfIdItem.requestFocus();
         disableTextFields(); // Disables all fields
@@ -259,10 +256,9 @@ public class ItemManagementWindowController {
             LOGGER.info("Search enabled state.");
             changeMode(3); // Change to search mode
         } else { // Find and change to default mode
-            if (tfIdItem.getText().trim().isEmpty()) {  // Unfindable
-                new Alert(Alert.AlertType.ERROR, "Fill the ID field before trying to search.", ButtonType.OK).showAndWait();
-                refreshTable(); // Refresh table content
-            } else {
+            LOGGER.info(cbModelItem.getSelectionModel().getSelectedIndex() + "");
+
+            if (!tfIdItem.getText().trim().isEmpty()) { // Find by id
                 LOGGER.log(Level.INFO, "Searching for Item {0}.", tfIdItem.getText());
                 List<Item> listItem = itemable.findItemById(Integer.parseInt(tfIdItem.getText()));
                 if (listItem.get(0) == null) { // Item wasn't found
@@ -271,6 +267,30 @@ public class ItemManagementWindowController {
                 } else { // Set the found item on the table
                     tvTableItem.setItems(FXCollections.observableArrayList(listItem));
                 }
+
+            } else if (!(cbModelItem.getSelectionModel().getSelectedIndex() == -1)) { // Find by Model
+                LOGGER.log(Level.INFO, "Searching for Item model {0}.", ((Model) cbModelItem.getSelectionModel().getSelectedItem()).getModel());
+                List<Item> listItem = itemable.findItemByModel(((Model) cbModelItem.getSelectionModel().getSelectedItem()).getId() + "");
+                if (listItem.get(0) == null) { // Item wasn't found
+                    new Alert(Alert.AlertType.ERROR, "Could not find the item.", ButtonType.OK).showAndWait();
+                    refreshTable(); // Refresh table content
+                } else { // Set the found item on the table
+                    tvTableItem.setItems(FXCollections.observableArrayList(listItem));
+                }
+
+            } else if (!(cbPackItem.getSelectionModel().getSelectedIndex() == -1)) { // Find by Pack
+                LOGGER.log(Level.INFO, "Searching for Item model {0}.", ((Pack) cbPackItem.getSelectionModel().getSelectedItem()).getId());
+                List<Item> listItem = itemable.findItemByPack(((Pack) cbPackItem.getSelectionModel().getSelectedItem()).getId() + "");
+                if (listItem.get(0) == null) { // Item wasn't found
+                    new Alert(Alert.AlertType.ERROR, "Could not find the item.", ButtonType.OK).showAndWait();
+                    refreshTable(); // Refresh table content
+                } else { // Set the found item on the table
+                    tvTableItem.setItems(FXCollections.observableArrayList(listItem));
+                }
+
+            } else { // Unfindable
+                new Alert(Alert.AlertType.ERROR, "Fill the ID, Model or Pack field before trying to search.", ButtonType.OK).showAndWait();
+                refreshTable(); // Refresh table content               
             }
             changeMode(0); // Change to default mode
         }
@@ -291,7 +311,8 @@ public class ItemManagementWindowController {
      * @param event The window event
      */
     @FXML
-    public void deleteItem(ActionEvent event) {
+    public void deleteItem(ActionEvent event
+    ) {
         LOGGER.info("Initializing deletion.");
         if (!btnDeleteItem.isDisabled() & !btnModifyItem.isDisabled()) { // Change to deletion mode
             LOGGER.info("Delete enabled state.");
@@ -321,30 +342,35 @@ public class ItemManagementWindowController {
      */
     private void refreshTable() {
         LOGGER.info("Retrieving model data.");
-        List<Item> listItem = itemable.listAllItems(); // Looks for all the items
-        // Sets the CellValueFactory for all TableColumns
-        tcId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        tcModel.setCellValueFactory(new PropertyValueFactory<>("model"));
+        try {
+            List<Item> listItem = itemable.listAllItems(); // Looks for all the items
+            // Sets the CellValueFactory for all TableColumns
+            tcId.setCellValueFactory(new PropertyValueFactory<>("id"));
+            tcModel.setCellValueFactory(new PropertyValueFactory<>("model"));
 
-        tcDate.setCellValueFactory(
-                new Callback<TableColumn.CellDataFeatures<Item, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<Item, String> item) {
-                SimpleStringProperty property = new SimpleStringProperty();
-                property.setValue(formatDate((item.getValue()).getDateAdded()).toString());
-                return property;
-            }
-        });
+            tcDate.setCellValueFactory(
+                    new Callback<TableColumn.CellDataFeatures<Item, String>, ObservableValue<String>>() {
+                @Override
+                public ObservableValue<String> call(TableColumn.CellDataFeatures<Item, String> item) {
+                    SimpleStringProperty property = new SimpleStringProperty();
+                    property.setValue(formatDate((item.getValue()).getDateAdded()).toString());
+                    return property;
+                }
+            });
 
-        tcIssues.setCellValueFactory(new PropertyValueFactory<>("issues"));
-        tcPack.setCellValueFactory(new PropertyValueFactory<>("pack"));
+            tcIssues.setCellValueFactory(new PropertyValueFactory<>("issues"));
+            tcPack.setCellValueFactory(new PropertyValueFactory<>("pack"));
 
-        tvTableItem.setItems(FXCollections.observableArrayList(listItem)); // Sets the Items on the TableView
+            tvTableItem.setItems(FXCollections.observableArrayList(listItem)); // Sets the Items on the TableView
 
-        List<Model> listModel = modelable.listAllModels();
-        cbModelItem.setItems(FXCollections.observableArrayList(listModel)); // Sets all Models on the ComboBox
-        //List<Pack> listPack = packable.listAllPacks();
-        //cbPackItem.setItems(FXCollections.observableArrayList(listPack)); // Sets all Packs on the ComboBox
+            List<Model> listModel = modelable.listAllModels();
+            cbModelItem.setItems(FXCollections.observableArrayList(listModel)); // Sets all Models on the ComboBox
+            List<Pack> listPack = packable.getAllPacks();
+            cbPackItem.setItems(FXCollections.observableArrayList(listPack)); // Sets all Packs on the ComboBox
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "The database was inaccessible. Closing Storio.").showAndWait();
+            primaryStage.close();
+        }
     }
 
     /**
@@ -356,8 +382,8 @@ public class ItemManagementWindowController {
         tfIdItem.setText("");
         taIssuesItem.setText("");
         dpCreateDateItem.setValue(null);
-        cbPackItem.setValue(null);
-        cbModelItem.getSelectionModel().select(0);
+        cbPackItem.getSelectionModel().select(-1);
+        cbModelItem.getSelectionModel().select(-1);
     }
 
     /**
@@ -429,6 +455,7 @@ public class ItemManagementWindowController {
                 dpCreateDateItem.setDisable(false);
                 taIssuesItem.setDisable(false);
                 cbModelItem.setDisable(false);
+                cbPackItem.setDisable(false);
                 tfIdItem.setText("" + (modelable.countModel() + 1));
                 LOGGER.log(Level.INFO, "Setting up Model for id {0}.", tfIdItem.getId());
                 LOGGER.info("Refreshing table.");
@@ -452,6 +479,8 @@ public class ItemManagementWindowController {
                 btnDeleteItem.setDisable(true);
                 btnCreateItem.setDisable(true);
                 tfIdItem.setDisable(false);
+                cbPackItem.setDisable(false);
+                cbModelItem.setDisable(false);
                 refreshTable();
                 break;
             case 4: // Deletion mode
@@ -463,31 +492,6 @@ public class ItemManagementWindowController {
                 LOGGER.info("Refreshing table.");
                 refreshTable();
                 break;
-        }
-    }
-
-    /**
-     * This method listens for an event onClick on the TableView for it to
-     * retrieve the information from the selected row and set it on the
-     * respective fields.
-     *
-     * @param event The window event
-     */
-    private void handleOnMouseClick(MouseEvent event) {
-        TableView tv = (TableView) event.getSource();
-        if (tv.getSelectionModel().getSelectedItem() != null) { // Checks if the table view is selected
-            ObservableList selectedItems = tv.getSelectionModel().getSelectedItems();
-            Item item = (Item) selectedItems.get(0);
-
-            LOGGER.log(Level.INFO, "Selecting table row: {0}", item.getId());
-            if (!(btnModifyItem.isDisabled() && btnSearchItem.isDisabled() && btnDeleteItem.isDisabled() && !btnCreateItem.isDisabled())) // If the creation mode is enabled, 
-            {
-                tfIdItem.setText(String.valueOf(item.getId()));
-            }
-            taIssuesItem.setText(item.getIssues());
-            cbModelItem.getSelectionModel().select(item.getModel());
-            dpCreateDateItem.setValue(formatDate(item.getDateAdded()));
-            formatDate(item.getDateAdded());
         }
     }
 
@@ -532,7 +536,7 @@ public class ItemManagementWindowController {
         LOGGER.info(localDate.toString());
         return localDate;
     }
-    
+
     /**
      * This method formats a {@link java.lang.String} object to a
      * {@link java.time.LocalDate} with the default format of the system.
@@ -549,6 +553,38 @@ public class ItemManagementWindowController {
         return localDate;
     }
 
+    /**
+     * This method listens for an event onClick on the TableView for it to
+     * retrieve the information from the selected row and set it on the
+     * respective fields.
+     *
+     * @param event The window event
+     */
+    private void handleOnMouseClick(MouseEvent event) {
+        TableView tv = (TableView) event.getSource();
+        if (tv.getSelectionModel().getSelectedItem() != null) { // Checks if the table view is selected
+            ObservableList selectedItems = tv.getSelectionModel().getSelectedItems();
+            Item item = (Item) selectedItems.get(0);
+
+            LOGGER.log(Level.INFO, "Selecting table row: {0}", item.getId());
+            if (!(btnModifyItem.isDisabled() && btnSearchItem.isDisabled() && btnDeleteItem.isDisabled() && !btnCreateItem.isDisabled())) // If the creation mode is enabled, 
+            {
+                tfIdItem.setText(String.valueOf(item.getId()));
+            }
+            taIssuesItem.setText(item.getIssues());
+            cbModelItem.getSelectionModel().select(item.getModel());
+            cbPackItem.getSelectionModel().select(item.getPack());
+            dpCreateDateItem.setValue(formatDate(item.getDateAdded()));
+            formatDate(item.getDateAdded());
+        }
+    }
+    
+    /**
+     * This method opens the Report template for Item and fills it with the
+     * information in the table.
+     *
+     * @param event The window event
+     */
     public void handleOnMouseClickHelp(ActionEvent event) {
         try {
             JasperReport report
@@ -557,13 +593,19 @@ public class ItemManagementWindowController {
                     = new JRBeanCollectionDataSource((Collection<Item>) this.tvTableItem.getItems());
             Map<String, Object> parameters = new HashMap<>();
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
-            JasperViewer jasperViewer = new JasperViewer(jasperPrint);
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setVisible(true);
         } catch (JRException ex) {
             Logger.getLogger(ItemManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
+    /**
+     * This method changes from the bright to dark mode and viceversa. Meaning
+     * most of the elements of the window change colours.
+     *
+     * @param event The window event
+     */
     private void handleOnMouseClickDarkMode(ActionEvent event) {
         if (lblCreateDateItem.getTextFill().equals(Color.WHITE)) {
             // Los background de los tfUsername, tfEmail, tfFullName, tfPassword y tfRepeatPassword cambiar�n de WHITE a #DDDDDD
@@ -593,7 +635,7 @@ public class ItemManagementWindowController {
             // En caso contrario, los background de los tfUsername, tfEmail, tfFullName, tfPassword y tfRepeatPassword cambiar�n de #DDDDDD a WHITE
             tfIdItem.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
             taIssuesItem.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-            dpCreateDateItem.setBackground(new Background(new BackgroundFill(Color.WHITE,CornerRadii.EMPTY, Insets.EMPTY)));
+            dpCreateDateItem.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
             cbModelItem.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
             cbPackItem.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
             // la letra pasar� de BLACK a WHITE
@@ -614,6 +656,12 @@ public class ItemManagementWindowController {
         }
     }
 
+    /**
+     * This method opens the Report template for Item and fills it with the
+     * information in the table.
+     *
+     * @param event The window event
+     */
     private void handleOnMouseClickLogOut(ActionEvent event) {
         primaryStage.close();
         Stage stage = new Stage();
@@ -632,6 +680,11 @@ public class ItemManagementWindowController {
         controller.initStage(root);
     }
 
+    /**
+     * This method closes the current window and opens ModelManagementWindow.
+     *
+     * @param event The window event
+     */
     private void handleOnMouseClickNavModel(ActionEvent event) {
         primaryStage.close();
         Stage stage = new Stage();
@@ -650,57 +703,94 @@ public class ItemManagementWindowController {
         controller.setStage(root);
     }
 
+    /**
+     * This method closes the current window and opens PackManagementWindow.
+     *
+     * @param event The window event
+     */
     private void handleOnMouseClickNavPack(ActionEvent event) {
-//        primaryStage.close();
-//        Stage stage = new Stage();
-//        // Carga el document FXML y obtiene un objeto Parent
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/PackManagementWindow.fxml"));
-//        // Crea una escena a partir del Parent
-//        Parent root = null;
-//        try {
-//            root = (Parent) loader.load();
-//        } catch (IOException ex) {
-//            Logger.getLogger(ItemManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        PackManagementWindowController controller = (PackManagementWindowController) loader.getController();
-//        // Establece la escena en el escensario (Stage) y la muestra
-//        controller.setStage(stage);
-//        controller.setStage(root);
+        primaryStage.close();
+        Stage stage = new Stage();
+        // Carga el document FXML y obtiene un objeto Parent
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/PackManagementWindow.fxml"));
+        // Crea una escena a partir del Parent
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(ItemManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        PackManagementWindowController controller = (PackManagementWindowController) loader.getController();
+        // Establece la escena en el escensario (Stage) y la muestra
+        controller.setStage(stage);
+        controller.initStage(root);
     }
 
+    /**
+     * This method closes the current window and opens UserManagementWindow.
+     *
+     * @param event The window event
+     */
     private void handleOnMouseClickNavUser(ActionEvent event) {
-//        primaryStage.close();
-//        Stage stage = new Stage();
-//        // Carga el document FXML y obtiene un objeto Parent
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/UserManagementWindow.fxml"));
-//        // Crea una escena a partir del Parent
-//        Parent root = null;
-//        try {
-//            root = (Parent) loader.load();
-//        } catch (IOException ex) {
-//            Logger.getLogger(ItemManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        UserManagementWindowController controller = (UserManagementWindowController) loader.getController();
-//        // Establece la escena en el escensario (Stage) y la muestra
-//        controller.setStage(stage);
-//        controller.setStage(root);
+        primaryStage.close();
+        Stage stage = new Stage();
+        // Carga el document FXML y obtiene un objeto Parent
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/UserManagementWindow.fxml"));
+        // Crea una escena a partir del Parent
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(ItemManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        UserManagementWindowController controller = (UserManagementWindowController) loader.getController();
+        // Establece la escena en el escensario (Stage) y la muestra
+        controller.setStage(stage);
+        controller.initStage(root);
     }
 
+    /**
+     * This method closes the current window and opens BookingManagementWindow.
+     *
+     * @param event The window event
+     */
     private void handleOnMouseClickNavBooking(ActionEvent event) {
-//        primaryStage.close();
-//        Stage stage = new Stage();
-//        // Carga el document FXML y obtiene un objeto Parent
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/BookingManagementWindow.fxml"));
-//        // Crea una escena a partir del Parent
-//        Parent root = null;
-//        try {
-//            root = (Parent) loader.load();
-//        } catch (IOException ex) {
-//            Logger.getLogger(ItemManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        BookingManagementWindowController controller = (BookingManagementWindowController) loader.getController();
-//        // Establece la escena en el escensario (Stage) y la muestra
-//        controller.setStage(stage);
-//        controller.setStage(root);
+        primaryStage.close();
+        Stage stage = new Stage();
+        // Carga el document FXML y obtiene un objeto Parent
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/BookingManagementWindow.fxml"));
+        // Crea una escena a partir del Parent
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(ItemManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        BookingManagementWindowController controller = (BookingManagementWindowController) loader.getController();
+        // Establece la escena en el escensario (Stage) y la muestra
+        controller.setStage(stage);
+        controller.initStage(root);
+    }
+
+    /**
+     * This method opens the ItemHelpWindow and shows the user manual for the
+     * ItemWindow.
+     *
+     * @param event The window event
+     */
+    private void handleOnMouseClickUserMan(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/HelpItem.fxml"));
+            Parent root = (Parent) loader.load();
+            ItemHelpWindowController helpController
+                    = ((ItemHelpWindowController) loader.getController());
+            //Initializes and shows help stage
+            helpController.initAndShowStage(root);
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE,
+                    "UI GestionUsuariosController: Error loading help window: {0}",
+                    ex.getMessage());
+            ex.printStackTrace();
+        }
     }
 }
