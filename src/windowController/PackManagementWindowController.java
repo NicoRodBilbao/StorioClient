@@ -124,51 +124,78 @@ public class PackManagementWindowController {
      * @param root
      */
     public void initStage(Parent root) {
-        Scene scene = new Scene(root);
-        stage.getIcons().add(new Image("windowController/images/logo.png"));
-        tfIdPack.requestFocus();
-        stage.setScene(scene);
-        stage.setTitle("Pack Management");
-        stage.setResizable(false);
-        stage.setResizable(false);
-        tfIdPack.setText("");
-        taDescriptionPack.setText("");
-
-        ObservableList<PackType> packtypes = FXCollections.observableArrayList(PackType.values());
-        cbTypePack.setItems(packtypes);
-
-        ObservableList<PackState> packStates = FXCollections.observableArrayList(PackState.values());
-        cbStatePack.setItems(packStates);
-        tvTablePack.setOnMouseClicked(event -> this.handleOnMouseClick(event));
-        /**
-         * When press ESCAPE Button, ask confirmation to close the app
-         */
-        stage.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
-            if (KeyCode.ESCAPE == event.getCode()) {
-                Optional<ButtonType> action = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to exit Storio?").showAndWait();
-                if (action.get() == ButtonType.OK) {
-                    stage.close();
+        try {
+            Scene scene = new Scene(root);
+            stage.getIcons().add(new Image("windowController/images/logo.png"));
+            tfIdPack.requestFocus();
+            stage.setScene(scene);
+            stage.setTitle("Pack Management");
+            stage.setResizable(false);
+            stage.setResizable(false);
+            tfIdPack.setText("");
+            taDescriptionPack.setText("");
+            ObservableList<PackType> packtypes = FXCollections.observableArrayList(PackType.values());
+            cbTypePack.setItems(packtypes);
+            ObservableList<PackState> packStates = FXCollections.observableArrayList(PackState.values());
+            cbStatePack.setItems(packStates);
+            tvTablePack.setOnMouseClicked(event -> this.handleOnMouseClick(event));
+            /**
+             * When press ESCAPE Button, ask confirmation to close the app
+             */
+            stage.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
+                if (KeyCode.ESCAPE == event.getCode()) {
+                    Optional<ButtonType> action = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to exit Storio?").showAndWait();
+                    if (action.get() == ButtonType.OK) {
+                        stage.close();
+                    }
                 }
-            }
-        });
-        /**
-         * When user click to exit form the window, ask confirmation to close
-         * the app
-         */
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                Optional<ButtonType> result = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to exit Storio?").showAndWait();
-                if (result.isPresent() && result.get() == ButtonType.OK) {
-                    return;
+            });
+            /**
+             * When user click to exit form the window, ask confirmation to
+             * close the app
+             */
+            stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    Optional<ButtonType> result = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to exit Storio?").showAndWait();
+                    if (result.isPresent() && result.get() == ButtonType.OK) {
+                        return;
+                    }
+                    event.consume();
                 }
-                event.consume();
-            }
-        });
-        disableTextFields();
-        enableButtons();
-        refreshTable();
-        stage.show();
+            });
+            disableTextFields();
+            enableButtons();
+            listPack = FXCollections.observableArrayList(packManager.getAllPacks());
+            tbcolID.setCellValueFactory(new PropertyValueFactory<>("Id"));
+            tbcolDescription.setCellValueFactory(new PropertyValueFactory<>("Description"));
+            tbcolState.setCellValueFactory(new PropertyValueFactory<>("State"));
+            this.tbcolDateAdded.setCellValueFactory(new PropertyValueFactory<>("datePackAdd"));
+            this.tbcolDateAdded.setCellFactory(column -> {
+                TableCell<Pack, Date> cell = new TableCell<Pack, Date>() {
+                    private SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+
+                    @Override
+                    protected void updateItem(Date item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setText(null);
+                        } else {
+                            this.setText(format.format(item));
+                        }
+                    }
+                };
+
+                return cell;
+            });
+            tbcolPackType.setCellValueFactory(new PropertyValueFactory<>("Type"));
+            tvTablePack.setItems(listPack);
+            stage.show();
+        } catch (PackManagerException e) {
+            Logger.getLogger(PackManagementWindowController.class.getName()).log(Level.SEVERE, "Initialize window error", e.getMessage());
+            new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
+            stage.close();
+        }
     }
 
     private void clearFields() {
@@ -198,6 +225,7 @@ public class PackManagementWindowController {
     @FXML
     private void createPackButtonAction(ActionEvent event) {
         try {
+            LOGGER.log(Level.INFO, "Create Pack state activated");
             if (!btnModifyPack.isDisabled()) {
                 tfIdPack.clear();
                 taDescriptionPack.clear();
@@ -214,9 +242,10 @@ public class PackManagementWindowController {
                 cbTypePack.setDisable(false);
                 cbStatePack.setDisable(false);
                 dpCreateDatePack.setDisable(false);
-
             } else {
-                if (!taDescriptionPack.getText().isEmpty() && (cbTypePack.getValue() != null) && (cbStatePack.getValue() != null) && (dpCreateDatePack.getValue() != null)) {
+                if (!taDescriptionPack.getText().isEmpty() && (!cbTypePack.getSelectionModel().getSelectedItem().toString().trim().equals(""))
+                        && (!cbStatePack.getSelectionModel().getSelectedItem().toString().trim().equals("")) && (dpCreateDatePack.getValue() != null)) {
+                    LOGGER.log(Level.INFO, "Create Pack");
                     Pack p = new Pack(null, taDescriptionPack.getText(),
                             convertToDateViaInstant(dpCreateDatePack.getValue()),
                             null,
@@ -225,8 +254,10 @@ public class PackManagementWindowController {
                             null);
                     packManager.createPack(p);
                     new Alert(Alert.AlertType.CONFIRMATION, "New pack created", ButtonType.OK).showAndWait();
+                    LOGGER.log(Level.INFO, "Create Pack correctly");
                 } else {
                     new Alert(Alert.AlertType.CONFIRMATION, "Pack data is't complete, please complete all fields", ButtonType.OK).showAndWait();
+                    LOGGER.log(Level.INFO, "Create pack error");
                 }
                 disableTextFields();
                 clearFields();
@@ -235,9 +266,13 @@ public class PackManagementWindowController {
             }
 
         } catch (PackManagerException ex) {
+            Logger.getLogger(PackManagementWindowController.class
+                    .getName()).log(Level.SEVERE, "Pack create server error", ex.getMessage());
             new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
+            stage.close();
         }
     }
+
     /**
      * Al pulsar este botón se alternará entre dos estados: Estado Activado: Los
      * Button btnCreate, btnModify y btnDelete se deshabilitarán. Se habilitarán
@@ -257,6 +292,7 @@ public class PackManagementWindowController {
     @FXML
     private void searchPackButtonAction(ActionEvent event) {
         if (!btnModifyPack.isDisabled()) {
+            LOGGER.log(Level.INFO, "Search pack activate state");
             clearFields();
 
             btnModifyPack.setDisable(true);
@@ -268,34 +304,44 @@ public class PackManagementWindowController {
             cbStatePack.setDisable(false);
         } else {
             try {
+                LOGGER.log(Level.INFO, "Search Pack");
                 if (tfIdPack.getText().isEmpty()) {
                     if (cbTypePack.getValue().equals("")) {
                         if (cbStatePack.getValue().equals("")) {
                             refreshTable();
+                            LOGGER.log(Level.INFO, "search all correctly");
                         } else {
                             listPack = FXCollections.observableArrayList(packManager.getPacksByState(cbStatePack.getValue().toString()));
                             tvTablePack.setItems(listPack);
+                            LOGGER.log(Level.INFO, "search packs by state correctly");
                         }
                     } else {
                         if (cbStatePack.getValue() != "") {
+                            LOGGER.log(Level.INFO, "Search Pack error");
                             new Alert(Alert.AlertType.ERROR, "only can search for one parameter", ButtonType.OK).showAndWait();
                         } else {
                             listPack = FXCollections.observableArrayList(packManager.getPacksByType(cbTypePack.getValue().toString()));
                             tvTablePack.setItems(listPack);
+                            LOGGER.log(Level.INFO, "search packs by type correctly");
                         }
                     }
                 } else {
                     if (cbTypePack.getValue() != "" || cbStatePack.getValue() != "") {
+                        LOGGER.log(Level.INFO, "Search Pack error");
                         new Alert(Alert.AlertType.ERROR, "Only can search for one parameter", ButtonType.OK).showAndWait();
                     } else {
+                        LOGGER.log(Level.INFO, "search all correctly");
                         listPack = FXCollections.observableArrayList(packManager.getPackById(Integer.parseInt(tfIdPack.getText())));
                         tvTablePack.setItems(listPack);
                     }
                 }
             } catch (PackManagerException ex) {
-                Logger.getLogger(PackManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(PackManagementWindowController.class
+                        .getName()).log(Level.SEVERE, "Pack search server error", ex.getMessage());
                 new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
+                stage.close();
             }
+
             disableTextFields();
             enableButtons();
         }
@@ -319,6 +365,7 @@ public class PackManagementWindowController {
     @FXML
     private void modifyPackButtonAction(ActionEvent event) {
         if (!btnCreatePack.isDisabled()) {
+            LOGGER.log(Level.INFO, "Modify Pack activate state");
             btnSearchPack.setDisable(true);
             btnCreatePack.setDisable(true);
             btnDeletePack.setDisable(true);
@@ -336,31 +383,45 @@ public class PackManagementWindowController {
                 refreshTable();
             }
         } else {
-            Pack pack = (Pack) tvTablePack.getSelectionModel().getSelectedItem();
             try {
-                if (!taDescriptionPack.getText().isEmpty() && (cbTypePack.getValue() != null) && (cbStatePack.getValue() != null) && (dpCreateDatePack.getValue() != null)) {
+                Pack pack = (Pack) tvTablePack.getSelectionModel().getSelectedItem();
+                if (!(taDescriptionPack.getText().isEmpty()) && (!cbTypePack.getSelectionModel().getSelectedItem().toString().trim().equals(""))
+                        && (!cbStatePack.getSelectionModel().getSelectedItem().toString().trim().equals("")) && (dpCreateDatePack.getValue() != null)) {
+                    LOGGER.log(Level.INFO, "Modify Pack");
                     Pack p = new Pack(Integer.parseInt(tfIdPack.getText()), taDescriptionPack.getText(),
                             convertToDateViaInstant(dpCreateDatePack.getValue()),
                             null,
                             PackState.valueOf(cbStatePack.getValue().toString()),
                             PackType.valueOf(cbTypePack.getValue().toString()),
                             null);
+
+                    packManager.updatePack(p);
+
                     if (!pack.equals(p)) {
-                        packManager.updatePack(p);
+                        LOGGER.log(Level.INFO, "Modify Pack correctly");
                         new Alert(Alert.AlertType.CONFIRMATION, "Pack updated", ButtonType.OK).showAndWait();
                     } else {
-                        new Alert(Alert.AlertType.CONFIRMATION, "No changes", ButtonType.OK).showAndWait();
+                        if (pack.equals(p)) {
+                            LOGGER.log(Level.INFO, "Modify Pack no changes");
+                            new Alert(Alert.AlertType.CONFIRMATION, "No changes", ButtonType.OK).showAndWait();
+                        }
                     }
-                }
-                clearFields();
-                disableTextFields();
-                enableButtons();
-                refreshTable();
 
+                } else {
+                    LOGGER.log(Level.INFO, "Modify Pack error");
+                    new Alert(Alert.AlertType.CONFIRMATION, "Pack data is't complete, please complete all fields", ButtonType.OK).showAndWait();
+                }
             } catch (PackManagerException ex) {
-                Logger.getLogger(PackManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(PackManagementWindowController.class
+                        .getName()).log(Level.SEVERE, "Pack modify server error", ex.getMessage());
                 new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
+                stage.close();
             }
+            clearFields();
+            disableTextFields();
+            enableButtons();
+            refreshTable();
+
         }
     }
 
@@ -377,27 +438,29 @@ public class PackManagementWindowController {
      * @param event
      */
     @FXML
-    private void deletePackButtonAction(ActionEvent event
-    ) {
+    private void deletePackButtonAction(ActionEvent event) {
         if (!btnCreatePack.isDisabled()) {
-            clearFields();
+            LOGGER.log(Level.INFO, "Delete Pack activate state");
+
             btnSearchPack.setDisable(true);
             btnCreatePack.setDisable(true);
             btnModifyPack.setDisable(true);
 
-            tfIdPack.setDisable(false);
         } else {
             try {
                 if (!tfIdPack.getText().isEmpty()) {
                     Optional<ButtonType> result = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this pack?").showAndWait();
+                    LOGGER.log(Level.INFO, "Deleting Pack");
                     if (result.isPresent() && result.get() == ButtonType.OK) {
-                        packManager.deletePack(packManager.getPackById(Integer.parseInt(tfIdPack.getText())));
+                        packManager.deletePack((Pack) tvTablePack.getSelectionModel().getSelectedItem());
                         clearFields();
                         disableTextFields();
                         enableButtons();
                         refreshTable();
+                        LOGGER.log(Level.INFO, "Delete Pack correct");
                         new Alert(Alert.AlertType.CONFIRMATION, "Pack delete correctly", ButtonType.OK).showAndWait();
                     } else {
+                        LOGGER.log(Level.INFO, "Delete Pack cancel");
                         new Alert(Alert.AlertType.CONFIRMATION, "Pack delete cancel", ButtonType.OK).showAndWait();
                         event.consume();
                         clearFields();
@@ -405,12 +468,12 @@ public class PackManagementWindowController {
                         enableButtons();
                         refreshTable();
                     }
-
                 }
-
             } catch (PackManagerException ex) {
-                Logger.getLogger(PackManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(PackManagementWindowController.class
+                        .getName()).log(Level.SEVERE, "Pack delete server error", ex);
                 new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
+                stage.close();
             }
             clearFields();
             disableTextFields();
@@ -434,8 +497,10 @@ public class PackManagementWindowController {
         Parent root = null;
         try {
             root = (Parent) loader.load();
+
         } catch (IOException ex) {
-            Logger.getLogger(PackManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PackManagementWindowController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         BookingManagementWindowController controller = (BookingManagementWindowController) loader.getController();
         // Establece la escena en el escensario (Stage) y la muestra
@@ -468,8 +533,10 @@ public class PackManagementWindowController {
         Parent root = null;
         try {
             root = (Parent) loader.load();
+
         } catch (IOException ex) {
-            Logger.getLogger(PackManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PackManagementWindowController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         ModelManagementWindowController controller = (ModelManagementWindowController) loader.getController();
         // Establece la escena en el escensario (Stage) y la muestra
@@ -492,8 +559,10 @@ public class PackManagementWindowController {
         Parent root = null;
         try {
             root = (Parent) loader.load();
+
         } catch (IOException ex) {
-            Logger.getLogger(PackManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PackManagementWindowController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         ItemManagementWindowController controller = (ItemManagementWindowController) loader.getController();
         // Establece la escena en el escensario (Stage) y la muestra
@@ -507,7 +576,8 @@ public class PackManagementWindowController {
      * @param event
      */
     @FXML
-    private void goToUserWindow(ActionEvent event) {
+    private void goToUserWindow(ActionEvent event
+    ) {
 //        stage.close();
 //        Stage stage = new Stage();
 //        // Carga el document FXML y obtiene un objeto Parent
@@ -531,7 +601,8 @@ public class PackManagementWindowController {
      * @param event
      */
     @FXML
-    private void goToHelpReportWindow(ActionEvent event) {
+    private void goToHelpReportWindow(ActionEvent event
+    ) {
         try {
             JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/PackReport.jrxml"));
             //Data for the report: a collection of UserBean passed as a JRDataSource 
@@ -557,7 +628,8 @@ public class PackManagementWindowController {
     }
 
     @FXML
-    private void goToHelpWindow(ActionEvent event) {
+    private void goToHelpWindow(ActionEvent event
+    ) {
         /*try {
             stage.close();
             Stage secondStage = new Stage();
@@ -572,8 +644,9 @@ public class PackManagementWindowController {
     }
 
     @FXML
-    private void logOut(ActionEvent event) {
-        
+    private void logOut(ActionEvent event
+    ) {
+
         stage.close();
         Stage stage = new Stage();
         // Carga el document FXML y obtiene un objeto Parent
@@ -582,18 +655,21 @@ public class PackManagementWindowController {
         Parent root = null;
         try {
             root = (Parent) loader.load();
+
         } catch (Exception ex) {
-            Logger.getLogger(PackManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PackManagementWindowController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         LogInWindowController controller = (LogInWindowController) loader.getController();
         // Establece la escena en el escensario (Stage) y la muestra
         controller.setStage(stage);
         controller.initStage(root);
-         
+
     }
 
     @FXML
-    private void changeWindow(ActionEvent event) {
+    private void changeWindow(ActionEvent event
+    ) {
         if (lblIdPack.getTextFill().equals(Color.WHITE)) {
             // Los background de los tfIdPack, taDescriptionPack y dpCreateDatePack cambiar�n de #3A3A3A a #DDDDDD
             tfIdPack.setBackground(new Background(new BackgroundFill(Color.valueOf("#DDDDDD"), CornerRadii.EMPTY, Insets.EMPTY)));
@@ -638,6 +714,7 @@ public class PackManagementWindowController {
     }
 
     private void disableTextFields() {
+        LOGGER.log(Level.INFO, "Disable fields");
         tfIdPack.setDisable(true);
         taDescriptionPack.setDisable(true);
         cbTypePack.setDisable(true);
@@ -651,7 +728,6 @@ public class PackManagementWindowController {
     private void refreshTable() {
         try {
             LOGGER.info("Retrieving model data.");
-
             listPack = FXCollections.observableArrayList(packManager.getAllPacks());
             tbcolID.setCellValueFactory(new PropertyValueFactory<>("Id"));
             tbcolDescription.setCellValueFactory(new PropertyValueFactory<>("Description"));
@@ -659,7 +735,7 @@ public class PackManagementWindowController {
             this.tbcolDateAdded.setCellValueFactory(new PropertyValueFactory<>("datePackAdd"));
             this.tbcolDateAdded.setCellFactory(column -> {
                 TableCell<Pack, Date> cell = new TableCell<Pack, Date>() {
-                    private SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+                    private SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 
                     @Override
                     protected void updateItem(Date item, boolean empty) {
@@ -678,7 +754,10 @@ public class PackManagementWindowController {
             tvTablePack.setItems(listPack);
 
         } catch (PackManagerException e) {
+            Logger.getLogger(PackManagementWindowController.class
+                    .getName()).log(Level.SEVERE, "Charge table error", e.getMessage());
             new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
+            stage.close();
         }
     }
 
