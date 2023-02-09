@@ -3,6 +3,10 @@ package windowController;
 import entities.Item;
 import entities.Model;
 import entities.Pack;
+import exceptions.ItemCreateException;
+import exceptions.ItemDeleteException;
+import exceptions.ItemFindException;
+import exceptions.ItemModifyException;
 import factories.ItemFactory;
 import factories.ModelFactory;
 import factories.PackFactory;
@@ -18,7 +22,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -150,7 +153,6 @@ public class ItemManagementWindowController {
         primaryStage.show(); // Show the window
     }
 
-                // TODO Javadoc
     private void windowShowing(WindowEvent event) {
         tfIdItem.requestFocus();
         disableTextFields(); // Disables all fields
@@ -169,7 +171,7 @@ public class ItemManagementWindowController {
      *
      * @param event The window event
      */
-    @FXML
+    @FXML // DONE
     private void createItem(ActionEvent event) {
         LOGGER.info("Initializing creation.");
         if (!btnCreateItem.isDisabled() & !btnModifyItem.isDisabled()) { // Change to creation mode
@@ -177,16 +179,20 @@ public class ItemManagementWindowController {
             changeMode(1); // Change to creation mode
         } else { // Create and change to default mode
             LOGGER.info("Create disabled state.");
-            if (!(taIssuesItem.getText().trim().equals("") || cbModelItem.getSelectionModel().getSelectedItem().toString().trim().equals("") || dpCreateDateItem.getValue() == null)) { // All fields have content
+            if ((cbModelItem.getSelectionModel().getSelectedIndex() != -1 && dpCreateDateItem.getValue() != null)) { // All fields have content
                 LOGGER.info("Creating item.");
-                itemable.createItem(new Item( // We create a new item with the data of the fields for it to be inserted
-                        0,
-                        (Model) cbModelItem.getSelectionModel().getSelectedItem(),
-                        convertToDateViaInstant(dpCreateDateItem.getValue()),
-                        taIssuesItem.getText(),
-                        null,
-                        (Pack) cbPackItem.getSelectionModel().getSelectedItem()
-                ));
+                try {
+                    itemable.createItem(new Item( // We create a new item with the data of the fields for it to be inserted
+                            0,
+                            (Model) cbModelItem.getSelectionModel().getSelectedItem(),
+                            convertToDateViaInstant(dpCreateDateItem.getValue()),
+                            taIssuesItem.getText(),
+                            null,
+                            (Pack) cbPackItem.getSelectionModel().getSelectedItem()
+                    ));
+                } catch (ItemCreateException e) {
+                    new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
+                }
             } else {// Some fields are empty
                 new Alert(Alert.AlertType.ERROR, "Fill the all the fields before trying to create.", ButtonType.OK).showAndWait();
             }
@@ -209,7 +215,7 @@ public class ItemManagementWindowController {
      *
      * @param event The window event
      */
-    @FXML
+    @FXML // DONE
     private void updateItem(ActionEvent event) {
         LOGGER.info("Initializing update.");
         if (!btnCreateItem.isDisabled() & !btnModifyItem.isDisabled()) { // Change to update mode
@@ -220,6 +226,7 @@ public class ItemManagementWindowController {
 
             if (!tfIdItem.getText().trim().equals("") && !(dpCreateDateItem.getValue() == null)) { // There's a Item selected
                 LOGGER.info("Updating Item.");
+                try {
                 itemable.updateItem(new Item(
                         Integer.parseInt(tfIdItem.getText()),
                         (Model) cbModelItem.getSelectionModel().getSelectedItem(),
@@ -228,6 +235,9 @@ public class ItemManagementWindowController {
                         null,
                         (Pack) cbPackItem.getSelectionModel().getSelectedItem()
                 ));
+                } catch (ItemModifyException e) {
+                    new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
+                }
             } else { // There's not an Item selected
                 new Alert(Alert.AlertType.ERROR, "Please select an item from the table before trying to update.", ButtonType.OK).showAndWait();
             }
@@ -254,6 +264,7 @@ public class ItemManagementWindowController {
     @FXML
     public void findItem(ActionEvent event) {
         LOGGER.info("Initializing search.");
+        try {
         if (!btnDeleteItem.isDisabled() & !btnModifyItem.isDisabled()) { // Change to search mode
             LOGGER.info("Search enabled state.");
             changeMode(3); // Change to search mode
@@ -262,7 +273,12 @@ public class ItemManagementWindowController {
 
             if (!tfIdItem.getText().trim().isEmpty()) { // Find by id
                 LOGGER.log(Level.INFO, "Searching for Item {0}.", tfIdItem.getText());
-                List<Item> listItem = itemable.findItemById(Integer.parseInt(tfIdItem.getText()));
+                List<Item> listItem = null;
+                try {
+                    listItem = itemable.findItemById(Integer.parseInt(tfIdItem.getText()));
+                } catch (ItemFindException ex) {
+                    new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
+                }
                 if (listItem.get(0) == null) { // Item wasn't found
                     new Alert(Alert.AlertType.ERROR, "Could not find the item.", ButtonType.OK).showAndWait();
                     refreshTable(); // Refresh table content
@@ -272,7 +288,12 @@ public class ItemManagementWindowController {
 
             } else if (!(cbModelItem.getSelectionModel().getSelectedIndex() == -1)) { // Find by Model
                 LOGGER.log(Level.INFO, "Searching for Item model {0}.", ((Model) cbModelItem.getSelectionModel().getSelectedItem()).getModel());
-                List<Item> listItem = itemable.findItemByModel(((Model) cbModelItem.getSelectionModel().getSelectedItem()).getId() + "");
+                List<Item> listItem = null;
+                try {
+                    listItem = itemable.findItemByModel(((Model) cbModelItem.getSelectionModel().getSelectedItem()).getId() + "");
+                } catch (ItemFindException ex) {
+                    new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
+                }
                 if (listItem.get(0) == null) { // Item wasn't found
                     new Alert(Alert.AlertType.ERROR, "Could not find the item.", ButtonType.OK).showAndWait();
                     refreshTable(); // Refresh table content
@@ -282,7 +303,12 @@ public class ItemManagementWindowController {
 
             } else if (!(cbPackItem.getSelectionModel().getSelectedIndex() == -1)) { // Find by Pack
                 LOGGER.log(Level.INFO, "Searching for Item model {0}.", ((Pack) cbPackItem.getSelectionModel().getSelectedItem()).getId());
-                List<Item> listItem = itemable.findItemByPack(((Pack) cbPackItem.getSelectionModel().getSelectedItem()).getId() + "");
+                List<Item> listItem = null;
+                try {
+                    listItem = itemable.findItemByPack(((Pack) cbPackItem.getSelectionModel().getSelectedItem()).getId() + "");
+                } catch (ItemFindException ex) {
+                    new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
+                }
                 if (listItem.get(0) == null) { // Item wasn't found
                     new Alert(Alert.AlertType.ERROR, "Could not find the item.", ButtonType.OK).showAndWait();
                     refreshTable(); // Refresh table content
@@ -295,6 +321,10 @@ public class ItemManagementWindowController {
                 refreshTable(); // Refresh table content               
             }
             changeMode(0); // Change to default mode
+        }
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "The program was unable to connect with the server.", ButtonType.OK).showAndWait();
+            changeMode(0);
         }
         LOGGER.info("Finishing search.");
     }
@@ -326,7 +356,11 @@ public class ItemManagementWindowController {
             } else {// Asks for confirmation before deleting
                 Optional<ButtonType> action = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete the item " + tfIdItem.getText() + "?").showAndWait();
                 if (action.get() == ButtonType.OK) {// Deletes
+                    try {
                     itemable.deleteItem(Integer.parseInt(tfIdItem.getText()));
+                    } catch (ItemDeleteException e) {
+                        new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
+                    }
                 }
             }
             changeMode(0);
@@ -355,7 +389,7 @@ public class ItemManagementWindowController {
                 @Override
                 public ObservableValue<String> call(TableColumn.CellDataFeatures<Item, String> item) {
                     SimpleStringProperty property = new SimpleStringProperty();
-                    property.setValue(formatDate((item.getValue()).getDateAdded()).toString());
+                    property.setValue(formatDate((item.getValue()).getDateAdded()));
                     return property;
                 }
             });
@@ -370,8 +404,8 @@ public class ItemManagementWindowController {
             List<Pack> listPack = packable.getAllPacks();
             cbPackItem.setItems(FXCollections.observableArrayList(listPack)); // Sets all Packs on the ComboBox
         } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR, "The database was inaccessible. Closing Storio.").showAndWait();
-            primaryStage.close();
+            //new Alert(Alert.AlertType.ERROR, "The database was inaccessible. Closing Storio.").showAndWait();
+            //primaryStage.close();
         }
     }
 
@@ -450,7 +484,8 @@ public class ItemManagementWindowController {
 
                 break;
             case 1: // Creation mode
-                LOGGER.info("Enabling and disabling fields.");
+                try {
+                    LOGGER.info("Enabling and disabling fields.");
                 btnModifyItem.setDisable(true);
                 btnSearchItem.setDisable(true);
                 btnDeleteItem.setDisable(true);
@@ -458,10 +493,13 @@ public class ItemManagementWindowController {
                 taIssuesItem.setDisable(false);
                 cbModelItem.setDisable(false);
                 cbPackItem.setDisable(false);
-                tfIdItem.setText("" + (modelable.countModel() + 1));
+                tfIdItem.setText("" + (itemable.countItem()+ 1));
                 LOGGER.log(Level.INFO, "Setting up Model for id {0}.", tfIdItem.getId());
                 LOGGER.info("Refreshing table.");
                 refreshTable();
+                } catch(Exception e) {
+                    new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
+                }
                 break;
             case 2: // Update mode
                 LOGGER.info("Enabling and disabling fields.");
@@ -490,7 +528,7 @@ public class ItemManagementWindowController {
                 btnModifyItem.setDisable(true);
                 btnSearchItem.setDisable(true);
                 btnCreateItem.setDisable(true);
-                tfIdItem.setDisable(false);
+                //tfIdItem.setDisable(false);
                 LOGGER.info("Refreshing table.");
                 refreshTable();
                 break;
@@ -522,21 +560,24 @@ public class ItemManagementWindowController {
                 .toInstant());
     }
 
+    public LocalDate stringToLocalDate(String dateToConvert) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+        String date = "16/08/2016";
+
+        //convert String to LocalDate
+        return LocalDate.parse(date, formatter);
+    }
+
     /**
      * This method formats a {@link java.util.Date} object to a
      * {@link java.time.LocalDate} with the default format of the system.
      *
      * @param dateToFormat The Date to be formatted
-     * @return A LocalDate containing the date with the desired format.
+     * @return A String containing the date with the desired format.
      */
-    public LocalDate formatDate(Date dateToFormat) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-        convertToLocalDateViaInstant(dateToFormat);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        //return sdf.format(dateToFormat);
-        LocalDate localDate = LocalDate.parse(sdf.format(dateToFormat), formatter);
-        LOGGER.info(localDate.toString());
-        return localDate;
+    public String formatDate(Date dateToFormat) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return formatter.format(convertToLocalDateViaInstant(dateToFormat));
     }
 
     /**
@@ -546,9 +587,9 @@ public class ItemManagementWindowController {
      * @param dateString The String to be formatted
      * @return A LocalDate containing the date with the desired format.
      */
-    public LocalDate formatDate(String dateString) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    public static LocalDate formatDate(String dateString) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         //return sdf.format(dateToFormat);
         LocalDate localDate = LocalDate.parse(sdf.format(dateString), formatter);
         LOGGER.info(localDate.toString());
@@ -576,11 +617,11 @@ public class ItemManagementWindowController {
             taIssuesItem.setText(item.getIssues());
             cbModelItem.getSelectionModel().select(item.getModel());
             cbPackItem.getSelectionModel().select(item.getPack());
-            dpCreateDateItem.setValue(formatDate(item.getDateAdded()));
+            dpCreateDateItem.setValue(stringToLocalDate(formatDate(item.getDateAdded())));
             formatDate(item.getDateAdded());
         }
     }
-    
+
     /**
      * This method opens the Report template for Item and fills it with the
      * information in the table.

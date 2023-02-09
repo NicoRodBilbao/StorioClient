@@ -1,6 +1,7 @@
 package dataAccess;
 
 import entities.Model;
+import exceptions.ItemFindException;
 import interfaces.Modelable;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,14 +45,13 @@ public class ModelImplementation implements Modelable{
     }
 
     @Override
-    public List<Model> listAllModels() {
+    public List<Model> listAllModels() throws ItemFindException {
         try {
             LOGGER.info("Listing all models.");
             return mc.findAll_XML(new GenericType<List<Model>>() {});
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new ItemFindException("There was an error when finding the models.");
         }
-        return null;
     }
 
     @Override

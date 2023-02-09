@@ -1,6 +1,7 @@
 package interfaces;
 
 import entities.Model;
+import exceptions.ItemFindException;
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ public interface Modelable {
     
     public void updateModel(Model model);
     
-    public List<Model> listAllModels();
+    public List<Model> listAllModels() throws ItemFindException;
     
     public List<Model> findModelById(Integer id);
     

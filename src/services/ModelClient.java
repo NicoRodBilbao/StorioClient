@@ -1,5 +1,6 @@
 package services;
 
+import exceptions.ItemFindException;
 import java.util.ResourceBundle;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
@@ -49,10 +50,14 @@ public class ModelClient {
         webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();
     }
 
-    public <T> T find_XML(Class<T> responseType, String id) throws ClientErrorException {
+    public <T> T find_XML(Class<T> responseType, String id) throws ItemFindException {
+        try {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        } catch (Exception e) {
+            throw new ItemFindException();
+        }
     }
 
     public <T> T find_JSON(Class<T> responseType, String id) throws ClientErrorException {
