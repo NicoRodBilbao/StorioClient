@@ -30,6 +30,7 @@ public class BookingClient implements Bookingable{
     private WebTarget webTarget;
     private Client client;
     private static final String BASE_URI = ResourceBundle.getBundle("services.config").getString("URL");// Clase
+    //private static final String BASE_URI = "http://localhost:30753/StorioWeb/webresources";// Casa
 
     public BookingClient() {
         client = javax.ws.rs.client.ClientBuilder.newClient();

@@ -1,6 +1,7 @@
 package windowController;
 
 import entities.Model;
+import exceptions.ItemFindException;
 import factories.ModelFactory;
 import interfaces.Modelable;
 import java.io.IOException;
@@ -274,15 +275,20 @@ public class ModelManagementWindowController {
     }
 
     private void refreshTable() {
-        LOGGER.info("Retrieving model data.");
-        List<Model> listModel = modelable.listAllModels();
-        tcId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        tcDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
-        tcModel.setCellValueFactory(new PropertyValueFactory<>("model"));
-        tcNote.setCellValueFactory(new PropertyValueFactory<>("notes"));
-        tcItemsId.setCellValueFactory(new PropertyValueFactory<>("items"));
-
-        tvModel.setItems(FXCollections.observableArrayList(listModel));
+        try {
+            LOGGER.info("Retrieving model data.");
+            List<Model> listModel = modelable.listAllModels();
+            tcId.setCellValueFactory(new PropertyValueFactory<>("id"));
+            tcDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+            tcModel.setCellValueFactory(new PropertyValueFactory<>("model"));
+            tcNote.setCellValueFactory(new PropertyValueFactory<>("notes"));
+            tcItemsId.setCellValueFactory(new PropertyValueFactory<>("items"));
+            
+            tvModel.setItems(FXCollections.observableArrayList(listModel));
+        } catch (ItemFindException ex) {
+            Logger.getLogger(ModelManagementWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            new Alert(Alert.AlertType.ERROR, "Error when connecting to the database.", ButtonType.OK).showAndWait();
+        }
     }
 
     private void emptyFields() {

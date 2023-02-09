@@ -39,7 +39,7 @@ public class ItemClient {
 
     public void removeItem(String id) throws ItemDeleteException {
         try {
-            webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();
+            webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete(Item.class);
         } catch (Exception e) {
             throw new ItemDeleteException();
         }
@@ -105,9 +105,9 @@ public class ItemClient {
         }
     }
 
-    public void createItem_JSON(Object requestEntity) throws ItemCreateException {
+    public void createItem_JSON(Item requestEntity) throws ItemCreateException {
         try {
-            webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
+            webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON),Item.class);
         } catch (Exception e) {
             throw new ItemCreateException();
         }
@@ -172,17 +172,17 @@ public class ItemClient {
         }
     }
 
-    public void updateItem_XML(Object requestEntity, String id) throws ItemModifyException {
+    public void updateItem_XML(Item requestEntity, String id) throws ItemModifyException {
         try {
-            webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
+            webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML),Item.class);
         } catch (Exception e) {
             throw new ItemModifyException();
         }
     }
 
-    public void updateItem_JSON(Object requestEntity, String id) throws ItemModifyException {
+    public void updateItem_JSON(Item requestEntity, String id) throws ItemModifyException {
         try {
-            webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request(javax.ws.rs.core.MediaType.APPLICATION_JSON).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
+            webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request(javax.ws.rs.core.MediaType.APPLICATION_JSON).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON),Item.class);
         } catch (Exception e) {
             throw new ItemModifyException();
         }

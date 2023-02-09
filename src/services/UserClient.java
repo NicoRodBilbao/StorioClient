@@ -27,6 +27,7 @@ public class UserClient {
 	private WebTarget webTarget;
 	private Client client;
 	private static final String BASE_URI = ResourceBundle.getBundle("services.config").getString("URL");// Clase
+                  //private static final String BASE_URI = "http://localhost:30753/StorioWeb/webresources";// Casa
 
 	protected static final Logger LOGGER = Logger.getLogger(UserClient.class.getName());
 

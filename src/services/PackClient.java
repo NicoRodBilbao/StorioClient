@@ -29,6 +29,7 @@ public class PackClient {
     private WebTarget webTarget;
     private Client client;
     private static final String BASE_URI = ResourceBundle.getBundle("services.config").getString("URL"); //Parametrizar en un archivo de propiedades
+    //private static final String BASE_URI = "http://localhost:30753/StorioWeb/webresources";// Casa
 
     public PackClient() {
         client = javax.ws.rs.client.ClientBuilder.newClient();

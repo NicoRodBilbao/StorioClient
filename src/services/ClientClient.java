@@ -28,6 +28,7 @@ public class ClientClient {
 	private WebTarget webTarget;
 	private Client client;
     private static final String BASE_URI = ResourceBundle.getBundle("services.config").getString("URL");// Clase
+    //private static final String BASE_URI = "http://localhost:30753/StorioWeb/webresources";// Casa
 
 	public ClientClient() {
 		client = javax.ws.rs.client.ClientBuilder.newClient();
